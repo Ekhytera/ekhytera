@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Ekhytera</title>
+    <link rel="shortcut icon" href="imgs/EK1x1.png" type="image/x-icon">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/styleConta.css">
+</head>
+
+<body>
+    <div id="bemVindo">
+        <p>Bem-Vindo!</p>
+    </div>
+    <div id="login">
+        <a href="index.html"><img src="imgs/ekhyteralogo.png" alt="logo" class="logo"></a>
+        <form>
+            <div>
+                <label for="email">Email</label>
+                <input type="email" id="email">
+                <span id="erroEmail" class="erro"></span>
+            </div>
+            <div>
+                <label for="senha">Senha</label>
+                <div id="viewPassword">
+                    <input type="password" id="senha">
+                    <img src="imgs/verSenha.png" id="verSenha">
+                </div>
+                <span id="erroSenha" class="erro"></span>
+            </div>
+            <a href="trocarSenha.html">Esqueceu a senha? Clique aqui</a>
+            <input class="entrarBtn" type="submit" onclick="entrar()" value="Entrar">
+            <a href="cadastrar.html">Não tem conta? Cadastre-se</a>
+        </form>
+    </div>
+
+    <script src="js/versenha.js"></script>
+    <script src="js/login.js"></script>
+</body>
+
+</html>

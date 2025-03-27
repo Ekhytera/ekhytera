@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ekhytera</title>
+    <link rel="shortcut icon" href="imgs/EK1x1.png" type="image/x-icon">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/styleConta.css">
+</head>
+<body>
+    <div id="bemVindo">
+        <p>Bem-Vindo!</p>
+    </div>
+    <div id="login">
+        <a href="index.html"><img src="imgs/ekhyteralogo.png" alt="logo" class="logo"></a>
+        <form action="login.html">
+            <div>
+                <label for="email">Email ou Telefone</label>
+                <input type="email" id="emailTrocarSenha">
+                <span id="emailNaoEnc"></span>
+            </div>
+            <div>
+                <label for="newSenha">Nova Senha</label>
+                <div id="viewPassword">
+                    <input type="password" id="senhaNova">
+                    <img src="imgs/verSenha.png" id="nSenha">
+                </div>
+                <span id="senhaInv"></span>
+            </div>
+            <div>
+                <label for="confSenha">Confirmar Senha</label>
+                <div id="viewPassword">
+                    <input type="password" id="confSenha">
+                    <img src="imgs/verSenha.png" id="cSenha">
+                </div>
+                <span id="senhaDiferentes"></span>
+            </div>
+            <input class="entrarBtn" type="submit" onclick="trocarSenha()" value="Trocar Senha">
+            <a href="login.html">Voltar</a>
+        </form>
+    </div>
+    <script src="js/versenha.js"></script>
+    <script src="js/login.js"></script>
+</body>
+</html>

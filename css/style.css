@@ -1,0 +1,488 @@
+body {
+    min-height: 100vh;
+    background-image: url('https://ekhytera.github.io/newEkhytera/imgs/img-noise-500x500.png');
+}
+
+main {
+    position: relative;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 6rem;
+}
+
+main .firstContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+}
+
+main .firstContainer .textPart {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    color: hsla(75, 6%, 87%, 1);
+}
+
+main .firstContainer .textPart h1 {
+    font-size: 2rem;
+    background-image: linear-gradient(45deg, hsla(75, 6%, 87%, 1), hsla(212, 60%, 67%, 1));
+    background-size: 100%;
+    background-clip: border-box;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+    font-weight: 800;
+}
+
+main .firstContainer .textPart p {
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+main .firstContainer .textPart .montePc {
+    background-image: -webkit-linear-gradient(45deg, var(--myColor1, hsla(212, 60%, 67%, 1)), var(--myColor2, hsla(0, 0%, 0%, 1)));
+    background-image: linear-gradient(45deg, var(--myColor1, hsla(212, 60%, 67%, 1)), var(--myColor2, hsla(0, 0%, 0%, 1)));
+    padding: 0.7rem;
+    color: hsla(0, 0%, 100%, 1);
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-image 0.3s ease, background-color 0.3s ease;
+    width: auto;
+    text-decoration: none;
+    text-align: center;
+    text-shadow: 2px 2px 3px rgba(0, 0, 0, 1);
+}
+
+main .firstContainer .imgPart {
+    position: relative;
+}
+
+main .firstContainer .imgPart img {
+    max-width: 100%;
+    height: auto;
+    z-index: 1;
+}
+
+main .firstContainer .imgPart::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgb(121, 167, 221, 1) 0%, rgba(0, 150, 255, 0) 100%);
+    border-radius: 50%;
+    z-index: -1;
+    filter: blur(150px);
+    animation: size1 3s infinite;
+}
+
+@keyframes size1 {
+    0%{
+        filter: blur(150px);
+        border-radius: 50%;
+    }
+
+    50%{
+        filter: blur(50px);
+        border-radius: 40%;
+    }
+
+    100%{
+        filter: blur(150px);
+    }
+}
+
+main .categorias {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+}
+
+main .categorias h2 {
+    color: hsla(75, 6%, 87%, 1);
+    font-size: 1rem;
+}
+
+main .categorias .options {
+    background: linear-gradient(262.57deg, rgba(0, 0, 0, 0.55) 1.51%, rgba(121, 167, 221, 0.55) 115.61%);
+    border-radius: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 541px;
+}
+
+main .categorias .options img {
+    width: 300px;
+}
+
+main .categorias .options .texts {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    gap: 1rem;
+}
+
+main .categorias .options .texts h1 {
+    font-size: 2rem;
+    background: linear-gradient(90deg, #415A77 0%, #79A7DD 100%);
+    background-size: 100%;
+    background-clip: border-box;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+    font-weight: 800;
+}
+
+main .categorias .options .texts p {
+    font-size: 1rem;
+    font-weight: 400;
+    color: hsla(75, 6%, 87%, 1);
+}
+
+main .categorias .options .texts a {
+    background-image: -webkit-linear-gradient(45deg, var(--myColor1, hsla(212, 60%, 67%, 1)), var(--myColor2, hsla(0, 0%, 0%, 1)));
+    background-image: linear-gradient(45deg, var(--myColor1, hsla(212, 60%, 67%, 1)), var(--myColor2, hsla(0, 0%, 0%, 1)));
+    padding: 0.5rem;
+    color: hsla(0, 0%, 100%, 1);
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-image 0.3s ease, background-color 0.3s ease;
+    width: auto;
+    text-decoration: none;
+    text-align: center;
+    text-shadow: 2px 2px 3px rgba(0, 0, 0, 1);
+}
+
+main .categorias .changeCat {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+main .categorias .changeCat button {
+    width: 80px;
+    height: 9px;
+    background: hsla(0, 0%, 0%, 0.55);
+    border: 1px solid hsla(0, 0%, 0%, 0.55);
+    cursor: pointer;
+}
+
+main .categorias .changeCat .selected {
+    background: linear-gradient(270deg, #79A7DD 0%, #415A77 100%);
+}
+
+main .educacao {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+}
+
+main .educacao h2 {
+    color: hsla(75, 6%, 87%, 1);
+    font-size: 1rem;
+}
+
+main .educacao #pEducacao {
+    color: hsla(75, 6%, 87%, 1);
+    font-weight: 400;
+    background-color: hsla(0, 0%, 0%, 0.55);
+    padding: 0.5rem;
+}
+
+main .educacao .destaques {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+main .educacao .destaques .noticias{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: hsla(0, 0%, 0%, 0.55);
+    padding: 10px;
+    transition: .3s;
+}
+
+main .educacao .destaques .noticias:hover{
+    box-shadow: 0px 0px 2px 0px #79A7DD;
+    transform: scale(1.03);
+    transition: .3s;
+}
+
+main .educacao .destaques .noticias .logoNot {
+    width: 100%;
+    max-width: 500px;
+}
+
+main .educacao .destaques .noticias a{
+    color: white;
+}
+
+main .materiais {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+}
+
+main .materiais h2 {
+    color: hsla(75, 6%, 87%, 1);
+    font-size: 1rem;
+}
+
+main .materiais .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+main .materiais .content .card {
+    height: 200px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    justify-content: space-between;
+    color: hsla(0, 0%, 80%, 1);
+    padding: 1rem;
+}
+
+main .materiais .content .card ul li{
+    padding-bottom: .5rem;
+    transition: .3s;
+}
+
+main .materiais .content .card ul li a{
+    transition: .3s;
+}
+
+main .materiais .content .card ul li a:hover{
+    color: #79A7DD;
+    transition: .3s;
+}
+
+
+
+main .materiais .content .card:nth-child(1) {
+    background-image: url('https://ekhytera.github.io/newEkhytera/imgs/gpubackimg.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+main .materiais .content .card:nth-child(2) {
+    background-image: url('https://ekhytera.github.io/newEkhytera/imgs/codebackimg.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+main .materiais .content .card h3 {
+    font-size: 1.5rem;
+}
+
+main .materiais .content .card ul {
+    list-style: none;
+}
+
+main .materiais .content .card ul li a {
+    text-decoration: underline;
+    color: hsla(0, 0%, 80%, 1);
+}
+
+.fade {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.visible {
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
+}
+
+@media only screen and (min-width: 600px) {
+    main .categorias .options img {
+        width: 450px;
+    }
+
+    main .categorias .options {
+        height: 650px;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    main .firstContainer {
+        flex-direction: row;
+        text-align: left;
+    }
+
+    main .firstContainer .textPart h1 {
+        font-size: 3rem;
+    }
+
+    main .categorias {
+        gap: 5rem;
+    }
+
+    main .categorias .options {
+        justify-content: flex-end;
+        flex-direction: row;
+        position: relative;
+        height: 332px;
+    }
+
+    main .categorias .options .texts {
+        width: 50%;
+        padding: 2.5rem;
+        align-items: center;
+    }
+
+    main .categorias .options .texts h1 {
+        font-size: 3rem;
+    }
+
+    main .categorias .options .texts a {
+        width: fit-content;
+    }
+
+    main .categorias .options img {
+        width: 450px;
+        position: absolute;
+        bottom: 0px;
+        left: -30px;
+    }
+
+    main .firstContainer .textPart .montePc {
+        width: 50%;
+    }
+
+    main .materiais .content {
+        flex-direction: row;
+    }
+}
+
+@media only screen and (min-width: 992px) {
+    main .firstContainer .textPart h1 {
+        font-size: 3rem;
+    }
+
+    main .firstContainer .textPart p {
+        font-size: 1rem;
+    }
+
+    main .categorias .options {
+        flex-direction: row;
+        margin-top: 5rem;
+        height: 308px;
+    }
+
+    main .categorias .options .texts {
+        width: 50%;
+    }
+
+    main .categorias .options .texts a {
+        width: 50%;
+    }
+
+    main .educacao .destaques {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr;
+    }
+
+}
+
+@media only screen and (min-width: 1200px) {
+    main {
+        padding-inline: 10rem;
+    }
+
+    main .firstContainer .textPart h1 {
+        font-size: 3.75rem;
+    }
+
+    main .materiais .content .card {
+        height: 250px;
+    }
+
+    main .categorias .options {
+        margin-top: 3rem;
+        height: 386px;
+    }
+
+    main .categorias .options .texts {
+        margin-block: 2rem;
+    }
+
+    main .categorias .options img {
+        width: 540px;
+    }
+
+    main .categorias .options .texts h1 {
+        font-size: 3.75rem;
+    }
+}
+
+@media only screen and (min-width: 1440px) {
+    main .firstContainer .textPart {
+        width: 50%;
+    }
+
+    main .firstContainer .imgPart {
+        display: flex;
+        justify-content: center;
+        width: 50%;
+    }
+
+    main .firstContainer .textPart h1 {
+        font-size: 4rem;
+    }
+
+    main .firstContainer .textPart p {
+        font-size: 1.25rem;
+    }
+
+    main .categorias {
+        margin-top: 8rem;
+    }
+
+    main .categorias .options {
+        margin-top: 5rem;
+        height: 500px;
+    }
+
+    main .categorias .options img {
+        width: 690px;
+        left: -55px;
+    }
+
+    main .categorias .options .texts h1 {
+        font-size: 4rem;
+    }
+
+    main .categorias .options .texts p {
+        font-size: 1.25rem;
+    }
+
+    main .educacao .destaques {
+        height: 400px;
+    }
+}
