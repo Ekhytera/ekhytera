@@ -1,19 +1,20 @@
 import UserRepository from "../repositories/userRepository.js";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import usersRepository from "../repositories/userRepository.js";
 
 const SECRET = process.env.JWT_SECRET;
 
 const UserController = {
     createUser: async (req, res) => {
-        const { email, nome, senha } = req.body;
+        const { email, userName, senha } = req.body;
 
         if (!email) return res.status(400).json({
             ok: false,
             status: 400,
             message: 'O campo email é obrigatório'
         });
-        if (!nome) return res.status(400).json({
+        if (!userName) return res.status(400).json({
             ok: false,
             status: 400,
             message: 'O campo nome é obrigatório'
@@ -25,6 +26,7 @@ const UserController = {
         });
 
         const userExist = await UserRepository.getByEmail(email);
+        console.log(userExist)
 
         if (userExist) return res.status(400).json({
             ok: false,
@@ -32,9 +34,9 @@ const UserController = {
             message: 'email já cadastrado'
         });
 
-        const nomeUser = await UserRepository.getByName(nome);
+        const nomeUser = await UserRepository.getByUserName(userName);
 
-        if (nomeUser && nome === nomeUser.nome) return res.status(400).json({
+        if (nomeUser && userName === nomeUser.userName) return res.status(400).json({
             ok: false,
             status: 400,
             message: 'esse nome de usuario já esta sendo utilizado'
@@ -45,20 +47,22 @@ const UserController = {
             const hashSenha = await bcrypt.hash(senha, salt);
 
             const newUser = await UserRepository.create({
-                email, nome, senha: hashSenha
+                email, userName, senha: hashSenha
             })
 
-            if (newUser) return res.status(201).json({
-                ok: true,
-                status: 201,
-                message: 'usuario criado com sucesso',
-                user: {
-                    id: newUser.id,
-                    email: newUser.email,
-                    nome: newUser.nome,
-                    cargo: newUser.cargo
-                }
-            })
+            if (newUser) {
+                return res.status(201).json({
+                    ok: true,
+                    status: 201,
+                    message: 'usuario criado com sucesso',
+                    user: {
+                        id: newUser.id,
+                        email: newUser.email,
+                        userName: newUser.userName,
+                        cargo: newUser.cargo
+                    }
+                })
+            }
 
             return res.status(400).json({
                 ok: false,
@@ -108,12 +112,15 @@ const UserController = {
 
             const token = jwt.sign({
                 id: user.id,
-                nome: user.nome,
-                email: user.email
+                userName: user.userName,
+                email: user.email,
+                cargo: user.cargo
             },
                 SECRET,
                 { expiresIn: '14d' }
             );
+
+            console.log(user.cargo)
 
             res.status(200).json({
                 status: 200,
@@ -135,8 +142,8 @@ const UserController = {
     getAllUser: async (req, res) => {
         try {
             const users = await UserRepository.getAll();
-            
-            if (users)  {
+
+            if (users) {
                 delete users.senha
 
                 return res.status(200).json({
@@ -146,7 +153,7 @@ const UserController = {
                     users: users
                 });
             }
-                
+
         } catch (error) {
             console.log(error);
             return res.status(500).json({
@@ -167,7 +174,7 @@ const UserController = {
                 delete user.senha
 
                 return res.status(200).json({
-                    ok: false,
+                    ok: true,
                     status: 200,
                     message: 'usuario encontrado com sucesso',
                     users: user
@@ -189,9 +196,38 @@ const UserController = {
         }
     },
 
+    getUserByUserName: async (req, res) => {
+        const { userName } = req.params;
+
+        const nomeUser = await UserRepository.getByUserName(userName);
+
+        try {
+            if (nomeUser) return res.status(200).json({
+                ok: false,
+                status: 200,
+                message: 'usuario encontrado com sucesso',
+                user: nomeUser.userName
+            });
+
+            return res.status(404).json({
+                ok: false,
+                status: 404,
+                message: 'nenhum usuario com esse nome foi encontrado',
+            });
+
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                ok: false,
+                status: 500,
+                message: 'Erro no servidor'
+            });
+        }
+    },
+
     updateUser: async (req, res) => {
         const id = req.params.id;
-        const { email, nome, senha, foto, descricao, num_telefone, genero, localizacao, dt_nascimento } = req.body;
+        const { email, userName, nome, senha, foto, descricao, num_telefone, genero, localizacao, dt_nascimento } = req.body;
 
         if (!email) return res.status(400).json({
             ok: false,
@@ -205,22 +241,22 @@ const UserController = {
             message: 'O campo senha é obrigatório'
         });
 
-        if (!nome) return res.status(400).json({
+        if (!userName) return res.status(400).json({
             ok: false,
             status: 400,
             message: 'O campo nome é obrigatório'
         });
 
-        const nomeUser = await UserRepository.getByName(nome);
+        const nomeUser = await UserRepository.getByUserName(userName);
 
-        if (nomeUser && nome === nomeUser.nome) return res.status(400).json({
+        if (nomeUser && userName === nomeUser.userName) return res.status(400).json({
             ok: false,
             status: 400,
             message: 'esse nome de usuario já esta sendo utilizado'
         });
 
         try {
-            const updateUser = await UserRepository.update(id, { email, nome, senha, foto, descricao, num_telefone, genero, localizacao, dt_nascimento });
+            const updateUser = await UserRepository.update(id, { email, userName, nome, senha, foto, descricao, num_telefone, genero, localizacao, dt_nascimento });
 
             if (updateUser) return res.status(200).json({
                 ok: true,

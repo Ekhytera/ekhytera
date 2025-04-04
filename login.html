@@ -17,22 +17,22 @@
     </div>
     <div id="login">
         <a href="index.html"><img src="imgs/ekhyteralogo.png" alt="logo" class="logo"></a>
-        <form>
+        <form id="loginForm">
             <div>
                 <label for="email">Email</label>
-                <input type="email" id="email">
+                <input type="email" name="email" id="email">
                 <span id="erroEmail" class="erro"></span>
             </div>
             <div>
                 <label for="senha">Senha</label>
                 <div id="viewPassword">
-                    <input type="password" id="senha">
+                    <input type="password" name="senha" id="senha">
                     <img src="imgs/verSenha.png" id="verSenha">
                 </div>
                 <span id="erroSenha" class="erro"></span>
             </div>
             <a href="trocarSenha.html">Esqueceu a senha? Clique aqui</a>
-            <input class="entrarBtn" type="submit" onclick="entrar()" value="Entrar">
+            <input class="entrarBtn" type="submit" value="Entrar">
             <a href="cadastrar.html">Não tem conta? Cadastre-se</a>
         </form>
     </div>

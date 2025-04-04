@@ -15,7 +15,9 @@ function listItem(text) {
     return li;
 }
 
-const tipoUser = sessionStorage.getItem('tipoUser') || 'usuario';
+const decoded = jwt_decode(token);
+const tipoUser = decoded.cargo
+console.log(tipoUser)
 
 function showMenu(caller) {
     const postOptionsList = document.getElementsByClassName('postOptions');
@@ -45,7 +47,7 @@ function showMenu(caller) {
     ul.appendChild(document.createElement('hr'));
     ul.appendChild(listItem('Silenciar Usuário'));
 
-    if (tipoUser === 'adm') {
+    if (tipoUser === 'admin') {
         ul.appendChild(document.createElement('hr'));
         const deleteOption = listItem('Deletar');
         deleteOption.classList.add('delete');

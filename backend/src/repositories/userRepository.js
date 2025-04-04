@@ -13,8 +13,8 @@ const usersRepository = {
     async getByEmail(email) {
         return users.find(item => item.email.toLowerCase() === email.toLowerCase());
     },
-    async getByName(nome) {
-        return users.find(item => item.nome.toLowerCase() === nome.toLowerCase());
+    async getByUserName(userName) {
+        return users.find(item => item.userName.toLowerCase() === userName.toLowerCase());
     },
     async getByStatus() {
         return users.filter(item => item.status === 1);
@@ -29,7 +29,7 @@ const usersRepository = {
             genero: null,
             localizacao: null,
             dt_nascimento: null,
-            cargo: 'users',
+            cargo: 'user',
             status: 1,
             createdAt: new Date()
         }

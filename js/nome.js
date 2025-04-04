@@ -1,21 +1,28 @@
+const token = localStorage.getItem('token');
+
 window.addEventListener('DOMContentLoaded', () => {
-    let userAtual = sessionStorage.getItem('userLogado');
-    let userAtualEmail = sessionStorage.getItem('userEmail');
+    if(!token) return
+
+    const decoded = jwt_decode(token);
+    console.log("Token decodificado:", decoded);
+
+    let userAtual = decoded.userName;
+    let userAtualEmail = decoded.email;
     let infoConta = document.getElementById('infoConta');
     let infoUser = document.getElementById('infoUser');
     let iconsNav = document.querySelector('.iconsNav');
     let userNameLogged = document.querySelector('.userNameLogged');
 
-    if(!userAtual){
+    if (!userAtual) {
         infoUser.innerHTML = '<h1 id="userName">Faça login!</h1>'
     }
 
     if (userAtual) {
         document.querySelectorAll('#userName').forEach(function (element) {
-                element.innerHTML = userAtual;
+            element.innerHTML = userAtual;
         })
         document.querySelectorAll('#CadatroInfo').forEach(function (element) {
-                element.innerHTML = userAtualEmail;
+            element.innerHTML = userAtualEmail;
         })
         document.querySelectorAll('.userNameLogged').forEach(function (element, name) {
             name = userAtual.split(' ')[0]
@@ -28,7 +35,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         document.querySelectorAll('#leave').forEach(function (element) {
             element.addEventListener('click', function () {
-                sessionStorage.clear();
+                localStorage.removeItem('token')
                 window.location.reload(true);
             })
         })

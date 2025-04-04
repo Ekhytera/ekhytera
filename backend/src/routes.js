@@ -12,6 +12,7 @@ routes.get('/', (req, res) => {
 // get
 routes.get('/usuarios', middlewares.verifyToken, UserController.getAllUser);
 routes.get('/usuarios/id/:id', middlewares.verifyToken, UserController.getUserById);
+routes.get('/usuarios/userName/:userName', UserController.getUserByUserName);
 
 
 // cadastro

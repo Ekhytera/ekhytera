@@ -60,7 +60,7 @@ function addPost(settings) {
 }
 
 // Função dar Like -------------------------------
-let userAtual = sessionStorage.getItem('userLogado');
+let userAtual = localStorage.getItem('token');
 
 function darLike(el) {
 	const likeCount = el.querySelector('.likeCount');
