@@ -26,9 +26,9 @@ const middlewares = {
             });
         }
     },
-    verifyCargo: (req, res, next) => {
+    // verifyCargo: (req, res, next) => {
 
-    }
+    // }
 }
 
 export default middlewares

@@ -5,10 +5,10 @@ const uuid = uuidv4()
 
 const usersRepository = {
     async getAll() {
-        return users;
+        return users.filter(item => item.status === 1);
     },
     async getById(id) {
-        return users.find(item => item.id === id);
+        return users.find(item => item.id === id && item.status === 1);
     },
     async getByEmail(email) {
         return users.find(item => item.email.toLowerCase() === email.toLowerCase());
@@ -19,10 +19,16 @@ const usersRepository = {
     async getByStatus() {
         return users.filter(item => item.status === 1);
     },
-    async create(data){
+    async create(data) {
         const newusers = {
             id: uuid,
             ...data,
+            foto: null,
+            descricao: null,
+            num_telefone: null,
+            genero: null,
+            localizacao: null,
+            dt_nascimento: null,
             cargo: 'users',
             status: 1,
             createdAt: new Date()
@@ -34,25 +40,20 @@ const usersRepository = {
     async update(id, data) {
         const index = users.findIndex(item => item.id === id);
 
-        if(index >= 0){
-            if(data.nome) users[index].nome = data.nome;
-            if(data.email) users[index].email = data.email;
-            if(data.senha) users[index].senha = data.senha;
-            if(data.descricao) users[index].descricao = data.descricao;
-            if(data.num_telefone) users[index].num_telefone = data.num_telefone;
-            if(data.genero) users[index].genero = data.genero;
-            if(data.localizacao) users[index].localizacao = data.localizacao;
-            if(data.dt_nascimento) users[index].dt_nascimento = data.dt_nascimento;
+        if (index >= 0) {
+            users[index] = { ...users[index], ...data }
 
             return users[index];
         }
         return false
     },
     async deleteUpdate(id) {
-        const delteusers = users.find(item => item.id === id);
+        const deleteUser = users.find(item => item.id === id);
 
-        if(delteusers) return delteusers.status = 0;
-
+        if (deleteUser) {
+            deleteUser.status = 0;
+            return true
+        }
         return false
     }
 }
