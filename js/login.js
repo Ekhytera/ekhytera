@@ -146,7 +146,7 @@ if (window.location.pathname === '/login.html') {
                 return
             }
 
-            const token = resp.token
+            const token = resp.token;
 
             if (token) {
                 localStorage.setItem('token', token);

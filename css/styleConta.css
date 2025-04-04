@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
-body{
+body {
     display: flex;
     min-height: 100vh;
     text-align: center;
@@ -12,7 +12,7 @@ body{
     background-size: cover;
 }
 
-form{
+form {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -21,7 +21,7 @@ form{
     gap: 2rem;
 }
 
-#bemVindo{
+#bemVindo {
     width: 50%;
     display: none;
     box-sizing: border-box;
@@ -31,7 +31,8 @@ form{
     border-radius: 47px;
     color: white;
 }
-#bemVindo p{
+
+#bemVindo p {
     flex-wrap: wrap;
     display: flex;
     align-items: center;
@@ -41,7 +42,8 @@ form{
     font-size: 40px;
     color: #FFFFFF;
 }
-#login{
+
+#login {
     width: 100%;
     display: flex;
     background: rgba(0, 0, 0, 0.55);
@@ -53,21 +55,25 @@ form{
     gap: 1rem;
     padding-inline: 1rem;
 }
-#login .logo{
+
+#login .logo {
     width: 180px;
 }
-#login div{
+
+#login div {
     width: 100%;
     display: flex;
     align-items: start;
     flex-direction: column;
 }
-div label{
+
+div label {
     font-size: 20px;
     font-weight: bold;
     margin: 5px;
 }
-div input{
+
+div input {
     width: 100%;
     border-radius: 5px;
     background-color: rgba(255, 255, 255, 0.2);
@@ -77,10 +83,15 @@ div input{
     font-size: 20px;
     padding: 10px;
 }
-div #senha, div #addSenha, div #senhaNova, div #confSenha{
+
+div #senha,
+div #addSenha,
+div #senhaNova,
+div #confSenha {
     background-color: transparent;
 }
-#login form div #viewPassword{
+
+#login form div #viewPassword {
     display: flex;
     background-color: rgba(255, 255, 255, 0.2);
     border-radius: 5px;
@@ -88,30 +99,48 @@ div #senha, div #addSenha, div #senhaNova, div #confSenha{
     flex-direction: row;
     justify-content: space-between;
 }
-#login div #viewPassword img{
+
+#login div #viewPassword img {
     width: 30px;
 }
-#verSenha, #verSenhaCad , #nSenha, #cSenha{
+
+#verSenha,
+#verSenhaCad,
+#nSenha,
+#cSenha {
     cursor: pointer;
 }
 
-.erro, #senhaDiferentes, #emailNaoEnc, #senhaInv{
-    color: white;
+.erro,
+#senhaDiferentes,
+#emailNaoEnc,
+#senhaInv {
+    width: 100%;
+    border: 2px solid;
+    padding: 2px 5px;
+    border: none;
+    color: red;
     font-weight: 500;
     border-radius: 5px;
     font-size: 16px;
     margin-top: 5px;
     width: 250px;
 }
-a{
+
+.inputErro {
+    border: 1px red;
+}
+
+a {
     color: white;
     text-decoration: none;
 }
-.entrarBtn{
+
+.entrarBtn {
     width: 50%;
     padding: 0.75rem;
     border-radius: 5px;
-    background: linear-gradient(90deg, rgba(121,167,221,1) 0%, rgba(65,90,119,1) 100%);
+    background: linear-gradient(90deg, rgba(121, 167, 221, 1) 0%, rgba(65, 90, 119, 1) 100%);
     filter: drop-shadow(0px 8px 10px rgba(0, 0, 0, 0.25));
     border: none;
     font-size: 20px;
@@ -120,29 +149,29 @@ a{
     cursor: pointer;
 }
 
-@media only screen and (min-width: 992px){
-    #bemVindo{
+@media only screen and (min-width: 992px) {
+    #bemVindo {
         display: flex;
         width: 50%;
         margin-block: 2rem;
         margin-inline: 4rem;
     }
 
-    #bemVindo p{
+    #bemVindo p {
         margin-left: 2rem;
     }
 
-    #login{
+    #login {
         width: 50%;
     }
 }
 
-@media only screen and (min-width: 1200px){
-    #login div{
+@media only screen and (min-width: 1200px) {
+    #login div {
         width: 70%;
     }
 
-    #login div #viewPassword{
+    #login div #viewPassword {
         width: 100%;
     }
 }

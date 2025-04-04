@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="css/footer.css">
     <link rel="stylesheet" href="css/lazy_load.css">
     <link rel="stylesheet" href="css/style.css">
+    <!-- <link rel="stylesheet" href="css/digitar.css"> -->
 </head>
 
 <body>
@@ -42,7 +43,7 @@
                 <img src="imgs/1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg" alt="foto" id="userFoto">
                 <div id="infoUser">
                     <h1 id="userName">Faça login!</h1>
-                    <span id="CadatroInfo">Faça login!</span>
+                    <span id="CadatroInfo"></span>
                 </div>
                 <img src="imgs/arrow_right.png" alt="arrow" id="seta">
             </div>
@@ -95,8 +96,7 @@
     <main>
         <section class="firstContainer">
             <div class="textPart lazy-load">
-
-                <h1>FAÇA A ESCOLHA CERTA!</h1>
+                <h1 id="title"></h1>
                 <p>Utilize nosso serviço de recomendações personalizadas e tenha mais assertividade ao montar sua
                     máquina.</p>
                 <a href="montagem.html" class="montePc" id="animatedButton">MONTE SEU COMPUTADOR!</a>
@@ -198,6 +198,8 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/typeit@8"></script>
+    <script src="js/digitar.js"></script>
     <script src="js/nome.js"></script>
     <script src="js/header.js"></script>
     <script src="js/categorias.js"></script>
