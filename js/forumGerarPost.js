@@ -96,8 +96,6 @@ async function compartilhar(el) {
 			})
 			shareCount.innerHTML++
 
-
-
 		} catch (error) {
 			console.error('Erro ao compartilhar:', error)
 		}
@@ -154,7 +152,13 @@ function addCommunities() {
 
 const textArea = document.getElementById('writePostInput');
 
-const userPost = sessionStorage.getItem('userLogado');
+console.log(decoded)
+let userPost;
+
+if (decoded) {
+	userPost = decoded.userName;
+}
+
 
 function postar() {
 	if (userPost === null) {

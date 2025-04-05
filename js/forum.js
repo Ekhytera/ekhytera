@@ -15,8 +15,7 @@ function listItem(text) {
     return li;
 }
 
-const tipoUser = decoded.cargo
-console.log(tipoUser)
+const tipoUser = decoded.cargo;
 
 function showMenu(caller) {
     const postOptionsList = document.getElementsByClassName('postOptions');

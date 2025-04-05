@@ -3,7 +3,6 @@ let decoded = null;
 
 if (token) {
     decoded = jwt_decode(token);
-    console.log("Token decodificado:", decoded);
 }
 
 function Header(item) {
