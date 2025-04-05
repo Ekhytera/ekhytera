@@ -15,7 +15,6 @@ function listItem(text) {
     return li;
 }
 
-const decoded = jwt_decode(token);
 const tipoUser = decoded.cargo
 console.log(tipoUser)
 
