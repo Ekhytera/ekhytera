@@ -5,6 +5,19 @@ if (token) {
     decoded = jwt_decode(token);
 }
 
+function setThema() {
+    const checkbox = document.querySelector('input[type="checkbox"]');
+    const isChecked = checkbox.checked;
+
+    console.log(isChecked);
+
+    if(isChecked) {
+        document.querySelector('.slider').style.backgroundColor = '#79a7dd';
+    } else {
+        document.querySelector('.slider').style.backgroundColor = 'gray';
+    }
+}
+
 function Header(item) {
 
     const header = `
@@ -51,9 +64,14 @@ function Header(item) {
             </ul>
             <div class="conf">
                 <h3>Aparencia</h3>
-                <p>
-                    <span>Modo claro</span> <input type="checkbox" name="" id="">
-                </p>
+                <div class="thema">
+                    Modo claro
+
+                    <label class="switch">
+                        <input type="checkbox" onclick="setThema()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
                 <hr>
                 <h3>Opções</h3>
                 <a href="config.html">Configurações</a>
