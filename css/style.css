@@ -58,6 +58,12 @@ main .firstContainer .textPart .montePc {
     text-shadow: 2px 2px 3px rgba(0, 0, 0, 1);
 }
 
+.btn-index:hover{
+    box-shadow: 7px 7px 2px black;
+    transform: scale(1.5deg);
+    transition: .5s;
+}
+
 main .firstContainer .imgPart {
     position: relative;
 }
