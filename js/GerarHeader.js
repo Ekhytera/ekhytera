@@ -9,8 +9,6 @@ function setThema() {
     const checkbox = document.querySelector('input[type="checkbox"]');
     const isChecked = checkbox.checked;
 
-    console.log(isChecked);
-
     if(isChecked) {
         document.querySelector('.slider').style.backgroundColor = '#79a7dd';
     } else {
