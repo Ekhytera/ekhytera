@@ -62,10 +62,13 @@ main .firstContainer .imgPart {
     position: relative;
 }
 
-main .firstContainer .imgPart img {
+main .firstContainer .imgPart img:nth-child(1) {
     max-width: 100%;
     height: auto;
     z-index: 1;
+}
+main .firstContainer .imgPart img:nth-child(2) {
+    display: none;
 }
 
 main .firstContainer .imgPart::before {
@@ -77,10 +80,10 @@ main .firstContainer .imgPart::before {
     border-radius: 50%;
     z-index: -1;
     filter: blur(150px);
-    animation: size1 3s infinite;
+    /* animation: size1 3s infinite; */
 }
 
-@keyframes size1 {
+/* @keyframes size1 {
     0%{
         filter: blur(150px);
         border-radius: 50%;
@@ -94,7 +97,7 @@ main .firstContainer .imgPart::before {
     100%{
         filter: blur(150px);
     }
-}
+} */
 
 main .categorias {
     display: flex;
@@ -450,6 +453,18 @@ main .materiais .content .card ul li a {
         display: flex;
         justify-content: center;
         width: 50%;
+        left: 5%;
+    }
+
+    main .firstContainer .imgPart img:nth-child(2) {
+        display: block;
+        width: 300px;
+        max-width: 80%;
+        height: 200px;
+        margin-block: auto;
+        position: relative;
+        left: -15%;
+        z-index: -1;
     }
 
     main .firstContainer .textPart h1 {
