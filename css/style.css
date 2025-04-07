@@ -105,6 +105,14 @@ main .firstContainer .imgPart::before {
     }
 } */
 
+@keyframes opacityLogo {
+    0%{
+        opacity: 0;
+    } 100% {
+        opacity: 1;
+    }
+}
+
 main .categorias {
     display: flex;
     flex-direction: column;
@@ -471,6 +479,7 @@ main .materiais .content .card ul li a {
         position: relative;
         left: -15%;
         z-index: -1;
+        animation: opacityLogo 3s ease-in-out;
     }
 
     main .firstContainer .textPart h1 {
