@@ -284,13 +284,13 @@ header .horizontalNav ul li a::before {
     border-radius: 10px;
     transform: scaleX(0); 
     transform-origin: center; 
-    transition: transform  0.3s ease;
+    transition: transform 0.3s ease, width 0.3s ease; 
 }
-
 
 header .horizontalNav ul li a:hover::before {
     width: 100%;
     transform: scaleX(1); 
+    transition: transform 0.3s ease, width 0.3s ease; /* Garante transição suave */
 }
 
 header .iconsNav {
