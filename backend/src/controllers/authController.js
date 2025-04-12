@@ -1,7 +1,6 @@
 import UserRepository from "../repositories/userRepository.js";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import usersRepository from "../repositories/userRepository.js";
 
 const SECRET = process.env.JWT_SECRET;
 
@@ -26,7 +25,6 @@ const UserController = {
         });
 
         const userExist = await UserRepository.getByEmail(email);
-        console.log(userExist)
 
         if (userExist) return res.status(400).json({
             ok: false,
@@ -103,6 +101,7 @@ const UserController = {
             });
 
             const checarSenha = await bcrypt.compare(senha, user.senha);
+            console.log(checarSenha)
 
             if (!checarSenha) return res.status(400).json({
                 status: 400,
@@ -171,8 +170,6 @@ const UserController = {
             const user = await UserRepository.getById(id);
 
             if (user) {
-                delete user.senha
-
                 return res.status(200).json({
                     ok: true,
                     status: 200,

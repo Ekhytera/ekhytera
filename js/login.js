@@ -142,7 +142,7 @@ if (window.location.pathname === '/login.html') {
             }
 
             if (resp.message === 'Senha inválida') {
-                erroSenha.innerHTML = resp.senha
+                erroSenha.innerHTML = resp.message
                 return
             }
 
