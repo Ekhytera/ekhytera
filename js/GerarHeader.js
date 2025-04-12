@@ -37,8 +37,8 @@ function Header(item) {
             <div id="infoConta">
                 <h3>Minha conta</h3>
                 ${item?.userName ?
-            `<a href="#" onclick="Logout()">Sair da conta</a>
-            <a href="trocarSenha.html">Trocar senha</a>`
+            `<a href="#">Acessar conta</a>
+            <a href="#" onclick="Logout()">Sair da conta</a>`
             :
             `<a href="login.html">Fazer login</a>
             <a href="cadastrar.html">Cadastrar</a>`}

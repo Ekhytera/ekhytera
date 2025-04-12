@@ -101,17 +101,18 @@ header .verticalNav .contorno #seta {
 }
 
 header .verticalNav #infoConta {
-    display: none;
+    display: flex;
     flex-direction: column;
-    gap: 0.5rem;
 }
 
 header .verticalNav #infoConta a {
     color: hsla(75, 6%, 87%, 1);
+    margin-top: .5rem;
     text-decoration: none;
     transition: 0.3s;
     width: fit-content;
-    padding: 0.5rem;
+    margin-left: 0.5rem;
+    padding: 5px;
 }
 
 header .verticalNav #infoConta a:hover {

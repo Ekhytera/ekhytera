@@ -1,3 +1,6 @@
+import { authUser } from "./auth.js";
+import { showMenu } from "./forum.js";
+
 function addPost(settings) {
 	function loadCategories() {
 		let buttons = '';
@@ -12,7 +15,7 @@ function addPost(settings) {
 	let post = document.createElement('div');
 	post.className = 'postWrapper';
 
-	const htmlPost = `<article class="post" id="postagem">
+	const htmlPost = `<article class="post" id="postagem" data-id="${settings.id}">
 				<div class="postDetails">
 					<div class="postAuthor">
 						<img class="fotoPerfil" src="imgs/${settings.pfp}">
@@ -152,13 +155,16 @@ function addCommunities() {
 
 const textArea = document.getElementById('writePostInput');
 
-console.log(decoded)
+// Capturando informações do usuario logado
 let userPost;
+let userId;
 
-if (decoded) {
-	userPost = decoded.userName;
-}
-
+authUser().then(dados => {
+	if (dados && dados.users) {
+		userPost = dados.users.userName;
+		userId = dados.users.id;
+	}
+})
 
 function postar() {
 	if (userPost === null) {
@@ -169,6 +175,7 @@ function postar() {
 	}
 	else {
 		addPost({
+			id: userId,
 			username: userPost,
 			pfp: '1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg',
 			text: document.getElementById('writePostInput').value,
@@ -179,7 +186,12 @@ function postar() {
 	}
 }
 
+// selecionando post por id
+// console.log(document.querySelector('[data-id="2"]'))
+
+
 addPost({
+	id: 1,
 	username: 'Usuário 1',
 	pfp: 'pexels-danxavier-1239291.jpg',
 	text: 'A placa de vídeo GT 730 roda Red Dead Redemption 2 em 4k?',
@@ -188,6 +200,7 @@ addPost({
 })
 
 addPost({
+	id: 2,
 	username: 'Usuário 2',
 	pfp: 'pexels-justin-shaifer-501272-1222271.jpg',
 	text: 'Acredito que a UniFOA seja a melhor faculdade do mundo.',
@@ -196,9 +209,18 @@ addPost({
 })
 
 addPost({
+	id: 3,
 	username: 'Usuário 3',
 	pfp: 'pexels-jjagtenberg-103123.jpg',
 	text: 'Como faz pra montar um pc gamer com 20 reais???',
 	attachment: '',
 	categories: ['Teste']
 })
+
+
+// definindo variaveis, constantes e funções globais:
+window.postar = postar;
+window.addCommunities = addCommunities;
+window.compartilhar = compartilhar;
+window.darLike = darLike;
+window.showMenu = showMenu;

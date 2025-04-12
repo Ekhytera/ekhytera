@@ -1,3 +1,5 @@
+import { authUser } from "./auth.js";
+
 function hideMenu() {
     const postOptionsList = document.getElementsByClassName('postOptions');
     if (postOptionsList.length > 0) {
@@ -15,9 +17,20 @@ function listItem(text) {
     return li;
 }
 
-const tipoUser = decoded.cargo;
+let cargo;
+let userId;
 
-function showMenu(caller) {
+authUser().then(dados => {
+    if (dados && dados.users) {
+        cargo = dados.users.cargo;
+        userId = dados.users.id;
+    }
+})
+
+export function showMenu(caller) {
+    const postElement = caller.closest('article');
+    const userPostId = postElement.dataset.id;
+
     const postOptionsList = document.getElementsByClassName('postOptions');
     if (postOptionsList.length > 0) {
         Array.from(postOptionsList).forEach(element => {
@@ -45,7 +58,7 @@ function showMenu(caller) {
     ul.appendChild(document.createElement('hr'));
     ul.appendChild(listItem('Silenciar Usuário'));
 
-    if (tipoUser === 'admin') {
+    if (cargo === 'admin' || userId === userPostId) {
         ul.appendChild(document.createElement('hr'));
         const deleteOption = listItem('Deletar');
         deleteOption.classList.add('delete');
@@ -53,7 +66,7 @@ function showMenu(caller) {
         deleteOption.addEventListener('click', function () {
             if (deleteOption.innerHTML === 'Deletar') {
                 deleteOption.innerHTML = 'Confirmar';
-                deleteOption.removeEventListener('click', arguments.callee);
+                deleteOption.removeEventListener('click', arguments.caller);
                 deleteOption.addEventListener('click', function () {
                     const post = caller.closest('.postWrapper');
                     if (post) {
@@ -80,3 +93,5 @@ function showMenu(caller) {
     postOptions.style.height = '';
     postOptions.style.opacity = '100%';
 }
+
+
