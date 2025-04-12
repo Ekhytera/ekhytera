@@ -1,5 +1,14 @@
 import { authUser } from "./auth.js";
 
+window.addEventListener('load', () => {
+    const postInput = document.getElementById('writePostInput');
+    const userLogado = localStorage.getItem('token');
+    if (!userLogado) {
+        postInput.setAttribute('readonly', 'true');
+        postInput.setAttribute('placeholder', 'Faça login ou crie uma conta para fazer postagens.')
+    }
+})
+
 function hideMenu() {
     const postOptionsList = document.getElementsByClassName('postOptions');
     if (postOptionsList.length > 0) {

@@ -28,7 +28,7 @@ const users = [
         localizacao: '',
         dt_nascimento: '',
         status: 1,
-        cargo: 'admin',
+        cargo: 'user',
         createdAt: ''
     },
 ]
