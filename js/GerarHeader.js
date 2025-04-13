@@ -37,7 +37,7 @@ function Header(item) {
             <div id="infoConta">
                 <h3>Minha conta</h3>
                 ${item?.userName ?
-            `<a href="#">Acessar conta</a>
+            `<a href="config.html">Acessar conta</a>
             <a href="#" onclick="Logout()">Sair da conta</a>`
             :
             `<a href="login.html">Fazer login</a>

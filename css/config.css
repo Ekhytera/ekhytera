@@ -1,0 +1,107 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+main {
+    color: rgba(224, 225, 221, 1);
+    margin: 0;
+    gap: 40px;
+}
+
+h2 {
+    padding: 0;
+    margin: 0;
+}
+
+.userArea {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.userArea button {
+    background: none;
+    border: 2px solid white;
+    color: white;
+    padding-block: 5px;
+    padding-inline: 15px;
+    transition: 0.3s;
+}
+
+.userArea button:hover {
+    background: white;
+    color: black;
+}
+
+.descriptionArea {
+    display: flex;
+    flex-direction: column;
+}
+
+.descriptionArea textarea {
+    min-height: 100px;
+    max-height: 200px;
+    background-color: rgba(0, 0, 0, 0.55);
+    color: white;
+    border: none;
+    padding: 5px;
+}
+
+.profileOption {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
+}
+
+.profileOption a {
+    text-decoration: none;
+    background: none;
+    border: 2px solid white;
+    color: white;
+    padding-block: 5px;
+    padding-inline: 15px;
+    transition: 0.3s;
+}
+
+.profileOption a:hover {
+    background: white;
+    color: black;
+}
+
+.profileOption input,
+.profileOption select {
+    background: none;
+    border: none;
+    border-bottom: 1px solid rgba(224, 225, 221, 1);
+    color: white;
+    width: 200px;
+}
+
+.profileOption option {
+    color: black;
+}
+
+.saveButton {
+    background: none;
+    border: 2px solid white;
+    color: white;
+    padding-block: 5px;
+    padding-inline: 15px;
+    transition: 0.3s;
+}
+
+.saveButton:hover {
+    background: white;
+    color: black;
+}
