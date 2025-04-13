@@ -11,10 +11,10 @@ const usersRepository = {
         return users.find(item => item.id === id && item.status === 1);
     },
     async getByEmail(email) {
-        return users.find(item => item.email.toLowerCase() === email.toLowerCase());
+        return users.find(item => item.email.toLowerCase() === email.toLowerCase() && item.status === 1);
     },
     async getByUserName(userName) {
-        return users.find(item => item.userName.toLowerCase() === userName.toLowerCase());
+        return users.find(item => item.userName.toLowerCase() === userName.toLowerCase() && item.status === 1);
     },
     async getByStatus() {
         return users.filter(item => item.status === 1);
