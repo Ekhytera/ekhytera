@@ -101,7 +101,6 @@ const UserController = {
             });
 
             const checarSenha = await bcrypt.compare(senha, user.senha);
-            console.log(checarSenha)
 
             if (!checarSenha) return res.status(400).json({
                 status: 400,
@@ -118,8 +117,6 @@ const UserController = {
                 SECRET,
                 { expiresIn: '14d' }
             );
-
-            console.log(user.cargo)
 
             res.status(200).json({
                 status: 200,
