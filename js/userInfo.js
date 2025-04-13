@@ -41,17 +41,41 @@ saveButton.addEventListener('click', async () => {
         return;
     }
 
-    const updatedData = {
-        email: currentUserEmail.textContent,
-        descricao: userDescription.value,
-        num_telefone: telefoneInput.value,
-        localizacao: localizacaoInput.value,
-        genero: generoSelect.value,
-        dt_nascimento: dataNascimentoInput.value,
-    };
-
     try {
-        const response = await fetch(`http://localhost:3000/usuarios/update/${currentUserId}`, {
+        const response = await fetch(`http://localhost:3000/usuarios/id/${currentUserId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+        });
+
+        const userData = await response.json();
+
+        if (!response.ok) {
+            console.error('Erro ao buscar informações do usuário:', userData.message);
+            alert('Erro ao buscar informações do usuário.');
+            return;
+        }
+
+        const updatedData = {
+            id: userData.id,
+            userName: userData.userName,
+            nome: userData.nome,
+            email: userData.email,
+            senha: userData.senha,
+            foto: userData.foto,
+            descricao: userDescription.value,
+            num_telefone: telefoneInput.value,
+            genero: generoSelect.value,
+            localizacao: localizacaoInput.value,
+            dt_nascimento: dataNascimentoInput.value,
+            status: userData.status,
+            cargo: userData.cargo,
+            createdAt: userData.createdAt,
+        };
+
+        const updateResponse = await fetch(`http://localhost:3000/usuarios/update/${currentUserId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -60,9 +84,9 @@ saveButton.addEventListener('click', async () => {
             body: JSON.stringify(updatedData),
         });
 
-        const result = await response.json();
+        const result = await updateResponse.json();
 
-        if (response.ok) {
+        if (updateResponse.ok) {
             alert('Informações atualizadas com sucesso!');
         } else {
             console.error('Erro ao atualizar informações:', result.message);
