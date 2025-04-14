@@ -221,7 +221,7 @@ const UserController = {
 
     updateUser: async (req, res) => {
         const id = req.params.id;
-        const { email, userName, nome, senha, foto, descricao, num_telefone, genero, localizacao, dt_nascimento } = req.body;
+        const { email, userName, senha, foto, descricao, num_telefone, genero, localizacao, dt_nascimento } = req.body;
 
         if (!email) return res.status(400).json({
             ok: false,
@@ -241,16 +241,8 @@ const UserController = {
             message: 'O campo nome é obrigatório'
         });
 
-        // const nomeUser = await UserRepository.getByUserName(userName);
-
-        // if (nomeUser && userName === nomeUser.userName) return res.status(400).json({
-        //     ok: false,
-        //     status: 400,
-        //     message: 'esse nome de usuario já esta sendo utilizado'
-        // });
-
         try {
-            const updateUser = await UserRepository.update(id, { email, userName, nome, senha, foto, descricao, num_telefone, genero, localizacao, dt_nascimento });
+            const updateUser = await UserRepository.update(id, { email, userName, senha, foto, descricao, num_telefone, genero, localizacao, dt_nascimento });
 
             if (updateUser) return res.status(200).json({
                 ok: true,

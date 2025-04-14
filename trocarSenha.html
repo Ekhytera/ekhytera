@@ -16,12 +16,20 @@
         <a href="index.html"><img src="imgs/ekhyteralogo.png" alt="logo" class="logo"></a>
         <form action="login.html">
             <div>
-                <label for="email">Email ou Telefone</label>
-                <input type="email" id="emailTrocarSenha" title="Digite seu email ou telefone" placeholder="Email ou Telefone">
+                <label for="email">Email</label>
+                <input type="email" id="email" title="Digite seu email" placeholder="Email">
                 <span id="emailNaoEnc"></span>
             </div>
             <div>
-                <label for="newSenha">Nova Senha</label>
+                <label for="senhaAtual">Senha Atual</label>
+                <div id="viewPassword">
+                    <input type="password" id="senhaAtual" title="Digite sua senha atual" placeholder="Senha atual">
+                    <img src="imgs/verSenha.png" id="atualSenha" alt="Ver senha">
+                </div>
+                <span id="erroSenhaAtual"></span>
+            </div>
+            <div>
+                <label for="novaSenha">Nova Senha</label>
                 <div id="viewPassword">
                     <input type="password" id="senhaNova" title="Digite sua nova senha" placeholder="Nova senha">
                     <img src="imgs/verSenha.png" id="nSenha" alt="Ver senha">
@@ -31,13 +39,13 @@
             <div>
                 <label for="confSenha">Confirmar Senha</label>
                 <div id="viewPassword">
-                    <input type="password" id="confSenha">
+                    <input type="password" id="confSenha" title="confirmação da senha" placeholder="Confirmar senha">
                     <img src="imgs/verSenha.png" id="cSenha" title="Ver senha">
                 </div>
                 <span id="senhaDiferentes"></span>
             </div>
             <input class="entrarBtn" type="submit" onclick="trocarSenha()" value="Trocar Senha">
-            <a href="login.html">Voltar</a>
+            <a href="#" id="back">Voltar</a>
         </form>
     </div>
     <script src="js/versenha.js"></script>
