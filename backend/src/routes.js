@@ -23,6 +23,7 @@ routes.post('/login', UserController.login);
 
 // update
 routes.put('/usuarios/update/:id', middlewares.verifyToken, UserController.updateUser);
+
 routes.put('/usuarios/delete/:id', middlewares.verifyToken, UserController.updateDeleteUser);
 
 

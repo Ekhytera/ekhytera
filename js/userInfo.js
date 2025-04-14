@@ -9,6 +9,7 @@ const localizacaoInput = document.getElementById('localizacao');
 const generoSelect = document.getElementById('genero');
 const dataNascimentoInput = document.getElementById('dataNascimento');
 const saveButton = document.getElementById('saveButton');
+const novaSenha = document.getElementById('senhaNova');
 
 let user;
 let currentUserId = null;
@@ -45,7 +46,8 @@ saveButton.addEventListener('click', async () => {
         const updatedData = {
             userName: user.userName,
             email: user.email,
-            senha: user.senha,
+            senhaAtual: user.senha,
+            senhaNova: novaSenha ? novaSenha.value : null,
             foto: user.foto,
             descricao: userDescription.value,
             num_telefone: telefoneInput.value,

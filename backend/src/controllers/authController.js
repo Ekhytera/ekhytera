@@ -119,7 +119,7 @@ const UserController = {
             );
 
             console.log(user);
-            
+
             res.status(200).json({
                 status: 200,
                 ok: true,
@@ -223,7 +223,7 @@ const UserController = {
 
     updateUser: async (req, res) => {
         const id = req.params.id;
-        const { email, userName, senha, foto, descricao, num_telefone, genero, localizacao, dt_nascimento } = req.body;
+        const { email, userName, senhaAtual, senhaNova, foto, descricao, num_telefone, genero, localizacao, dt_nascimento } = req.body;
 
         if (!email) return res.status(400).json({
             ok: false,
@@ -231,17 +231,36 @@ const UserController = {
             message: 'O campo email é obrigatório'
         });
 
-        if (!senha) return res.status(400).json({
-            ok: false,
-            status: 400,
-            message: 'O campo senha é obrigatório'
-        });
-
         if (!userName) return res.status(400).json({
             ok: false,
             status: 400,
             message: 'O campo nome é obrigatório'
         });
+
+        if (!senhaAtual) return res.status(400).json({
+            ok: false,
+            status: 400,
+            message: 'O campo senha atual é obrigatório'
+        });
+
+        const user = await UserRepository.getById(id);
+
+        if (senhaAtual !== user.senha) {
+            return res.status(400).json({
+                status: 400,
+                ok: false,
+                message: 'Senha atual incorreta'
+            });
+        }
+
+        let senha = senhaAtual;
+
+        if (senhaNova) {
+            const salt = await bcrypt.genSalt(10);
+            const hashSenha = await bcrypt.hash(senhaNova, salt);
+
+            senha = hashSenha;
+        }
 
         try {
             const updateUser = await UserRepository.update(id, { email, userName, senha, foto, descricao, num_telefone, genero, localizacao, dt_nascimento });
