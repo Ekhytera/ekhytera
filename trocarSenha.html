@@ -13,12 +13,11 @@
         <p>Bem-Vindo!</p>
     </div>
     <div id="login">
-        <!-- <a href="index.html"><img src="imgs/ekhyteralogo.png" alt="logo" class="logo"></a> -->
         <form id="trocarSenha">
             <div>
                 <label for="email">Email</label>
                 <input type="email" name="email" id="email" title="Digite seu email" placeholder="Email">
-                <span id="emailNaoEnc"></span>
+                <span id="emailNaoEnc" class="erro"></span>
             </div>
             <div>
                 <label for="senhaAtual">Senha Atual</label>
@@ -26,7 +25,7 @@
                     <input type="password" name="atualSenha" id="atualSenha" title="Digite sua senha atual" placeholder="Senha atual">
                     <img src="imgs/verSenha.png" id="verSenhaAtual" alt="Ver senha">
                 </div>
-                <span id="erroSenhaAtual"></span>
+                <span id="erroSenhaAtual" class="erro"></span>
             </div>
             <div>
                 <label for="novaSenha">Nova Senha</label>
@@ -34,7 +33,7 @@
                     <input type="password" name="senhaNova" id="senhaNova" title="Digite sua nova senha" placeholder="Nova senha">
                     <img src="imgs/verSenha.png" id="nSenha" alt="Ver senha">
                 </div>
-                <span id="senhaInv"></span>
+                <span id="senhaInv" class="erro"></span>
             </div>
             <div>
                 <label for="confSenha">Confirmar Senha</label>
@@ -42,7 +41,7 @@
                     <input type="password" name="confSenhaNova" id="confSenha" title="confirmação da senha" placeholder="Confirmar senha">
                     <img src="imgs/verSenha.png" id="cSenha" title="Ver senha">
                 </div>
-                <span id="senhaDiferentes"></span>
+                <span id="senhaDiferentes" class="erro"></span>
             </div>
             <input class="entrarBtn" type="submit" value="Trocar Senha">
             <a href="login.html" id="back">Voltar</a>

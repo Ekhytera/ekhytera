@@ -1,7 +1,10 @@
 import { authUser } from "./auth.js";
 
 const formTrocarSenha = document.querySelector("#trocarSenha");
-console.log(formTrocarSenha)
+const erroEmail = document.querySelector('#emailNaoEnc');
+const erroSenhaAtual = document.querySelector('#erroSenhaAtual');
+const erroSenhaNova = document.querySelector('#senhaInv');
+const erroConfSenha = document.querySelector('#senhaDiferentes');
 
 document.querySelector('#back').addEventListener('click', () => {
     if (document.referrer) {
@@ -25,6 +28,11 @@ async function trocarSenha(form) {
     const senhaNova = form.senhaNova.value;
     const confSenhaNova = form.confSenhaNova.value;
 
+    erroEmail.textContent = '';
+    erroSenhaAtual.textContent = '';
+    erroSenhaNova.textContent = '';
+    erroConfSenha.textContent = '';
+
     const data = {
         email: email,
         senhaAtual: senhaAtual,
@@ -32,23 +40,64 @@ async function trocarSenha(form) {
         confSenha: confSenhaNova
     };
 
-    const updateResponse = await fetch(`http://localhost:3000/usuarios/senha/${user.id}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify(data),
-    });
+    if(!data.email) {
+        erroEmail.textContent = 'O campo email é obrigatório';
+        return
+    }
+    if(!data.senhaAtual) {
+        erroSenhaAtual.textContent = 'O campo senha atual é obrigatório';
+        return
+    }
+    if(!data.senhaNova) {
+        erroSenhaNova.textContent = 'O campo nova senha é obrigatório';
+        return
+    }
+    if(!data.confSenha) {
+        erroConfSenha.textContent = 'O campo de confirmação da senha é obrigatório';
+        return
+    }
 
-    const result = await updateResponse.json();
+    if(data.senhaNova.length < 6) {
+        erroSenhaNova.textContent = 'A senha deve possuir no mínimo 6 caracteres';
+        return
+    }
 
-    if (updateResponse.ok) {
-        window.location.href = 'login.html';
-        alert(result.message);
-    } else {
-        console.error('Erro ao atualizar informações:', result.message);
-        alert('Erro: ' + result.message);
+    if(data.senhaNova !== data.confSenha) {
+        erroConfSenha.textContent = 'As senhas não conferem';
+        return
+    }
+
+    try{
+        const updateResponse = await fetch(`http://localhost:3000/usuarios/senha/${user.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify(data),
+        });
+    
+        const result = await updateResponse.json();
+    
+        if(!result.ok){
+            if(result.message === 'Email incorreto'){
+                erroEmail.textContent = result.message;
+                return
+            }
+            if(result.message === 'Senha incorreta'){
+                erroSenhaAtual.textContent = result.message;
+                return
+            }
+            if(result.message === 'A senha nova é igual a atual'){
+                erroSenhaNova.textContent = result.message;
+                return
+            }
+        }
+
+        window.location.href = 'login.html'
+
+    } catch (error){
+        console.log(error);
     }
 }
 
