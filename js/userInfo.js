@@ -44,7 +44,6 @@ saveButton.addEventListener('click', async () => {
 
         const updatedData = {
             userName: user.userName,
-            nome: user.nome,
             email: user.email,
             senha: user.senha,
             foto: user.foto,

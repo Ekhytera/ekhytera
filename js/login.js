@@ -163,7 +163,18 @@ if (window.location.pathname === '/login.html') {
     }
 }
 
+if (window.location.pathname === '/trocarSenha.html') {
 
+    document.querySelector('#back').addEventListener('click', () => {
+        if(document.referrer) {
+            window.location.href = document.referrer;
+        } else {
+            window.location.href = 'login.html';
+        }
+    });
+
+    
+}
 
 
 
