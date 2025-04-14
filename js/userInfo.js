@@ -10,11 +10,12 @@ const generoSelect = document.getElementById('genero');
 const dataNascimentoInput = document.getElementById('dataNascimento');
 const saveButton = document.getElementById('saveButton');
 
+let user;
 let currentUserId = null;
 
 authUser().then(userData => {
     if (userData && userData.users) {
-        const user = userData.users;
+        user = userData.users;
         currentUserId = user.id;
 
         currentUserName.textContent = user.userName || 'Usuário';
@@ -41,38 +42,19 @@ saveButton.addEventListener('click', async () => {
         return;
     }
 
-    try {
-        const response = await fetch(`http://localhost:3000/usuarios/id/${currentUserId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'authorization': `Bearer ${localStorage.getItem('token')}`
-            },
-        });
-
-        const userData = await response.json();
-
-        if (!response.ok) {
-            console.error('Erro ao buscar informações do usuário:', userData.message);
-            alert('Erro ao buscar informações do usuário.');
-            return;
-        }
-
         const updatedData = {
-            id: userData.id,
-            userName: userData.userName,
-            nome: userData.nome,
-            email: userData.email,
-            senha: userData.senha,
-            foto: userData.foto,
+            userName: user.userName,
+            nome: user.nome,
+            email: user.email,
+            senha: user.senha,
+            foto: user.foto,
             descricao: userDescription.value,
             num_telefone: telefoneInput.value,
             genero: generoSelect.value,
             localizacao: localizacaoInput.value,
             dt_nascimento: dataNascimentoInput.value,
-            status: userData.status,
-            cargo: userData.cargo,
-            createdAt: userData.createdAt,
+            status: user.status,
+            cargo: user.cargo
         };
 
         const updateResponse = await fetch(`http://localhost:3000/usuarios/update/${currentUserId}`, {
@@ -92,8 +74,4 @@ saveButton.addEventListener('click', async () => {
             console.error('Erro ao atualizar informações:', result.message);
             alert('Erro ao atualizar informações: ' + result.message);
         }
-    } catch (error) {
-        console.error('Erro ao enviar atualização:', error);
-        alert('Erro ao enviar atualização.');
-    }
 });

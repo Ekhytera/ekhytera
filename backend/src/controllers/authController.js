@@ -241,13 +241,13 @@ const UserController = {
             message: 'O campo nome é obrigatório'
         });
 
-        const nomeUser = await UserRepository.getByUserName(userName);
+        // const nomeUser = await UserRepository.getByUserName(userName);
 
-        if (nomeUser && userName === nomeUser.userName) return res.status(400).json({
-            ok: false,
-            status: 400,
-            message: 'esse nome de usuario já esta sendo utilizado'
-        });
+        // if (nomeUser && userName === nomeUser.userName) return res.status(400).json({
+        //     ok: false,
+        //     status: 400,
+        //     message: 'esse nome de usuario já esta sendo utilizado'
+        // });
 
         try {
             const updateUser = await UserRepository.update(id, { email, userName, nome, senha, foto, descricao, num_telefone, genero, localizacao, dt_nascimento });
