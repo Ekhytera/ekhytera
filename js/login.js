@@ -1,7 +1,5 @@
-const formCadastrar = document.getElementById('cadastrar');
-const formLogin = document.getElementById('loginForm')
-
 if (window.location.pathname === '/cadastrar.html') {
+    const formCadastrar = document.getElementById('cadastrar');
     let timeOut;
 
     document.getElementById('newName').addEventListener('input', (e) => {
@@ -104,6 +102,7 @@ if (window.location.pathname === '/cadastrar.html') {
 
 
 if (window.location.pathname === '/login.html') {
+    const formLogin = document.getElementById('loginForm');
     async function login(form) {
         const erroSenha = document.getElementById('erroSenha');
         const erroEmail = document.getElementById('erroEmail');
@@ -164,7 +163,6 @@ if (window.location.pathname === '/login.html') {
 }
 
 if (window.location.pathname === '/trocarSenha.html') {
-
     document.querySelector('#back').addEventListener('click', () => {
         if (document.referrer) {
             window.location.href = document.referrer;
@@ -173,7 +171,9 @@ if (window.location.pathname === '/trocarSenha.html') {
         }
     });
 
+    if (window.location.pathname === '/trocarSenha.html'){
 
+    }
 }
 
 
