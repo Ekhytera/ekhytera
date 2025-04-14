@@ -35,4 +35,3 @@ export async function authUser() {
 if (token) {
     authUser();
 }
-

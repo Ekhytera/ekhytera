@@ -1,7 +1,4 @@
 import users from '../database/users.js';
-import { v4 as uuidv4 } from 'uuid'
-
-const uuid = uuidv4()
 
 const usersRepository = {
     async getAll() {
@@ -21,7 +18,7 @@ const usersRepository = {
     },
     async create(data) {
         const newusers = {
-            id: uuid,
+            id: new Date().getTime().toLocaleString(),
             ...data,
             foto: null,
             descricao: null,

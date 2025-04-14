@@ -60,10 +60,10 @@ if (window.location.pathname === '/cadastrar.html') {
             if (!data.senha) {
                 erroSenha.innerHTML = 'O compo senha é obrigatório'
             }
-
-            if (data.senha.length < 6) {
-                erroSenha.innerHTML = 'A senha tem q conter no minimo 6 caracteres'
-            }
+            return
+        }
+        if (data.senha.length < 6) {
+            erroSenha.innerHTML = 'A senha deve conter no mínimo 6 caracteres.';
             return
         }
 
@@ -80,7 +80,7 @@ if (window.location.pathname === '/cadastrar.html') {
             const resp = await req.json();
             console.log(resp)
 
-            if(resp.message === 'email já cadastrado'){
+            if (resp.message === 'email já cadastrado') {
                 erroEmail.innerHTML = resp.message;
                 return
             }
@@ -115,7 +115,7 @@ if (window.location.pathname === '/login.html') {
             senha: form.senha.value
         }
 
-        if(!data.email || !data.senha){
+        if (!data.email || !data.senha) {
             if (!data.email) {
                 erroEmail.innerHTML = 'O campo e email é obrigatório'
             }
@@ -166,14 +166,14 @@ if (window.location.pathname === '/login.html') {
 if (window.location.pathname === '/trocarSenha.html') {
 
     document.querySelector('#back').addEventListener('click', () => {
-        if(document.referrer) {
+        if (document.referrer) {
             window.location.href = document.referrer;
         } else {
             window.location.href = 'login.html';
         }
     });
 
-    
+
 }
 
 
