@@ -87,7 +87,8 @@ div input {
 div #senha,
 div #addSenha,
 div #senhaNova,
-div #confSenha {
+div #confSenha,
+div #atualSenha {
     background-color: transparent;
 }
 
@@ -107,7 +108,8 @@ div #confSenha {
 #verSenha,
 #verSenhaCad,
 #nSenha,
-#cSenha {
+#cSenha,
+#verSenhaAtual {
     cursor: pointer;
 }
 
