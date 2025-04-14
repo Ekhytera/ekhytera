@@ -1,0 +1,13 @@
+/* CONFIGURANDO TOAST --
+    Elemento .toast-container precisa incluir a classe position-fixed.
+    Caso contrário, deverá adicionar position: fixed; aqui.
+ */
+ .toast-container {
+    right: 1rem;
+    bottom: 1rem;
+}
+.toast-container .toast{
+    transition: 0.3s;
+    margin-top: 1rem;
+    margin-bottom: 0;
+}
