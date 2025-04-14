@@ -10,6 +10,8 @@ const generoSelect = document.getElementById('genero');
 const dataNascimentoInput = document.getElementById('dataNascimento');
 const saveButton = document.getElementById('saveButton');
 const deleteButton = document.getElementById('deleteButton');
+const confirmButton = document.getElementById('confirm');
+const modal = document.querySelector('.confirmModal');
 
 let user;
 let currentUserId = null;
@@ -75,7 +77,21 @@ saveButton.addEventListener('click', async () => {
         }
 });
 
-deleteButton.addEventListener('click', async () => {
+deleteButton.addEventListener('click', () => {
+    if(modal.classList.contains('hide')){
+        modal.classList.remove('hide');
+    } else {
+        deleteButton.classList.add('hide');
+    }
+})
+
+modal.addEventListener('click', () =>{modal.classList.add('hide')});
+
+document.querySelector('#cancel').addEventListener('click', () =>{
+    modal.classList.add('hide')
+})
+
+confirmButton.addEventListener('click', async () => {
     const updateResponse = await fetch(`http://localhost:3000/usuarios/delete/${currentUserId}`, {
         method: 'PUT',
         headers: {

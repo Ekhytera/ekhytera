@@ -99,9 +99,137 @@ h2 {
     padding-block: 5px;
     padding-inline: 15px;
     transition: 0.3s;
+    font-weight: bold;
 }
 
 .saveButton:hover {
     background: white;
     color: black;
+}
+
+.deleteButton {
+    background-color: rgba(0, 0, 0, 0.6);
+    border: 2px solid black;
+    padding-block: 5px;
+    padding-inline: 15px;
+    color: red;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.deleteButton:hover{
+    background-color: red;
+    color: white;
+    border: solid 2px red;
+}
+
+.confirmModal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.7);
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.containerModal {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 35%;
+    align-items: center;
+    background-color: #0D1B2A;
+    color: #EB4B61;
+    padding: 1rem;
+    border: 1px solid white;
+    border-radius: 15px;
+    box-shadow: 1px 1px 5px 1px black;
+    animation: openModal .5s ease-in-out;
+}
+
+.containerModal p {
+    font-size: 1.5rem;
+}
+
+.containerModal .circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: solid 5px #EB4B61;
+    border-radius: 50%;
+    height: 80px;
+    width: 80px;
+    animation: xAlert .5s ease-in-out;
+}
+
+.containerModal .circle i {
+    font-size: 3rem;
+    margin: 1rem;
+}
+
+.hide {
+    display: none;
+}
+
+.containerModal p {
+    font-weight: 400;
+    text-align: center;
+    animation: openModal .8s ease-in-out;
+    margin: 0;
+}
+
+.containerModal .btns{
+    display: flex;
+    flex-direction: row;
+}
+.containerModal .btns>*{
+    margin: 0.5rem;
+}
+
+.confirmButton, .cancelButton {
+    padding-inline: 15px;
+    padding-block: 5px;
+    border-radius: 20px;
+    border: none;
+}
+
+.confirmButton:hover, .cancelButton:hover{
+    opacity: .8;
+}
+
+#confirm{
+    background-color: red;
+    color: white;
+    font-weight: bold;
+}
+
+#cancel {
+    background-color: rgba(121, 167, 221, 1);
+    color: black;
+    font-weight: bold;
+}
+
+@keyframes openModal {
+    from {
+        opacity: 0%;
+    }
+
+    to {
+        opacity: 100%;
+    }
+}
+
+@keyframes xAlert {
+    from {
+        transform: scale(.5) rotateY(360deg);
+    }
+
+    to {
+        transform: scale(1.5);
+    }
 }
