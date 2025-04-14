@@ -118,6 +118,8 @@ const UserController = {
                 { expiresIn: '14d' }
             );
 
+            console.log(user);
+            
             res.status(200).json({
                 status: 200,
                 ok: true,

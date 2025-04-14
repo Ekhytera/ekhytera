@@ -117,7 +117,7 @@ authUser().then(dados => {
 
 function Logout() {
     localStorage.removeItem('token');
-    window.location.reload(true);
+    window.location.href = 'index.html';
 }
 
 window.setThema = setThema;
