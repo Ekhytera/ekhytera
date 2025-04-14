@@ -9,7 +9,7 @@ const localizacaoInput = document.getElementById('localizacao');
 const generoSelect = document.getElementById('genero');
 const dataNascimentoInput = document.getElementById('dataNascimento');
 const saveButton = document.getElementById('saveButton');
-const novaSenha = document.getElementById('senhaNova');
+const deleteButton = document.getElementById('deleteButton');
 
 let user;
 let currentUserId = null;
@@ -46,8 +46,6 @@ saveButton.addEventListener('click', async () => {
         const updatedData = {
             userName: user.userName,
             email: user.email,
-            senhaAtual: user.senha,
-            senhaNova: novaSenha ? novaSenha.value : null,
             foto: user.foto,
             descricao: userDescription.value,
             num_telefone: telefoneInput.value,
@@ -76,3 +74,23 @@ saveButton.addEventListener('click', async () => {
             alert('Erro ao atualizar informações: ' + result.message);
         }
 });
+
+deleteButton.addEventListener('click', async () => {
+    const updateResponse = await fetch(`http://localhost:3000/usuarios/delete/${currentUserId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+    });
+
+    const result = await updateResponse.json();
+
+    if (updateResponse.ok) {
+        window.location.href = 'index.html'
+        localStorage.removeItem('token');
+    } else {
+        console.error('Erro ao atualizar informações:', result.message);
+        alert('Erro ao atualizar informações: ' + result.message);
+    }
+})

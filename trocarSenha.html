@@ -13,17 +13,17 @@
         <p>Bem-Vindo!</p>
     </div>
     <div id="login">
-        <a href="index.html"><img src="imgs/ekhyteralogo.png" alt="logo" class="logo"></a>
-        <form action="login.html">
+        <!-- <a href="index.html"><img src="imgs/ekhyteralogo.png" alt="logo" class="logo"></a> -->
+        <form id="trocarSenha">
             <div>
                 <label for="email">Email</label>
-                <input type="email" id="email" title="Digite seu email" placeholder="Email">
+                <input type="email" name="email" id="email" title="Digite seu email" placeholder="Email">
                 <span id="emailNaoEnc"></span>
             </div>
             <div>
                 <label for="senhaAtual">Senha Atual</label>
                 <div id="viewPassword">
-                    <input type="password" id="atualSenha" title="Digite sua senha atual" placeholder="Senha atual">
+                    <input type="password" name="atualSenha" id="atualSenha" title="Digite sua senha atual" placeholder="Senha atual">
                     <img src="imgs/verSenha.png" id="verSenhaAtual" alt="Ver senha">
                 </div>
                 <span id="erroSenhaAtual"></span>
@@ -31,7 +31,7 @@
             <div>
                 <label for="novaSenha">Nova Senha</label>
                 <div id="viewPassword">
-                    <input type="password" id="senhaNova" title="Digite sua nova senha" placeholder="Nova senha">
+                    <input type="password" name="senhaNova" id="senhaNova" title="Digite sua nova senha" placeholder="Nova senha">
                     <img src="imgs/verSenha.png" id="nSenha" alt="Ver senha">
                 </div>
                 <span id="senhaInv"></span>
@@ -39,17 +39,18 @@
             <div>
                 <label for="confSenha">Confirmar Senha</label>
                 <div id="viewPassword">
-                    <input type="password" id="confSenha" title="confirmação da senha" placeholder="Confirmar senha">
+                    <input type="password" name="confSenhaNova" id="confSenha" title="confirmação da senha" placeholder="Confirmar senha">
                     <img src="imgs/verSenha.png" id="cSenha" title="Ver senha">
                 </div>
                 <span id="senhaDiferentes"></span>
             </div>
-            <input class="entrarBtn" type="submit" onclick="trocarSenha()" value="Trocar Senha">
-            <a href="#" id="back">Voltar</a>
+            <input class="entrarBtn" type="submit" value="Trocar Senha">
+            <a href="login.html" id="back">Voltar</a>
         </form>
     </div>
     <script src="js/versenha.js"></script>
-    <script src="js/login.js"></script>
-    <script type="module" src="js/userInfo.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/trocarSenha.js"></script>
 </body>
 </html>

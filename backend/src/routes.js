@@ -21,9 +21,14 @@ routes.post('/cadastrar', UserController.createUser);
 // login
 routes.post('/login', UserController.login);
 
-// update
+// update infoUser
 routes.put('/usuarios/update/:id', middlewares.verifyToken, UserController.updateUser);
 
+// update Senha
+routes.put('/usuarios/senha/:id', middlewares.verifyToken, UserController.updatePassword);
+
+
+// update status
 routes.put('/usuarios/delete/:id', middlewares.verifyToken, UserController.updateDeleteUser);
 
 

@@ -162,19 +162,51 @@ if (window.location.pathname === '/login.html') {
     }
 }
 
-if (window.location.pathname === '/trocarSenha.html') {
-    document.querySelector('#back').addEventListener('click', () => {
-        if (document.referrer) {
-            window.location.href = document.referrer;
-        } else {
-            window.location.href = 'login.html';
-        }
-    });
+// if (window.location.pathname === '/trocarSenha.html') {
 
-    if (window.location.pathname === '/trocarSenha.html'){
+//     const formTrocarSenha = document.querySelector("#trocarSenha");
+//     console.log(formTrocarSenha)
 
-    }
-}
+//     document.querySelector('#back').addEventListener('click', () => {
+//         if (document.referrer) {
+//             window.location.href = document.referrer;
+//         } else {
+//             window.location.href = 'login.html';
+//         }
+//     });
+
+//     let user;
+
+//     authUser().then(dados => {
+//         if (dados && dados.users) {
+//             user = dados.users;
+//         }
+//     });
+
+//     async function trocarSenha(form) {
+//         const email = form.email.value;
+//         const senhaAtual = form.atualSenha.value;
+//         const senhaNova = form.senhaNova.value;
+//         const confSenhaNova = form.confSenhaNova.value;
+
+//         if (email !== user.email) {
+//             alert('Email incorreto')
+//             return
+//         }
+
+//         if (senhaNova !== confSenhaNova) {
+//             alert('As senhas não são iguais')
+//             return
+//         }
+
+        
+//     }
+
+//     formTrocarSenha.onsubmit = (e) => {
+//         e.preventDefault();
+//         trocarSenha(formTrocarSenha);
+//     }
+// }
 
 
 
