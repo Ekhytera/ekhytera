@@ -1,3 +1,13 @@
+import { authUser } from "./auth.js";
+
+let userId;
+
+authUser().then(dados => {
+    if (dados && dados.users) {
+        userId = dados.users.id;
+    }
+})
+
 class CreateCard {
     constructor(t, l, i, h) {
         this.title = t;
@@ -27,20 +37,18 @@ listNot.forEach((noticia) => {
     noticias.innerHTML += news.cardNews();
 });
 
-let userAtual = sessionStorage.getItem('userLogado');
+
 document.querySelectorAll('.likeIcon').forEach((el, i) => {
     el.addEventListener("click", () => {
         const likeCount = document.querySelectorAll('.likeCount')
-        if (userAtual) {
+        if (userId) {
             if(!el.classList.contains('like')){
                 el.classList.add('like');
                 likeCount[i].innerHTML = parseInt(likeCount[i].innerHTML)+ 1;
-                clickLike = 0;
             }
             else{
                 el.classList.remove('like');
                 likeCount[i].innerHTML = parseInt(likeCount[i].innerHTML)- 1;
-                clickLike = 1;
             }
         } else {
             modal.classList.remove('hide')

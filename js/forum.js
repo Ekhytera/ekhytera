@@ -1,13 +1,21 @@
 import { authUser } from "./auth.js";
 
-window.addEventListener('load', () => {
-    const postInput = document.getElementById('writePostInput');
-    const userLogado = localStorage.getItem('token');
-    if (!userLogado) {
+const postInput = document.getElementById('writePostInput');
+let cargo;
+let userId;
+
+authUser().then(dados => {
+    if (dados && dados.users) {
+        cargo = dados.users.cargo;
+        userId = dados.users.id;
+    }
+
+    if (!userId) {
         postInput.setAttribute('readonly', 'true');
         postInput.setAttribute('placeholder', 'Faça login ou crie uma conta para fazer postagens.')
     }
 })
+
 
 function hideMenu() {
     const postOptionsList = document.getElementsByClassName('postOptions');
@@ -25,16 +33,6 @@ function listItem(text) {
     li.innerHTML = text;
     return li;
 }
-
-let cargo;
-let userId;
-
-authUser().then(dados => {
-    if (dados && dados.users) {
-        cargo = dados.users.cargo;
-        userId = dados.users.id;
-    }
-})
 
 export function showMenu(caller) {
     const postElement = caller.closest('article');

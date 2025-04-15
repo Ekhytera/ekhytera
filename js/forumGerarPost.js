@@ -1,6 +1,16 @@
 import { authUser } from "./auth.js";
 import { showMenu } from "./forum.js";
 
+let userPost;
+let userId;
+
+authUser().then(dados => {
+	if (dados && dados.users) {
+		userPost = dados.users.userName;
+		userId = dados.users.id;
+	}
+})
+
 function addPost(settings) {
 	function loadCategories() {
 		let buttons = '';
@@ -63,11 +73,10 @@ function addPost(settings) {
 }
 
 // Função dar Like -------------------------------
-let userAtual = localStorage.getItem('token');
 
 function darLike(el) {
 	const likeCount = el.querySelector('.likeCount');
-	if (userAtual) {
+	if (userId) {
 		if (!el.classList.contains('like')) {
 			el.classList.add('like')
 			likeCount.innerHTML = parseInt(likeCount.innerHTML) + 1;
@@ -81,7 +90,7 @@ function darLike(el) {
 }
 
 document.querySelector('.writePostContainer').addEventListener('click', function () {
-	if (!userAtual) {
+	if (!userId) {
 		modal.classList.remove('hide');
 	}
 })
@@ -156,8 +165,7 @@ function addCommunities() {
 const textArea = document.getElementById('writePostInput');
 
 // Capturando informações do usuario logado
-let userPost;
-let userId;
+
 
 authUser().then(dados => {
 	if (dados && dados.users) {
@@ -185,10 +193,6 @@ function postar() {
 		textArea.value = '';
 	}
 }
-
-// selecionando post por id
-// console.log(document.querySelector('[data-id="2"]'))
-
 
 addPost({
 	id: 1,
