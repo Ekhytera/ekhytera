@@ -65,10 +65,10 @@ saveButton.addEventListener('click', async () => {
     const formData = new FormData();
     let hasChanges = false;
 
-
     if (file) {
         formData.append('file', file);
-        hasChanges = true;
+        hasChanges = true; 
+    }
 
     const fieldsToCheck = [
         { name: 'userName', value: user.userName, current: user.userName },
