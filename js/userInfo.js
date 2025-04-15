@@ -63,30 +63,34 @@ saveButton.addEventListener('click', async () => {
     }
 
     const formData = new FormData();
+    let hasChanges = false;
 
-    if(foto) {
-        formData.append('file', file)
+    // Verifica se há nova imagem
+    if (file) {
+        formData.append('file', file);
+        hasChanges = true; // Nova imagem significa alteração
     }
 
-    formData.append('userName', user.userName);
-    formData.append('email', user.email);
-    formData.append('descricao', userDescription.value);
-    formData.append('num_telefone', telefoneInput.value);
-    formData.append('genero', generoSelect.value);
-    formData.append('localizacao', localizacaoInput.value);
-    formData.append('dt_nascimento', dataNascimentoInput.value);
+    // Adiciona campos ao FormData e verifica alterações
+    const fieldsToCheck = [
+        { name: 'userName', value: user.userName, current: user.userName },
+        { name: 'email', value: user.email, current: user.email },
+        { name: 'descricao', value: userDescription.value, current: user.descricao },
+        { name: 'num_telefone', value: telefoneInput.value, current: user.num_telefone },
+        { name: 'genero', value: generoSelect.value, current: user.genero },
+        { name: 'localizacao', value: localizacaoInput.value, current: user.localizacao },
+        { name: 'dt_nascimento', value: dataNascimentoInput.value, current: user.dt_nascimento }
+    ];
 
-    if (
-        (formData.userName || '').trim() === (user.userName || '').trim() &&
-        (formData.email || '').trim() === (user.email || '').trim() &&
-        (formData.foto || '').trim() === (user.foto || '').trim() &&
-        (formData.descricao || '').trim() === (user.descricao || '').trim() &&
-        (formData.num_telefone || '').trim() === (user.num_telefone || '').trim() &&
-        (formData.genero || '').trim() === (user.genero || '').trim() &&
-        (formData.localizacao || '').trim() === (user.localizacao || '').trim() &&
-        (formData.dt_nascimento || '').trim() === (user.dt_nascimento || '').trim()
-    ) {
-        alert('Nenhuma alteração detectada');
+    fieldsToCheck.forEach(field => {
+        formData.append(field.name, field.value);
+        if (String(field.value || '').trim() !== String(field.current || '').trim()) {
+            hasChanges = true;
+        }
+    });
+
+    if (!hasChanges && !file) {
+        createToast('Aviso', 'Nenhuma alteração encontrada', 'vermelho');
         return;
     }
 

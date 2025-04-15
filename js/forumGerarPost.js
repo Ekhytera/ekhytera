@@ -1,14 +1,19 @@
 import { authUser } from "./auth.js";
 import { showMenu } from "./forum.js";
-import createToast from "./toast.js"
+import createToast from "./toast.js";
+
+const fotoPerfil = document.querySelector('.fotoPerfil');
 
 let userPost;
 let userId;
+let userFoto;
 
 authUser().then(dados => {
 	if (dados && dados.users) {
 		userPost = dados.users.userName;
 		userId = dados.users.id;
+		userFoto = dados.users.foto
+		fotoPerfil.src = `http://localhost:3000/files/${userFoto}`;
 	}
 })
 
@@ -29,7 +34,11 @@ function addPost(settings) {
 	const htmlPost = `<article class="post" id="postagem" data-id="${settings.id}">
 				<div class="postDetails">
 					<div class="postAuthor">
-						<img class="fotoPerfil" src="imgs/${settings.pfp}">
+					${!userFoto ?
+						`<img class="fotoPerfil" src="imgs/${settings.pfp}"></img>` :
+						`<img class="fotoPerfil" src="http://localhost:3000/files/${settings.pfp}"></img>`
+					}
+						
 						<div>
 							<span class="username">${settings.username}</span>
 							<span class="subtitle">2h atrás</span>
@@ -183,10 +192,11 @@ function postar() {
 		return
 	}
 	else {
+		console.log(userFoto)
 		addPost({
 			id: userId,
 			username: userPost,
-			pfp: '1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg',
+			pfp: userFoto ? userFoto : '1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg',
 			text: document.getElementById('writePostInput').value,
 			categories: ['Teste']
 		});
