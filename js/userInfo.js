@@ -110,7 +110,6 @@ saveButton.addEventListener('click', async () => {
     });
 
     if (!hasChanges && !fileChanged) {
-        location.reload()
         createToast('Aviso', 'Nenhuma alteração encontrada', 'vermelho');
         return;
     }
