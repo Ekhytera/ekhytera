@@ -22,7 +22,6 @@ function prepareToaster() {
     toaster.className = 'toast-container position-fixed'
     toaster.id = 'toaster'
     document.body.appendChild(toaster)
-    console.log('toaster created')
 }
 
 function createToast(title, message, color = null, subtitle = null) {
@@ -100,3 +99,5 @@ function selfTest() {
 
 // para testar as toasts, troque a função que está no event listener abaixo pela função self test.
 window.addEventListener('load', prepareToaster)
+
+export default createToast

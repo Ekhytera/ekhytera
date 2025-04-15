@@ -1,5 +1,6 @@
 import { authUser } from "./auth.js";
 import { showMenu } from "./forum.js";
+import createToast from "./toast.js"
 
 let userPost;
 let userId;
@@ -191,6 +192,7 @@ function postar() {
 		});
 
 		textArea.value = '';
+		createToast("Informação", "Seu post foi enviado!", "#79A7DD")
 	}
 }
 
