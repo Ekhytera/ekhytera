@@ -27,7 +27,8 @@ function Header(item) {
             </div>
             <div class="contorno">
             ${!item.foto ?
-                '<img src="imgs/1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg" alt="foto" id="userFoto"></img>' :
+                '<img src="imgs/1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg" alt="foto" id="userFoto"></img>' 
+                :
                 `<img src='http://localhost:3000/files/${item.foto}' id="userFoto"></img>`
             }
                 <div id="infoUser">

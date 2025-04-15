@@ -14,7 +14,7 @@ authUser().then(dados => {
 		userId = dados.users.id;
 		userFoto = dados.users.foto
 		console.log(userFoto);
-		fotoPerfil.src = `http://localhost:3000/files/${dados.users.foto}`;
+		fotoPerfil.src = dados.users.foto ? `http://localhost:3000/files/${dados.users.foto}` : 'imgs/1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg';
 	}
 })
 

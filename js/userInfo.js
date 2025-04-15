@@ -16,14 +16,22 @@ const modal = document.querySelector('.confirmModal');
 const userFoto = document.getElementById('userFoto');
 const foto = document.getElementById('profile-input');
 let file;
+let fileChanged = false;
 
 foto.addEventListener('change', (e) => {
     file = e.target.files?.[0];
+    fileChanged = true;
 
     if (file) {
         userFoto.src = URL.createObjectURL(file);
     }
 });
+
+document.querySelector('.excluir').addEventListener('click', () => {
+    file = '';
+    fileChanged = true;
+    userFoto.src = 'imgs/1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg';
+})
 
 let user;
 let currentUserId = null;
@@ -57,6 +65,8 @@ authUser().then(userData => {
                 .catch(error => {
                     console.error('Erro ao converter imagem para File:', error);
                 });
+        } else {
+            userFoto.src = 'imgs/1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg';
         }
     } else {
         currentUserName.textContent = 'Usuário não logado';
@@ -80,7 +90,6 @@ saveButton.addEventListener('click', async () => {
 
     if (file) {
         formData.append('file', file);
-        hasChanges = true;
     }
 
     const fieldsToCheck = [
@@ -100,7 +109,8 @@ saveButton.addEventListener('click', async () => {
         }
     });
 
-    if (!hasChanges && !file) {
+    if (!hasChanges && !fileChanged) {
+        location.reload()
         createToast('Aviso', 'Nenhuma alteração encontrada', 'vermelho');
         return;
     }

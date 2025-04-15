@@ -41,6 +41,16 @@ input {
     position: relative;
 }
 
+.userArea .userInfo div .excluir{
+    position: absolute;
+    background-color: red;
+    padding: 10px;
+    border-radius: 50%;
+    top: -20px;
+    left: -10px;
+    cursor: pointer;
+}
+
 .file-input {
     position: absolute;
     bottom: 10px;
