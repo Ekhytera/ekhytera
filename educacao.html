@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" data-bs-theme="dark">
 
 <head>
     <meta charset="UTF-8">
@@ -21,7 +21,8 @@
     <link rel="stylesheet" href="css/footer.css">
     <link rel="stylesheet" href="css/educacao.css">
     <link rel="stylesheet" href="css/alertModal.css">
-
+    <link rel="stylesheet" href="css/toast.css">
+    <link rel="stylesheet" href="css/buttons.css">
 </head>
 
 <body>
@@ -138,34 +139,6 @@
             </div>
         </aside>
     </main>
-    <footer>
-        <div class="box">
-            <h3>Ajuda</h3>
-            <a href="#">Nos contate</a>
-            <a href="#">FAQ</a>
-            <a href="#">Nos contate</a>
-            <a href="#">FAQ</a>
-        </div>
-        <div class="box">
-            <h3>A Empresa</h3>
-            <a href="#">Sobre nós</a>
-            <a href="#">Código de Ética</a>
-            <a href="#">Política de Cookies e Privacidade</a>
-            <a href="#">Informações Corporativas</a>
-        </div>
-        <div class="box">
-            <h3>Newsletter</h3>
-            <p>Se inscreva no nosso newsletter para receber novidades e notícias!</p>
-            <input type="text" placeholder="E-Mail" name="email" autocomplete="email">
-            <h3>País/Região</h3>
-            <select name="pais/regiao" title="pais/reg">
-                <option value="br">Brasil</option>
-                <option value="usa">Estados Unidos</option>
-                <option value="jp">Japão</option>
-            </select>
-        </div>
-    </footer>
-
     <!-- IMPORTAÇÃO DO JWT PARA GERAR O HEADER -->
     <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
     <script type="module" src="js/GerarHeader.js"></script>
@@ -178,6 +151,9 @@
     <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
     <script src="js/header.js"></script>
     <script src="js/alertaModal.js"></script>
+    <script type="module" src="js/gerarFooter.js"></script>
+    <script type="module" src="js/footer.js"></script>
+    <script type="module" src="js/toast.js"></script>
 </body>
 
 </html>

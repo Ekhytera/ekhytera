@@ -80,8 +80,7 @@ main {
     text-align: justify;
 }
 
-.text_container h1,
-p {
+.text_container h1, main p {
     color: aliceblue;
     margin: 50px;
 }

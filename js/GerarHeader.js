@@ -53,7 +53,7 @@ function Header(item) {
                 <hr>
             </ul>
             <div class="conf">
-                <h3>Aparencia</h3>
+                <h3>Aparência</h3>
                 <div class="thema">
                     Modo claro
                     <label class="switch">

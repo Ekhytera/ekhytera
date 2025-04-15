@@ -1,4 +1,5 @@
 import { authUser } from "./auth.js";
+import createToast from "./toast.js"
 
 const postInput = document.getElementById('writePostInput');
 let cargo;
@@ -80,6 +81,7 @@ export function showMenu(caller) {
                         document.body.removeChild(clickOutArea);
                         post.remove();
                         hideMenu();
+                        createToast("Informação", "Post deletado com sucesso.", "vermelho")
                     }
                 });
             }

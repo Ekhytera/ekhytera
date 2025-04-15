@@ -15,14 +15,15 @@ na raiz do HTML para combinar com a temática do site.
 */
 
 const toastDisappearDelayMs = 5000 /* tempo que levará até a toast desaparecer */
-const toastTransitionMs = 300 /* este valor tem que combinar com o transition no arquivo toast.css */
+const toastTransitionMs = 1000 /* este valor tem que combinar com o transition no arquivo toast.css */
+const corPadrao = "#79A7DD" /* cor customizável para as toasts */
+const corVermelho = "#EB4B61" /* cor customizável para as toasts */
 
 function prepareToaster() {
     const toaster = document.createElement('div')
     toaster.className = 'toast-container position-fixed'
     toaster.id = 'toaster'
     document.body.appendChild(toaster)
-    console.log('toaster created')
 }
 
 function createToast(title, message, color = null, subtitle = null) {
@@ -69,7 +70,7 @@ function createToast(title, message, color = null, subtitle = null) {
     toaster.appendChild(toastRoot);
 
     if (color) {
-        toastRoot.style.borderLeft = `4px solid ${color}`;
+        toastRoot.style.borderLeft = `4px solid ${color === "padrao" ? corPadrao : color === "vermelho" ? corVermelho : color}`;
     }
 
     setTimeout(() => {
@@ -100,3 +101,5 @@ function selfTest() {
 
 // para testar as toasts, troque a função que está no event listener abaixo pela função self test.
 window.addEventListener('load', prepareToaster)
+
+export default createToast

@@ -1,4 +1,5 @@
 import { authUser } from './auth.js';
+import createToast from './toast.js';
 
 const currentUserName = document.getElementById('currentUserName');
 const currentUserEmail = document.getElementById('currentUserEmail');
@@ -70,7 +71,7 @@ saveButton.addEventListener('click', async () => {
         const result = await updateResponse.json();
 
         if (updateResponse.ok) {
-            alert('Informações atualizadas com sucesso!');
+            createToast('Informação','Informações atualizadas com sucesso!','padrao');
         } else {
             console.error('Erro ao atualizar informações:', result.message);
             alert('Erro ao atualizar informações: ' + result.message);
