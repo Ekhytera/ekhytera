@@ -81,7 +81,7 @@ export function showMenu(caller) {
                         document.body.removeChild(clickOutArea);
                         post.remove();
                         hideMenu();
-                        createToast("Informação", "Post deletado com sucesso.", "#EB4B61")
+                        createToast("Informação", "Post deletado com sucesso.", "vermelho")
                     }
                 });
             }

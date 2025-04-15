@@ -113,7 +113,7 @@ async function compartilhar(el) {
 			console.error('Erro ao compartilhar:', error)
 		}
 	} else {
-		alert('Função de compartilhar não suportada pelo navegador.')
+		createToast('Erro','Função de compartilhar não suportada pelo navegador.', 'vermelho')
 	}
 }
 
@@ -192,7 +192,7 @@ function postar() {
 		});
 
 		textArea.value = '';
-		createToast("Informação", "Seu post foi enviado!", "#79A7DD")
+		createToast("Informação", "Seu post foi enviado!", "padrao")
 	}
 }
 

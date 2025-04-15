@@ -15,7 +15,9 @@ na raiz do HTML para combinar com a temática do site.
 */
 
 const toastDisappearDelayMs = 5000 /* tempo que levará até a toast desaparecer */
-const toastTransitionMs = 300 /* este valor tem que combinar com o transition no arquivo toast.css */
+const toastTransitionMs = 1000 /* este valor tem que combinar com o transition no arquivo toast.css */
+const corPadrao = "#79A7DD" /* cor customizável para as toasts */
+const corVermelho = "#EB4B61" /* cor customizável para as toasts */
 
 function prepareToaster() {
     const toaster = document.createElement('div')
@@ -68,7 +70,7 @@ function createToast(title, message, color = null, subtitle = null) {
     toaster.appendChild(toastRoot);
 
     if (color) {
-        toastRoot.style.borderLeft = `4px solid ${color}`;
+        toastRoot.style.borderLeft = `4px solid ${color === "padrao" ? corPadrao : color === "vermelho" ? corVermelho : color}`;
     }
 
     setTimeout(() => {

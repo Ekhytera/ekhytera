@@ -81,7 +81,7 @@ document.querySelectorAll('.share').forEach((el, i) => {
                     console.error('Erro ao compartilhar:', error);
                 }
             } else {
-                alert('Função de compartilhar não suportada pelo navegador.')
+                createToast('Erro','Função de compartilhar não suportada pelo navegador.', 'vermelho')
             }
     })
 })

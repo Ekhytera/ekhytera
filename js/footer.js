@@ -11,7 +11,7 @@ function handleNewsletterEmailSubmit() {
     const campoEmail = document.getElementById("newsletterEmail")
     campoEmail.value = ""
     console.warn("Atenção: o envio de e-mails para newsletter ainda não foi implementado.")
-    createToast("Informação", "Seu e-mail está registrado na nossa lista de transmissão!", "#79A7DD")
+    createToast("Informação", "Seu e-mail está registrado na nossa lista de transmissão!", "padrao")
     alert("Informação: A adição de emails à newsletter do site ainda não foi implementada.")
 }
 
