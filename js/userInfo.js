@@ -42,8 +42,21 @@ authUser().then(userData => {
         generoSelect.value = user.genero || '';
         dataNascimentoInput.value = user.dt_nascimento || '';
 
-        if(user.foto){
+        if (user.foto) {
             userFoto.src = `http://localhost:3000/files/${user.foto}`;
+
+            const imageUrl = `http://localhost:3000/files/${user.foto}`;
+            userFoto.src = imageUrl;
+
+            fetch(imageUrl)
+                .then(response => response.blob())
+                .then(blob => {
+                    const convertFile = new File([blob], user.foto, { type: blob.type });
+                    file = convertFile
+                })
+                .catch(error => {
+                    console.error('Erro ao converter imagem para File:', error);
+                });
         }
     } else {
         currentUserName.textContent = 'Usuário não logado';
@@ -67,7 +80,7 @@ saveButton.addEventListener('click', async () => {
 
     if (file) {
         formData.append('file', file);
-        hasChanges = true; 
+        hasChanges = true;
     }
 
     const fieldsToCheck = [
@@ -103,7 +116,7 @@ saveButton.addEventListener('click', async () => {
     const result = await updateResponse.json();
 
     if (updateResponse.ok) {
-        createToast('Informação','Informações atualizadas com sucesso!','padrao');
+        createToast('Informação', 'Informações atualizadas com sucesso!', 'padrao');
     } else {
         console.error('Erro ao atualizar informações:', result.message);
         alert('Erro ao atualizar informações: ' + result.message);

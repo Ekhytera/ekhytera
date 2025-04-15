@@ -13,7 +13,8 @@ authUser().then(dados => {
 		userPost = dados.users.userName;
 		userId = dados.users.id;
 		userFoto = dados.users.foto
-		fotoPerfil.src = `http://localhost:3000/files/${userFoto}`;
+		console.log(userFoto);
+		fotoPerfil.src = `http://localhost:3000/files/${dados.users.foto}`;
 	}
 })
 
@@ -192,7 +193,6 @@ function postar() {
 		return
 	}
 	else {
-		console.log(userFoto)
 		addPost({
 			id: userId,
 			username: userPost,

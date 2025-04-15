@@ -133,7 +133,7 @@ div #atualSenha {
     border: 1px red;
 }
 
-a {
+a, #linkLogin {
     color: white;
     text-decoration: none;
 }
