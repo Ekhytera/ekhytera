@@ -65,13 +65,11 @@ saveButton.addEventListener('click', async () => {
     const formData = new FormData();
     let hasChanges = false;
 
-    // Verifica se há nova imagem
+
     if (file) {
         formData.append('file', file);
-        hasChanges = true; // Nova imagem significa alteração
-    }
+        hasChanges = true;
 
-    // Adiciona campos ao FormData e verifica alterações
     const fieldsToCheck = [
         { name: 'userName', value: user.userName, current: user.userName },
         { name: 'email', value: user.email, current: user.email },
