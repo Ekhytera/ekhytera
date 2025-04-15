@@ -1,6 +1,7 @@
 import { Router } from "express";
 import UserController from "./controllers/authController.js";
-import middlewares from "./middlewares/middlewares.js";
+import auth from "./middlewares/auth.js";
+import upload from "./middlewares/uplaodImage.js";
 
 const routes = Router();
 
@@ -10,9 +11,10 @@ routes.get('/', (req, res) => {
 })
 
 // get
-routes.get('/usuarios', middlewares.verifyToken, UserController.getAllUser);
-routes.get('/usuarios/id/:id', middlewares.verifyToken, UserController.getUserById);
+routes.get('/usuarios', auth.verifyToken, UserController.getAllUser);
+routes.get('/usuarios/id/:id', auth.verifyToken, UserController.getUserById);
 routes.get('/usuarios/userName/:userName', UserController.getUserByUserName);
+routes.get('/usuarios/email/:email', UserController.getUserByEmail);
 
 
 // cadastro
@@ -22,14 +24,14 @@ routes.post('/cadastrar', UserController.createUser);
 routes.post('/login', UserController.login);
 
 // update infoUser
-routes.put('/usuarios/update/:id', middlewares.verifyToken, UserController.updateUser);
+routes.put('/usuarios/update/:id', auth.verifyToken, upload.single('file'), UserController.updateUser);
 
 // update Senha
-routes.put('/usuarios/senha/:id', middlewares.verifyToken, UserController.updatePassword);
+routes.put('/usuarios/senha/:id', auth.verifyToken, UserController.updatePassword);
 
 
 // update status
-routes.put('/usuarios/delete/:id', middlewares.verifyToken, UserController.updateDeleteUser);
+routes.put('/usuarios/delete/:id', auth.verifyToken, UserController.updateDeleteUser);
 
 
 
