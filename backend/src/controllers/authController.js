@@ -199,7 +199,7 @@ const UserController = {
 
         try {
             if (nomeUser) return res.status(200).json({
-                ok: false,
+                ok: true,
                 status: 200,
                 message: 'usuario encontrado com sucesso',
                 user: nomeUser.userName
@@ -221,9 +221,43 @@ const UserController = {
         }
     },
 
+    getUserByEmail: async (req, res) => {
+        const { email } = req.params;
+        const user = await UserRepository.getByEmail(email);
+
+        try {
+            if (user) return res.status(200).json({
+                ok: true,
+                status: 200,
+                message: 'Usuario encontrado com sucesso',
+                user: user
+            });
+
+            return res.status(404).json({
+                ok: false,
+                status: 404,
+                message: 'Usuario não encontrado',
+            });
+
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                ok: false,
+                status: 500,
+                message: 'Erro no servidor'
+            });
+        }
+    },
+
     updateUser: async (req, res) => {
         const id = req.params.id;
-        const { email, userName, foto, descricao, num_telefone, genero, localizacao, dt_nascimento } = req.body;
+        const { email, userName, descricao, num_telefone, genero, localizacao, dt_nascimento } = req.body;
+        const file = req.file;
+        let foto;
+
+        if(file) {
+            foto = file.filename;
+        }
 
         if (!email) return res.status(400).json({
             ok: false,

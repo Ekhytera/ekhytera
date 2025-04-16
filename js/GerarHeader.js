@@ -26,7 +26,11 @@ function Header(item) {
                 <img src="imgs/logo_vazada1.png" alt="logo" id="logo">
             </div>
             <div class="contorno">
-                <img src="imgs/1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg" alt="foto" id="userFoto">
+            ${!item.foto ?
+                '<img src="imgs/1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg" alt="foto" id="userFoto"></img>' 
+                :
+                `<img src='http://localhost:3000/files/${item.foto}' id="userFoto"></img>`
+            }
                 <div id="infoUser">
                     <h1 id="userName">${item?.userName || 'Faça Login'}</h1>
                     <span id="CadatroInfo">${item?.email || ''}</span>
@@ -53,7 +57,7 @@ function Header(item) {
                 <hr>
             </ul>
             <div class="conf">
-                <h3>Aparência</h3>
+                <h3>Aparencia</h3>
                 <div class="thema">
                     Modo claro
                     <label class="switch">
@@ -103,7 +107,8 @@ authUser().then(dados => {
         user = dados.users;
         Header({
             email: user.email,
-            userName: user.userName
+            userName: user.userName,
+            foto: user.foto
         });
     } else {
         Header({});

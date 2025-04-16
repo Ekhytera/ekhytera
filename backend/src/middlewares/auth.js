@@ -25,10 +25,7 @@ const middlewares = {
                 message: 'Token invalido'
             });
         }
-    },
-    // verifyCargo: (req, res, next) => {
-
-    // }
+    }
 }
 
 export default middlewares

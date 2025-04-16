@@ -21,12 +21,75 @@ h2 {
     margin: 0;
 }
 
+input {
+    outline: none;
+}
+
 .userArea {
     display: flex;
     flex-direction: row;
     width: 100%;
     justify-content: space-between;
     align-items: center;
+}
+
+.userArea .userInfo {
+    display: flex;
+}
+
+.userArea .userInfo div {
+    position: relative;
+}
+
+.userArea .userInfo div .excluir{
+    position: absolute;
+    background-color: red;
+    padding: 10px;
+    border-radius: 50%;
+    top: -20px;
+    left: -10px;
+    cursor: pointer;
+}
+
+.file-input {
+    position: absolute;
+    bottom: 10px;
+    left: 50px;
+    width: 40px;
+    height: 40px;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.camera-icon {
+    position: absolute;
+    bottom: 10px;
+    left: 50px;
+    width: 40px;
+    height: 40px;
+    background-color: #4285f4;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.userArea .userInfo .info {
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+    justify-content: center;
+}
+
+.userArea .userInfo img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
 }
 
 .userArea button {
@@ -117,7 +180,7 @@ h2 {
     transition: 0.3s;
 }
 
-.deleteButton:hover{
+.deleteButton:hover {
     background-color: red;
     color: white;
     border: solid 2px red;
@@ -141,7 +204,6 @@ h2 {
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    width: 35%;
     align-items: center;
     background-color: #0D1B2A;
     color: #EB4B61;
@@ -154,6 +216,7 @@ h2 {
 
 .containerModal p {
     font-size: 1.5rem;
+    max-width: 480px;
 }
 
 .containerModal .circle {
@@ -183,26 +246,29 @@ h2 {
     margin: 0;
 }
 
-.containerModal .btns{
+.containerModal .btns {
     display: flex;
     flex-direction: row;
 }
-.containerModal .btns>*{
+
+.containerModal .btns>* {
     margin: 0.5rem;
 }
 
-.confirmButton, .cancelButton {
+.confirmButton,
+.cancelButton {
     padding-inline: 15px;
     padding-block: 5px;
     border-radius: 20px;
     border: none;
 }
 
-.confirmButton:hover, .cancelButton:hover{
+.confirmButton:hover,
+.cancelButton:hover {
     opacity: .8;
 }
 
-#confirm{
+#confirm {
     background-color: red;
     color: white;
     font-weight: bold;
