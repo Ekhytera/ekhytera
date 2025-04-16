@@ -4,7 +4,7 @@ const users = [
         userName: 'ekhytera',
         email: 'ekhytera@gmail.com',
         senha: '$2b$10$WQGLRERtbqQFA617R4M4iue1EWAc61TAePBggekTWSt9Z3pOpzwCq',
-        foto: '1744753447591.png',
+        foto: '1744821925102.jpg',
         descricao: 'Conta oficial do Ekhytera',
         num_telefone: '',
         genero: '',
