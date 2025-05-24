@@ -139,15 +139,15 @@ const UserController = {
 
     getAllUser: async (req, res) => {
         try {
-            const users = await UserRepository.getAll();
+            const users = await UserRepository.getAllUsers();
 
             if (users) {
                 delete users.senha
 
                 return res.status(200).json({
-                    ok: false,
+                    ok: true,
                     status: 200,
-                    message: 'Erro no servidor',
+                    message: 'Mostrando todos os usuários.',
                     users: users
                 });
             }
@@ -166,13 +166,13 @@ const UserController = {
         try {
             const id = req.params.id;
 
-            const user = await UserRepository.getById(id);
+            const user = await UserRepository.findUserByID(id);
 
             if (user) {
                 return res.status(200).json({
                     ok: true,
                     status: 200,
-                    message: 'usuario encontrado com sucesso',
+                    message: 'Usuário encontrado com sucesso',
                     users: user
                 });
             }
@@ -195,14 +195,14 @@ const UserController = {
     getUserByUserName: async (req, res) => {
         const { userName } = req.params;
 
-        const nomeUser = await UserRepository.getByUserName(userName);
+        const nomeUser = await UserRepository.findUserByUsername(userName);
 
         try {
             if (nomeUser) return res.status(200).json({
                 ok: true,
                 status: 200,
                 message: 'usuario encontrado com sucesso',
-                user: nomeUser.userName
+                user: nomeUser.nome_usuario,
             });
 
             return res.status(404).json({
@@ -223,7 +223,7 @@ const UserController = {
 
     getUserByEmail: async (req, res) => {
         const { email } = req.params;
-        const user = await UserRepository.getByEmail(email);
+        const user = await UserRepository.findUserByEmail(email);
 
         try {
             if (user) return res.status(200).json({

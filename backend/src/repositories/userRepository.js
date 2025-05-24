@@ -1,17 +1,42 @@
 import users from '../database/users.js';
+import connection from '../database/mysqlconnection.js';
 
 const usersRepository = {
-    async getAll() {
-        return users.filter(item => item.status === 1);
+    async getAllUsers() {
+        const sql = 'SELECT * FROM tb_usuarios';
+        try {
+            const [rows] = await connection.promise().execute(sql);
+            return rows;
+        } catch (error) {
+            throw new Error(`Database query failed: ${error.message}`);
+        }
     },
-    async getById(id) {
-        return users.find(item => item.id === id && item.status === 1);
+    async findUserByID(user_id) {
+        const sql = `SELECT * FROM tb_usuarios WHERE id_usuario = ?;`;
+        try {
+            const [rows] = await connection.promise().execute(sql, [user_id]);
+            return rows.length > 0 ? rows[0] : null;
+        } catch (error) {
+            throw new Error(`Failed to check for existing user: ${error.message}`);
+        }
     },
-    async getByEmail(email) {
-        return users.find(item => item.email.toLowerCase() === email.toLowerCase() && item.status === 1);
+    async findUserByEmail(email) {
+        const sql = `SELECT * FROM tb_usuarios WHERE email = ?;`;
+        try {
+            const [rows] = await connection.promise().execute(sql, [email]);
+            return rows.length > 0 ? rows[0] : null;
+        } catch (error) {
+            throw new Error(`Failed to check for existing email: ${error.message}`);
+        }
     },
-    async getByUserName(userName) {
-        return users.find(item => item.userName.toLowerCase() === userName.toLowerCase() && item.status === 1);
+    async findUserByUsername(username) {
+        const sql = 'SELECT * FROM tb_usuarios WHERE nome_usuario = ?;';
+        try {
+            const [rows] = await connection.promise().execute(sql, [username]);
+            return rows.length > 0 ? rows[0] : null;
+        } catch (error) {
+            throw new Error(`Failed to check for existing user: ${error.message}`);
+        }
     },
     async getByStatus() {
         return users.filter(item => item.status === 1);

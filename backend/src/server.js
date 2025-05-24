@@ -1,7 +1,9 @@
 import express from 'express';
 import cors from 'cors';
-import config from './config.js';
 import routes from './routes.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 
@@ -14,6 +16,6 @@ app.use(cors({
 app.use(routes);
 app.use('/files', express.static('./src/uploads'));
 
-app.listen(config.port, config.host, () => {
-    console.log(`Servidor rodando em http://${config.host}:${config.port}`)
+app.listen(process.env.PORT, process.env.HOST, () => {
+    console.log(`Servidor rodando em http://${process.env.HOST}:${process.env.PORT}`)
 })

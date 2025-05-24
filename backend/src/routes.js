@@ -11,8 +11,8 @@ routes.get('/', (req, res) => {
 })
 
 // get
-routes.get('/usuarios', auth.verifyToken, UserController.getAllUser);
-routes.get('/usuarios/id/:id', auth.verifyToken, UserController.getUserById);
+routes.get('/usuarios', UserController.getAllUser);
+routes.get('/usuarios/id/:id', UserController.getUserById);
 routes.get('/usuarios/userName/:userName', UserController.getUserByUserName);
 routes.get('/usuarios/email/:email', UserController.getUserByEmail);
 
