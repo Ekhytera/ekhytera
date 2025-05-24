@@ -48,8 +48,6 @@ const UserController = {
                 nome_usuario, email, senha: hashSenha
             });
 
-            console.log(newUser)
-
             if (newUser) {
                 return res.status(201).json({
                     ok: true,
@@ -93,7 +91,7 @@ const UserController = {
         });
 
         try {
-            const user = await UserRepository.getByEmail(email);
+            const user = await UserRepository.findUserByEmail(email);
 
             if (!user) return res.status(404).json({
                 status: 404,
@@ -110,8 +108,8 @@ const UserController = {
             });
 
             const token = jwt.sign({
-                id: user.id,
-                userName: user.userName,
+                id: user.id_usuario,
+                userName: user.nome_usuario,
                 email: user.email,
                 cargo: user.cargo
             },
@@ -119,7 +117,7 @@ const UserController = {
                 { expiresIn: '14d' }
             );
 
-            console.log(user);
+            console.log('Usuario logado: ', user);
 
             res.status(200).json({
                 status: 200,
@@ -251,8 +249,8 @@ const UserController = {
     },
 
     updateUser: async (req, res) => {
-        const id = req.params.id;
-        const { email, nome_usuario, descricao, num_telefone, genero, localizacao, dt_nascimento, senha } = req.body;
+        const id = req.user.id;
+        const data = req.body;
         const file = req.file;
         let endereco_imagem;
 
@@ -260,7 +258,7 @@ const UserController = {
             endereco_imagem = file.filename;
         }
 
-        if (!email) {
+        if ('email' in data && !data.email) {
             return res.status(400).json({
                 ok: false,
                 status: 400,
@@ -268,7 +266,7 @@ const UserController = {
             });
         }
 
-        if (!nome_usuario) {
+        if ('nome_usuario' in data && !data.nome_usuario) {
             return res.status(400).json({
                 ok: false,
                 status: 400,
@@ -276,7 +274,7 @@ const UserController = {
             });
         }
 
-        if (!senha) {
+        if ('senha' in data && !data.senha) {
             return res.status(400).json({
                 ok: false,
                 status: 400,
@@ -295,18 +293,17 @@ const UserController = {
                 });
             }
 
-            const updatedData = {
-                email: email !== currentUser.email ? email : currentUser.email,
-                nome_usuario: nome_usuario !== currentUser.nome_usuario ? nome_usuario : currentUser.nome_usuario,
-                descricao: descricao !== currentUser.descricao ? descricao : currentUser.descricao,
-                num_telefone: num_telefone !== currentUser.num_telefone ? num_telefone : currentUser.num_telefone,
-                genero: genero !== currentUser.genero ? genero : currentUser.genero,
-                localizacao: localizacao !== currentUser.localizacao ? localizacao : currentUser.localizacao,
-                dt_nascimento: dt_nascimento !== currentUser.dt_nascimento ? dt_nascimento : currentUser.dt_nascimento,
-                endereco_imagem: endereco_imagem || currentUser.endereco_imagem
-            };
+            const isPasswordValid = await bcrypt.compare(data.senha, currentUser.senha);
 
-            const updated = await UserRepository.updateInfo(id, updatedData, senha);
+            console.log('Verificação da senha: ', isPasswordValid)
+
+            if (!isPasswordValid) return res.status(400).json({
+                ok: false,
+                status: 400,
+                message: 'Senha inválida'
+            })
+
+            const updated = await UserRepository.updateInfo(id, { ...data, endereco_imagem: endereco_imagem });
 
             if (updated) {
                 return res.status(200).json({
@@ -425,9 +422,9 @@ const UserController = {
 
     updateDeleteUser: async (req, res) => {
         try {
-            const id = req.params.id;
+            const id = req.user.id;
 
-            const userDelete = await UserRepository.deleteUpdate(id);
+            const userDelete = await UserRepository.logicalDelete(id);
 
             if (userDelete) return res.status(200).json({
                 ok: true,

@@ -64,21 +64,8 @@ const usersRepository = {
             throw new Error(`Failed to register user: ${error.message}`);
         }
     },
-    async updateInfo(id, data, password) {
-        const getPasswordSql = `SELECT senha FROM tb_usuarios WHERE id_usuario = ?;`;
+    async updateInfo(id, data) {
         try {
-            const [rows] = await connection.promise().execute(getPasswordSql, [id]);
-            if (rows.length === 0) {
-                throw new Error('Usuário não encontrado');
-            }
-
-            const currentPassword = rows[0].senha;
-
-            const isPasswordValid = await bcrypt.compare(password, currentPassword);
-            if (!isPasswordValid) {
-                throw new Error('Senha inválida');
-            }
-
             const {
                 nome_usuario = null,
                 email = null,
@@ -119,14 +106,14 @@ const usersRepository = {
             throw new Error(`Failed to update user: ${error.message}`);
         }
     },
-    async deleteUpdate(id) {
-        const deleteUser = users.find(item => item.id === id);
-
-        if (deleteUser) {
-            deleteUser.status = 0;
-            return true
+    async logicalDelete(id) {
+        const sql = `UPDATE tb_usuarios SET status = 0 where id_usuario = ?`;
+        try {
+            const [result] = await connection.promise().execute(sql, [id]);
+            return result.affectedRows > 0;
+        } catch (error) {
+            throw new Error(`Failed to update status user: ${error.message}`);
         }
-        return false
     }
 }
 

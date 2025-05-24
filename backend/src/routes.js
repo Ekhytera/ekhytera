@@ -23,15 +23,19 @@ routes.post('/cadastrar', UserController.createUser);
 // login
 routes.post('/login', UserController.login);
 
+
+// ROTAS PRIVADAS --------------------------------------------
+
+// ROTAS DE DE UPDATE ALTERADAS. O FRONTEND PRECISAR SER ATUALIZADOS POSTERIORMENTE...
+
 // update infoUser
-routes.put('/usuarios/update/:id', upload.single('file'), UserController.updateUser);
+routes.put('/update-user', auth.verifyToken, upload.single('file'), UserController.updateUser);
 
 // update Senha
-routes.put('/usuarios/senha/:id', auth.verifyToken, UserController.updatePassword);
-
+routes.put('/update-password-user', auth.verifyToken, UserController.updatePassword);
 
 // update status
-routes.put('/usuarios/delete/:id', auth.verifyToken, UserController.updateDeleteUser);
+routes.patch('/delete-user', auth.verifyToken, UserController.updateDeleteUser);
 
 
 

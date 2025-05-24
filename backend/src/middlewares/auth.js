@@ -5,7 +5,7 @@ const SECRET = process.env.JWT_SECRET;
 const middlewares = {
     verifyToken: (req, res, next) => {
         const tokenHeader = req.headers.authorization;
-        const token = tokenHeader.split(' ')[1];
+        const token = tokenHeader ? tokenHeader.split(' ')[1] || tokenHeader : null;
 
         if(!token) return res.status(401).json({
             ok: false,
@@ -15,7 +15,8 @@ const middlewares = {
 
         try {
             const dados = jwt.verify(token, SECRET);
-            req.user = dados
+            req.user = dados;
+            console.log(req.user)
 
             next();
         } catch (error) {
