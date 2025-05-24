@@ -39,25 +39,29 @@ const usersRepository = {
         }
     },
     async getByStatus() {
-        return users.filter(item => item.status === 1);
-    },
-    async create(data) {
-        const newusers = {
-            id: new Date().getTime().toLocaleString(),
-            ...data,
-            foto: null,
-            descricao: null,
-            num_telefone: null,
-            genero: null,
-            localizacao: null,
-            dt_nascimento: null,
-            cargo: 'user',
-            status: 1,
-            createdAt: new Date()
+        const sql = 'SELECT * FROM tb_usuarios WHERE status = 1;';
+        try {
+            const [rows] = await connection.promise().execute(sql);
+            return rows;
+        } catch (error) {
+            throw new Error(`Database query failed: ${error.message}`);
         }
-
-        users.push(newusers);
-        return newusers;
+    },
+    async create(user) {
+        const sql = `
+        INSERT INTO tb_usuarios (nome_usuario, email, senha)
+        VALUES (?, ?, ?);
+    `;
+        try {
+            const [result] = await connection.promise().execute(sql, [
+                user.nome_usuario,
+                user.email,
+                user.senha,
+            ]);
+            return { success: true, insertId: result.insertId };
+        } catch (error) {
+            throw new Error(`Failed to register user: ${error.message}`);
+        }
     },
     async update(id, data) {
         const index = users.findIndex(item => item.id === id);

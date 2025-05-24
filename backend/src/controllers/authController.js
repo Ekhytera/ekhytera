@@ -6,14 +6,14 @@ const SECRET = process.env.JWT_SECRET;
 
 const UserController = {
     createUser: async (req, res) => {
-        const { email, userName, senha } = req.body;
+        const { nome_usuario, email, senha } = req.body;
 
         if (!email) return res.status(400).json({
             ok: false,
             status: 400,
             message: 'O campo email é obrigatório'
         });
-        if (!userName) return res.status(400).json({
+        if (!nome_usuario) return res.status(400).json({
             ok: false,
             status: 400,
             message: 'O campo nome é obrigatório'
@@ -24,7 +24,7 @@ const UserController = {
             message: 'O campo senha é obrigatório'
         });
 
-        const userExist = await UserRepository.getByEmail(email);
+        const userExist = await UserRepository.findUserByEmail(email);
 
         if (userExist) return res.status(400).json({
             ok: false,
@@ -32,9 +32,9 @@ const UserController = {
             message: 'email já cadastrado'
         });
 
-        const nomeUser = await UserRepository.getByUserName(userName);
+        const nomeUser = await UserRepository.findUserByUsername(nome_usuario);
 
-        if (nomeUser && userName === nomeUser.userName) return res.status(400).json({
+        if (nomeUser && nome_usuario === nomeUser.nome_usuario) return res.status(400).json({
             ok: false,
             status: 400,
             message: 'esse nome de usuario já esta sendo utilizado'
@@ -45,7 +45,7 @@ const UserController = {
             const hashSenha = await bcrypt.hash(senha, salt);
 
             const newUser = await UserRepository.create({
-                email, userName, senha: hashSenha
+                nome_usuario, email, senha: hashSenha
             })
 
             if (newUser) {
@@ -54,10 +54,8 @@ const UserController = {
                     status: 201,
                     message: 'usuario criado com sucesso',
                     user: {
-                        id: newUser.id,
-                        email: newUser.email,
-                        userName: newUser.userName,
-                        cargo: newUser.cargo
+                        nome_usuario: req.body.nome_usuario,
+                        email: req.body.email,
                     }
                 })
             }
