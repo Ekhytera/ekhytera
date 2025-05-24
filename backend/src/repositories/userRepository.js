@@ -1,5 +1,6 @@
 import users from '../database/users.js';
 import connection from '../database/mysqlconnection.js';
+import bcrypt from 'bcrypt';
 
 const usersRepository = {
     async getAllUsers() {
@@ -63,15 +64,60 @@ const usersRepository = {
             throw new Error(`Failed to register user: ${error.message}`);
         }
     },
-    async update(id, data) {
-        const index = users.findIndex(item => item.id === id);
+    async updateInfo(id, data, password) {
+        const getPasswordSql = `SELECT senha FROM tb_usuarios WHERE id_usuario = ?;`;
+        try {
+            const [rows] = await connection.promise().execute(getPasswordSql, [id]);
+            if (rows.length === 0) {
+                throw new Error('Usuário não encontrado');
+            }
 
-        if (index >= 0) {
-            users[index] = { ...users[index], ...data }
+            const currentPassword = rows[0].senha;
 
-            return users[index];
+            const isPasswordValid = await bcrypt.compare(password, currentPassword);
+            if (!isPasswordValid) {
+                throw new Error('Senha inválida');
+            }
+
+            const {
+                nome_usuario = null,
+                email = null,
+                descricao = null,
+                num_telefone = null,
+                genero = null,
+                localizacao = null,
+                dt_nascimento = null,
+                endereco_imagem = null
+            } = data;
+
+            const sql = `
+            UPDATE tb_usuarios
+            SET 
+                nome_usuario = ?, 
+                email = ?, 
+                descricao = ?, 
+                num_telefone = ?, 
+                genero = ?, 
+                localizacao = ?, 
+                dt_nascimento = ?, 
+                endereco_imagem = ?
+            WHERE id_usuario = ?;
+        `;
+            const [result] = await connection.promise().execute(sql, [
+                nome_usuario,
+                email,
+                descricao,
+                num_telefone,
+                genero,
+                localizacao,
+                dt_nascimento,
+                endereco_imagem,
+                id,
+            ]);
+            return result.affectedRows > 0;
+        } catch (error) {
+            throw new Error(`Failed to update user: ${error.message}`);
         }
-        return false
     },
     async deleteUpdate(id) {
         const deleteUser = users.find(item => item.id === id);

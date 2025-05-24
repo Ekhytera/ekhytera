@@ -24,7 +24,7 @@ routes.post('/cadastrar', UserController.createUser);
 routes.post('/login', UserController.login);
 
 // update infoUser
-routes.put('/usuarios/update/:id', auth.verifyToken, upload.single('file'), UserController.updateUser);
+routes.put('/usuarios/update/:id', upload.single('file'), UserController.updateUser);
 
 // update Senha
 routes.put('/usuarios/senha/:id', auth.verifyToken, UserController.updatePassword);

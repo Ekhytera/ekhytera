@@ -252,47 +252,81 @@ const UserController = {
 
     updateUser: async (req, res) => {
         const id = req.params.id;
-        const { email, userName, descricao, num_telefone, genero, localizacao, dt_nascimento } = req.body;
+        const { email, nome_usuario, descricao, num_telefone, genero, localizacao, dt_nascimento, senha } = req.body;
         const file = req.file;
-        let foto;
+        let endereco_imagem;
 
-        if(file) {
-            foto = file.filename;
+        if (file) {
+            endereco_imagem = file.filename;
         }
 
-        if (!email) return res.status(400).json({
-            ok: false,
-            status: 400,
-            message: 'O campo email é obrigatório'
-        });
+        if (!email) {
+            return res.status(400).json({
+                ok: false,
+                status: 400,
+                message: 'O campo email é obrigatório'
+            });
+        }
 
-        if (!userName) return res.status(400).json({
-            ok: false,
-            status: 400,
-            message: 'O campo nome é obrigatório'
-        });
+        if (!nome_usuario) {
+            return res.status(400).json({
+                ok: false,
+                status: 400,
+                message: 'O campo nome é obrigatório'
+            });
+        }
+
+        if (!senha) {
+            return res.status(400).json({
+                ok: false,
+                status: 400,
+                message: 'A senha é obrigatória para atualizar as informações'
+            });
+        }
 
         try {
-            const updateUser = await UserRepository.update(id, { email, userName, foto, descricao, num_telefone, genero, localizacao, dt_nascimento });
+            const currentUser = await UserRepository.findUserByID(id);
 
-            if (updateUser) return res.status(200).json({
-                ok: true,
-                status: 200,
-                message: 'usuario atualizado com sucesso'
-            });
+            if (!currentUser) {
+                return res.status(404).json({
+                    ok: false,
+                    status: 404,
+                    message: 'Usuário não encontrado'
+                });
+            }
 
-            return res.status(404).json({
+            const updatedData = {
+                email: email !== currentUser.email ? email : currentUser.email,
+                nome_usuario: nome_usuario !== currentUser.nome_usuario ? nome_usuario : currentUser.nome_usuario,
+                descricao: descricao !== currentUser.descricao ? descricao : currentUser.descricao,
+                num_telefone: num_telefone !== currentUser.num_telefone ? num_telefone : currentUser.num_telefone,
+                genero: genero !== currentUser.genero ? genero : currentUser.genero,
+                localizacao: localizacao !== currentUser.localizacao ? localizacao : currentUser.localizacao,
+                dt_nascimento: dt_nascimento !== currentUser.dt_nascimento ? dt_nascimento : currentUser.dt_nascimento,
+                endereco_imagem: endereco_imagem || currentUser.endereco_imagem
+            };
+
+            const updated = await UserRepository.updateInfo(id, updatedData, senha);
+
+            if (updated) {
+                return res.status(200).json({
+                    ok: true,
+                    status: 200,
+                    message: 'Usuário atualizado com sucesso'
+                });
+            }
+
+            return res.status(400).json({
                 ok: false,
-                status: 404,
-                message: 'erro ao atualizar'
+                status: 400,
+                message: 'Nenhuma alteração foi feita'
             });
-
         } catch (error) {
-            console.log(error);
+            console.error(error);
             return res.status(500).json({
                 ok: false,
                 status: 500,
-                message: 'Erro no servidor'
+                message: error.message
             });
         }
     },
