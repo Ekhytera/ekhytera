@@ -46,7 +46,9 @@ const UserController = {
 
             const newUser = await UserRepository.create({
                 nome_usuario, email, senha: hashSenha
-            })
+            });
+
+            console.log(newUser)
 
             if (newUser) {
                 return res.status(201).json({
@@ -54,8 +56,9 @@ const UserController = {
                     status: 201,
                     message: 'usuario criado com sucesso',
                     user: {
-                        nome_usuario: req.body.nome_usuario,
-                        email: req.body.email,
+                        id: newUser.insertId,
+                        nome_usuario: nome_usuario,
+                        email: email,
                     }
                 })
             }
