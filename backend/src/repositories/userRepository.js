@@ -106,8 +106,17 @@ const usersRepository = {
             throw new Error(`Failed to update user: ${error.message}`);
         }
     },
+    async updatePassword(id, password) {
+        const sql = `UPDATE tb_usuarios SET senha = ? WHERE id_usuario = ?;`;
+        try {
+            const [result] = await connection.promise().execute(sql, [password, id]);
+            return result.affectedRows > 0;
+        } catch (error) {
+            throw new Error(`Failed to update password user: ${error.message}`);
+        }
+    },
     async logicalDelete(id) {
-        const sql = `UPDATE tb_usuarios SET status = 0 where id_usuario = ?`;
+        const sql = `UPDATE tb_usuarios SET status = 0 WHERE id_usuario = ?`;
         try {
             const [result] = await connection.promise().execute(sql, [id]);
             return result.affectedRows > 0;

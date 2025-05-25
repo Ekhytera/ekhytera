@@ -329,16 +329,8 @@ const UserController = {
     },
 
     updatePassword: async (req, res) => {
-        const id = req.params.id
-        const { email, senhaAtual, senhaNova, confSenha } = req.body;
-
-        const user = await UserRepository.getById(id);
-
-        if (!user) return res.status(404).json({
-            ok: false,
-            status: 404,
-            message: 'Usuario não encontrado'
-        });
+        const id = req.user.id;
+        const { email, senhaAtual, senhaNova, confirmar } = req.body;
 
         if (!email) return res.status(400).json({
             ok: false,
@@ -349,54 +341,62 @@ const UserController = {
         if (!senhaAtual) return res.status(400).json({
             ok: false,
             status: 400,
-            message: 'O campo senha atual é obrigatório'
+            message: 'O campo da senha atual é obrigatório'
         });
 
         if (!senhaNova) return res.status(400).json({
             ok: false,
             status: 400,
-            message: 'O campo senha é obrigatório'
+            message: 'O campo da nova senha é obrigatório'
         });
 
-        if (!confSenha) return res.status(400).json({
+        if (!confirmar) return res.status(400).json({
             ok: false,
             status: 400,
-            message: 'O campo senha é obrigatório'
+            message: 'O campo de confirmação da senha é obrigatório'
         });
 
-        if (email !== user.email) return res.status(400).json({
+        const currentUser = await UserRepository.findUserByID(id);
+
+        if (!currentUser) return res.status(404).json({
             ok: false,
-            status: 400,
-            message: 'Email incorreto'
-        });
-
-        const checkSenha = await bcrypt.compare(senhaAtual, user.senha);
-
-        if (!checkSenha) return res.status(400).json({
-            ok: false,
-            status: 400,
-            message: 'Senha incorreta'
-        });
-
-        if (senhaNova !== confSenha) return res.status(400).json({
-            ok: false,
-            status: 400,
-            message: 'As senhas não conferem'
-        });
-
-        const checkNovaSenha = await bcrypt.compare(senhaNova, user.senha);
-
-        if (checkNovaSenha) return res.status(400).json({
-            ok: false,
-            status: 400,
-            message: 'A senha nova é igual a atual'
+            status: 404,
+            message: 'Erro ao encontrar usuario atual'
         });
 
         try {
+            if (currentUser.email !== email) return res.status(400).json({
+                ok: false,
+                status: 400,
+                message: 'Email incorreto'
+            });
+
+            const isCurrentPassordValid = await bcrypt.compare(senhaAtual, currentUser.senha);
+
+            if(!isCurrentPassordValid) return res.status(400).json({
+                ok: false,
+                status: 400,
+                message: 'Senha incorreta'
+            });
+
+            if(senhaNova !== confirmar) return res.status(400).json({
+                ok: false,
+                status: 400,
+                message: 'As senhas são diferentes'
+            });
+
+            const isNewPasswordValid = await bcrypt.compare(senhaNova, currentUser.senha);
+
+            if(isNewPasswordValid) return res.status(400).json({
+                ok: false,
+                status: 400,
+                message: 'A nova senha é igual a atual'
+            });
+
             const salt = await bcrypt.genSalt(10);
             const hashSenha = await bcrypt.hash(senhaNova, salt);
 
-            const updateUser = await UserRepository.update(id, { senha: hashSenha });
+            const updateUser = await UserRepository.updatePassword(id, hashSenha);
 
             if (updateUser) return res.status(200).json({
                 ok: true,

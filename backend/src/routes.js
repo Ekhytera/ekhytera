@@ -32,7 +32,7 @@ routes.post('/login', UserController.login);
 routes.put('/update-user', auth.verifyToken, upload.single('file'), UserController.updateUser);
 
 // update Senha
-routes.put('/update-password-user', auth.verifyToken, UserController.updatePassword);
+routes.patch('/update-password-user', auth.verifyToken, UserController.updatePassword);
 
 // update status
 routes.patch('/delete-user', auth.verifyToken, UserController.updateDeleteUser);

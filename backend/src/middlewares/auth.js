@@ -16,7 +16,6 @@ const middlewares = {
         try {
             const dados = jwt.verify(token, SECRET);
             req.user = dados;
-            console.log(req.user)
 
             next();
         } catch (error) {
