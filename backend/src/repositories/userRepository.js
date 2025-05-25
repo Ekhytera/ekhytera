@@ -1,6 +1,4 @@
-import users from '../database/users.js';
 import connection from '../database/mysqlconnection.js';
-import bcrypt from 'bcrypt';
 
 const usersRepository = {
     async getAllUsers() {
