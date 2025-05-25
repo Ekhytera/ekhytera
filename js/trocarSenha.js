@@ -17,8 +17,8 @@ document.querySelector('#back').addEventListener('click', () => {
 let user;
 
 authUser().then(dados => {
-    if (dados && dados.users) {
-        user = dados.users;
+    if (dados) {
+        user = dados;
     }
 });
 

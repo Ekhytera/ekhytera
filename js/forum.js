@@ -6,10 +6,11 @@ let cargo;
 let userId;
 
 authUser().then(dados => {
-    if (dados && dados.users) {
-        cargo = dados.users.cargo;
-        userId = dados.users.id;
+    if (dados) {
+        cargo = dados.cargo;
+        userId = dados.id_usuario;
     }
+    console.log(dados)
 
     if (!userId) {
         postInput.setAttribute('readonly', 'true');

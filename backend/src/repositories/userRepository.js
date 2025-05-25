@@ -21,6 +21,15 @@ const usersRepository = {
             throw new Error(`Failed to check for existing user: ${error.message}`);
         }
     },
+    async findUserByToken(userId) {
+        const sql = `SELECT * FROM tb_usuarios WHERE id_usuario = ?;`;
+        try {
+            const [rows] = await connection.promise().execute(sql, [userId]);
+            return rows.length > 0 ? rows[0] : null;
+        } catch (error) {
+            throw new Error(`Failed to find user by token: ${error.message}`);
+        }
+    },
     async findUserByEmail(email) {
         const sql = `SELECT * FROM tb_usuarios WHERE email = ?;`;
         try {

@@ -102,9 +102,8 @@ function Header(item) {
     }
 }
 
-authUser().then(dados => {
-    if (dados && dados.users) {
-        user = dados.users;
+authUser().then(user => {
+    if (user) {
         Header({
             email: user.email,
             nome_usuario: user.nome_usuario,

@@ -9,12 +9,12 @@ let userId;
 let userFoto;
 
 authUser().then(dados => {
-	if (dados && dados.users) {
-		userPost = dados.users.userName;
-		userId = dados.users.id;
-		userFoto = dados.users.foto
+	if (dados) {
+		userPost = dados.nome_usuario;
+		userId = dados.id_usuario;
+		userFoto = dados.foto;
 		console.log(userFoto);
-		fotoPerfil.src = dados.users.foto ? `http://localhost:3000/files/${dados.users.foto}` : 'imgs/1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg';
+		fotoPerfil.src = dados.foto ? `http://localhost:3000/files/${dados.foto}` : 'imgs/1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg';
 	}
 })
 
@@ -179,9 +179,9 @@ const textArea = document.getElementById('writePostInput');
 
 
 authUser().then(dados => {
-	if (dados && dados.users) {
-		userPost = dados.users.userName;
-		userId = dados.users.id;
+	if (dados) {
+		userPost = dados.nome_usuario;
+		userId = dados.id_usuario;
 	}
 })
 

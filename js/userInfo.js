@@ -37,9 +37,9 @@ let user;
 let currentUserId = null;
 
 authUser().then(userData => {
-    if (userData && userData.users) {
-        user = userData.users;
-        currentUserId = user.id;
+    if (userData) {
+        user = userData;
+        currentUserId = user.id_usuario;
 
         currentUserName.textContent = user.nome_usuario || 'Usuário';
         currentUserEmail.textContent = user.email || 'Email não disponível';
