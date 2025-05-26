@@ -29,7 +29,7 @@ const usersRepository = {
         }
     },
     async findUserByEmail(email) {
-        const sql = `SELECT * FROM tb_usuarios WHERE email = ?;`;
+        const sql = `SELECT * FROM tb_usuarios WHERE email = ? AND status = 1;`;
         try {
             const [rows] = await connection.promise().execute(sql, [email]);
             return rows.length > 0 ? rows[0] : null;
@@ -38,7 +38,7 @@ const usersRepository = {
         }
     },
     async findUserByUsername(username) {
-        const sql = 'SELECT * FROM tb_usuarios WHERE nome_usuario = ?;';
+        const sql = 'SELECT * FROM tb_usuarios WHERE nome_usuario = ? AND status = 1;';
         try {
             const [rows] = await connection.promise().execute(sql, [username]);
             return rows.length > 0 ? rows[0] : null;
