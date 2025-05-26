@@ -94,7 +94,7 @@ async function editProfile(senha) {
     }
 
     const fieldsToCheck = [
-        { name: 'nome_usuario', value: user.userName, current: user.userName },
+        { name: 'nome_usuario', value: user.nome_usuario, current: user.nome_usuario },
         { name: 'email', value: user.email, current: user.email },
         { name: 'descricao', value: userDescription.value, current: user.descricao },
         { name: 'num_telefone', value: telefoneInput.value, current: user.num_telefone },
