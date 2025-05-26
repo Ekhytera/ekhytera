@@ -173,7 +173,7 @@ document.querySelector('#cancel').addEventListener('click', () => {
 
 confirmButton.addEventListener('click', async () => {
     const updateResponse = await fetch(`http://localhost:3000/delete-user`, {
-        method: 'PUT',
+        method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
             'authorization': `Bearer ${localStorage.getItem('token')}`
