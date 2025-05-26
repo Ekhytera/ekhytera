@@ -14,17 +14,15 @@ routes.get('/', (req, res) => {
 routes.get('/usuarios', UserController.getAllUser);
 routes.get('/usuarios/id/:id', UserController.getUserById);
 routes.get('/usuarios/userName/:userName', UserController.getUserByUserName);
-routes.get('/usuarios/email/:email', UserController.getUserByEmail);
+routes.get('/usuarios/email/:email', auth.verifyStatus, UserController.getUserByEmail);
 
 // cadastro
-routes.post('/cadastrar', UserController.createUser);
+routes.post('/cadastrar', auth.verifyStatus, UserController.createUser);
 
 // login
-routes.post('/login', UserController.login);
+routes.post('/login', auth.verifyStatus, UserController.login);
 
 // ROTAS PRIVADAS --------------------------------------------
-
-// ROTAS DE DE UPDATE ALTERADAS. O FRONTEND PRECISAR SER ATUALIZADOS POSTERIORMENTE...
 
 routes.get('/usuarios/token', auth.verifyToken, UserController.getUserByToken);
 

@@ -111,7 +111,8 @@ const UserController = {
                 id: user.id_usuario,
                 nome_usuario: user.nome_usuario,
                 email: user.email,
-                cargo: user.cargo
+                cargo: user.cargo,
+                status: user.status
             },
                 SECRET,
                 { expiresIn: '14d' }
