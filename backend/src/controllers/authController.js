@@ -192,19 +192,8 @@ const UserController = {
     },
 
     getUserByToken: async (req, res) => {
-        const token = req.headers.authorization?.split(' ')[1];
-
-        if (!token) {
-            return res.status(401).json({
-                ok: false,
-                status: 401,
-                message: 'Token não fornecido'
-            });
-        }
-
         try {
-            const decoded = jwt.verify(token, SECRET);
-            const userId = decoded.id;
+            const userId = req.user.id;
 
             const user = await UserRepository.findUserByToken(userId);
 
@@ -335,6 +324,9 @@ const UserController = {
                     message: 'Usuário não encontrado'
                 });
             }
+
+            console.log('Senha digitada: ', data.senha)
+            console.log('Senha salva: ', currentUser.senha)
 
             const isPasswordValid = await bcrypt.compare(data.senha, currentUser.senha);
 

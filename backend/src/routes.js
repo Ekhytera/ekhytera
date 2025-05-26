@@ -15,7 +15,6 @@ routes.get('/usuarios', UserController.getAllUser);
 routes.get('/usuarios/id/:id', UserController.getUserById);
 routes.get('/usuarios/userName/:userName', UserController.getUserByUserName);
 routes.get('/usuarios/email/:email', UserController.getUserByEmail);
-routes.get('/usuarios/token', UserController.getUserByToken);
 
 // cadastro
 routes.post('/cadastrar', UserController.createUser);
@@ -26,6 +25,8 @@ routes.post('/login', UserController.login);
 // ROTAS PRIVADAS --------------------------------------------
 
 // ROTAS DE DE UPDATE ALTERADAS. O FRONTEND PRECISAR SER ATUALIZADOS POSTERIORMENTE...
+
+routes.get('/usuarios/token', auth.verifyToken, UserController.getUserByToken);
 
 // update infoUser
 routes.put('/update-user', auth.verifyToken, upload.single('file'), UserController.updateUser);
