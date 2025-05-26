@@ -3,8 +3,8 @@ import { authUser } from "./auth.js";
 let userId;
 
 authUser().then(dados => {
-    if (dados && dados.users) {
-        userId = dados.users.id;
+    if (dados) {
+        userId = dados.id_usuario;
     }
 })
 

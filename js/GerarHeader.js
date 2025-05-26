@@ -32,7 +32,7 @@ function Header(item) {
                 `<img src='http://localhost:3000/files/${item.foto}' id="userFoto"></img>`
             }
                 <div id="infoUser">
-                    <h1 id="userName">${item?.userName || 'Faça Login'}</h1>
+                    <h1 id="userName">${item?.nome_usuario || 'Faça Login'}</h1>
                     <span id="CadatroInfo">${item?.email || ''}</span>
                 </div>
                 <img src="imgs/arrow_right.png" alt="arrow" id="seta">
@@ -40,7 +40,7 @@ function Header(item) {
 
             <div id="infoConta">
                 <h3>Minha conta</h3>
-                ${item?.userName ?
+                ${item?.nome_usuario ?
             `<a href="config.html">Acessar conta</a>
             <a href="#" onclick="Logout()">Sair da conta</a>`
             :
@@ -87,7 +87,7 @@ function Header(item) {
         <nav class="iconsNav menuIcon">
             <img src="https://img.icons8.com/?size=30&id=JFpp84FpjBA0&format=png&color=FFFFFF" alt="user icon">
             <p class="userNameLogged">
-                ${item?.userName?.split(' ')[0] || ''}
+                ${item?.nome_usuario?.split(' ')[0] || ''}
             </p>
         </nav>
     `;
@@ -96,18 +96,17 @@ function Header(item) {
     const iconsNav = document.querySelector('.iconsNav');
     const userNameLogged = document.querySelector('.userNameLogged');
 
-    if (item?.userName) {
+    if (item?.nome_usuario) {
         iconsNav.style.borderRadius = '10px';
         userNameLogged.style.display = 'block';
     }
 }
 
-authUser().then(dados => {
-    if (dados && dados.users) {
-        user = dados.users;
+authUser().then(user => {
+    if (user) {
         Header({
             email: user.email,
-            userName: user.userName,
+            nome_usuario: user.nome_usuario,
             foto: user.foto
         });
     } else {

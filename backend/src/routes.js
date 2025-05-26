@@ -15,14 +15,13 @@ routes.get('/usuarios', UserController.getAllUser);
 routes.get('/usuarios/id/:id', UserController.getUserById);
 routes.get('/usuarios/userName/:userName', UserController.getUserByUserName);
 routes.get('/usuarios/email/:email', UserController.getUserByEmail);
-
+routes.get('/usuarios/token', UserController.getUserByToken);
 
 // cadastro
 routes.post('/cadastrar', UserController.createUser);
 
 // login
 routes.post('/login', UserController.login);
-
 
 // ROTAS PRIVADAS --------------------------------------------
 

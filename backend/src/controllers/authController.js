@@ -109,7 +109,7 @@ const UserController = {
 
             const token = jwt.sign({
                 id: user.id_usuario,
-                userName: user.nome_usuario,
+                nome_usuario: user.nome_usuario,
                 email: user.email,
                 cargo: user.cargo
             },
@@ -187,6 +187,49 @@ const UserController = {
                 ok: false,
                 status: 500,
                 message: 'Erro no servidor'
+            });
+        }
+    },
+
+    getUserByToken: async (req, res) => {
+        const token = req.headers.authorization?.split(' ')[1];
+
+        if (!token) {
+            return res.status(401).json({
+                ok: false,
+                status: 401,
+                message: 'Token não fornecido'
+            });
+        }
+
+        try {
+            const decoded = jwt.verify(token, SECRET);
+            const userId = decoded.id;
+
+            const user = await UserRepository.findUserByToken(userId);
+
+            if (!user) {
+                return res.status(404).json({
+                    ok: false,
+                    status: 404,
+                    message: 'Usuário não encontrado'
+                });
+            }
+
+            delete user.senha;
+
+            return res.status(200).json({
+                ok: true,
+                status: 200,
+                message: 'Usuário encontrado com sucesso',
+                user: user
+            });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({
+                ok: false,
+                status: 500,
+                message: 'Erro ao verificar o token'
             });
         }
     },

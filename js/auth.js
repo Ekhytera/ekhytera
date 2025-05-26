@@ -1,20 +1,13 @@
 const token = localStorage.getItem('token');
-let decoded = null;
-
-if (token) {
-    decoded = jwt_decode(token);
-}
 
 export async function authUser() {
-    if (decoded) {
-        const id = decoded.id;
-
+    if (token) {
         try {
-            const resp = await fetch(`http://localhost:3000/usuarios/id/${id}`, {
+            const resp = await fetch(`http://localhost:3000/usuarios/token`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
 
@@ -22,16 +15,26 @@ export async function authUser() {
 
             if (!resp.ok) {
                 console.error(`Erro: ${dados.message}`);
-                return
+                return null;
             }
 
-            return dados
+            return dados.user;
         } catch (error) {
-            console.error(error)
+            console.error('Erro ao autenticar o usuário:', error);
+            return null;
         }
-    } 
+    } else {
+        console.warn('Token não encontrado no localStorage');
+        return null;
+    }
 }
 
 if (token) {
-    authUser();
+    authUser().then(user => {
+        if (user) {
+            console.log('Usuário autenticado:', user);
+        } else {
+            console.warn('Falha na autenticação do usuário.');
+        }
+    });
 }

@@ -42,16 +42,16 @@ if (window.location.pathname === '/cadastrar.html') {
 
         const data = {
             email: form.newEmail.value,
-            userName: form.newUserName.value,
+            nome_usuario: form.newUserName.value,
             senha: form.addSenha.value
         }
 
-        if (!data.email || !data.userName || !data.senha) {
+        if (!data.email || !data.nome_usuario || !data.senha) {
             if (!data.email) {
                 erroEmail.innerHTML = 'O campo e email é obrigatório'
             }
 
-            if (!data.userName) {
+            if (!data.nome_usuario) {
                 erroUserName.innerHTML = 'O compo nome é obrigatório'
             }
 
@@ -67,6 +67,7 @@ if (window.location.pathname === '/cadastrar.html') {
 
 
         try {
+            console.log(data)
             const req = await fetch(`http://localhost:3000/cadastrar`, {
                 method: 'POST',
                 headers: {

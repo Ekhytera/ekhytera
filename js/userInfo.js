@@ -37,11 +37,11 @@ let user;
 let currentUserId = null;
 
 authUser().then(userData => {
-    if (userData && userData.users) {
-        user = userData.users;
-        currentUserId = user.id;
+    if (userData) {
+        user = userData;
+        currentUserId = user.id_usuario;
 
-        currentUserName.textContent = user.userName || 'Usuário';
+        currentUserName.textContent = user.nome_usuario || 'Usuário';
         currentUserEmail.textContent = user.email || 'Email não disponível';
 
         userDescription.value = user.descricao || '';
@@ -93,7 +93,7 @@ saveButton.addEventListener('click', async () => {
     }
 
     const fieldsToCheck = [
-        { name: 'userName', value: user.userName, current: user.userName },
+        { name: 'nome_usuario', value: user.userName, current: user.userName },
         { name: 'email', value: user.email, current: user.email },
         { name: 'descricao', value: userDescription.value, current: user.descricao },
         { name: 'num_telefone', value: telefoneInput.value, current: user.num_telefone },
