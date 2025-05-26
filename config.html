@@ -72,8 +72,8 @@
             <label for="genero">Gênero</label>
             <select name="genero" id="genero">
                 <option value="">Selecione uma opção</option>
-                <option value="masculino">Masculino</option>
-                <option value="feminino">Feminino</option>
+                <option value="M">Masculino</option>
+                <option value="F">Feminino</option>
             </select>
         </div>
         <div class="profileOption">
@@ -98,6 +98,20 @@
             </div>
         </div>
     </section>
+
+    <div class="containerConfirmModal hide">
+        <section class="confirmPassword">
+            <p>Adicione a senha para confirmar as alterações</p>
+            <input type="password" id="confSenha" placeholder="******">
+
+            <div class="btns">
+                <button class="confirmButton" id="confirmPass">
+                    Confirmar
+                </button>
+                <button class="cancelButton" id="cancelPass">cancelar</button>
+            </div>
+        </section>
+    </div>
 
     <script type="module" src="js/userInfo.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

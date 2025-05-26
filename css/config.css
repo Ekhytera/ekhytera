@@ -25,6 +25,53 @@ input {
     outline: none;
 }
 
+.containerConfirmModal {
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.7);
+    width: 100%;
+    height: 100vh;
+    z-index: 10;
+}
+
+.confirmPassword {
+    background: #0D1B2A;
+    border: 1px white solid;
+    width: 100%;
+    max-width: fit-content;
+    padding: 15px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    position: fixed;
+    top: 15%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#confirmPass {
+    background-color: #4285f4;
+    font-weight: bold;
+    color: black;
+}
+
+#cancelPass {
+    background-color: transparent;
+    font-weight: bold;
+    border: 2px solid #4285f4;
+    color: #4285f4;
+}
+
+.confirmPassword input{
+    padding: 5px;
+    background-color: rgba(255, 255, 255, 0.6);
+    border: none;
+    width: 80%;
+    border-radius: 5px;
+    color: black;
+}
+
 .userArea {
     display: flex;
     flex-direction: row;

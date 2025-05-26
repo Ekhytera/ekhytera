@@ -51,9 +51,9 @@ authUser().then(userData => {
         dataNascimentoInput.value = user.dt_nascimento || '';
 
         if (user.foto) {
-            userFoto.src = `http://localhost:3000/files/${user.foto}`;
+            userFoto.src = `http://localhost:3000/files/${user.endereco_imagem}`;
 
-            const imageUrl = `http://localhost:3000/files/${user.foto}`;
+            const imageUrl = `http://localhost:3000/files/${user.endereco_imagem}`;
             userFoto.src = imageUrl;
 
             fetch(imageUrl)
@@ -78,14 +78,15 @@ authUser().then(userData => {
     currentUserEmail.textContent = '';
 });
 
-saveButton.addEventListener('click', async () => {
+
+async function editProfile(senha) {
+    const formData = new FormData();
 
     if (!currentUserId) {
         console.error('Usuário não logado ou ID não encontrado.');
         return;
     }
 
-    const formData = new FormData();
     let hasChanges = false;
 
     if (file) {
@@ -109,12 +110,14 @@ saveButton.addEventListener('click', async () => {
         }
     });
 
+    formData.append('senha', senha)
+
     if (!hasChanges && !fileChanged) {
         createToast('Aviso', 'Nenhuma alteração encontrada', 'vermelho');
         return;
     }
 
-    const updateResponse = await fetch(`http://localhost:3000/usuarios/update/${currentUserId}`, {
+    const updateResponse = await fetch(`http://localhost:3000/update-user`, {
         method: 'PUT',
         headers: {
             'authorization': `Bearer ${localStorage.getItem('token')}`
@@ -130,7 +133,29 @@ saveButton.addEventListener('click', async () => {
         console.error('Erro ao atualizar informações:', result.message);
         alert('Erro ao atualizar informações: ' + result.message);
     }
+}
+const passwordModal = document.querySelector('.containerConfirmModal');
+
+saveButton.addEventListener('click', () => {
+    passwordModal.classList.remove('hide');
 });
+
+
+document.querySelector('#confirmPass').addEventListener('click', () => {
+    const input = document.querySelector('#confSenha');
+    console.log(input.value);
+
+    if(input.value.trim() === ""){
+        console.log('O campo é obrigatório');
+        return
+    }
+
+    editProfile(input.value);
+})
+
+document.querySelector('#cancelPass').addEventListener('click', () => {
+    passwordModal.classList.add('hide');
+})
 
 deleteButton.addEventListener('click', () => {
     if (modal.classList.contains('hide')) {
@@ -147,7 +172,7 @@ document.querySelector('#cancel').addEventListener('click', () => {
 })
 
 confirmButton.addEventListener('click', async () => {
-    const updateResponse = await fetch(`http://localhost:3000/usuarios/delete/${currentUserId}`, {
+    const updateResponse = await fetch(`http://localhost:3000/delete-user`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
