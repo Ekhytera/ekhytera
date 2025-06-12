@@ -39,5 +39,6 @@ routes.patch('/delete-user', auth.verifyToken, UserController.updateDeleteUser);
 //posts routes (mover pra outro arquivo)
 routes.post('/create-post', auth.verifyToken, PostController.createPost);
 routes.get('/list-posts', PostController.getAllPosts);
+routes.get('/list-posts/active', PostController.getAllPostsByStatus);
 
 export default routes

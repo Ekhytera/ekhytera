@@ -80,7 +80,33 @@ const PostController = {
                 message: 'Erro no servidor'
             });
         }
-    }
+    },
+    getAllPostsByStatus: async (req, res) => {
+        try {
+            const posts = await postsRepository.findAllPostByStatus();
+
+            if (posts) return res.status(200).json({
+                ok: true,
+                status: 200,
+                message: 'Posts encontrados com sucesso',
+                posts: posts
+            });
+
+            return res.status(404).json({
+                ok: false,
+                status: 404,
+                message: 'Falha ao encontrar posts'
+            });
+
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                ok: false,
+                status: 500,
+                message: 'Erro no servidor'
+            });
+        }
+    },
 }
 
 export default PostController;
