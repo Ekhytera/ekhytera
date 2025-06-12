@@ -1,5 +1,6 @@
 import { Router } from "express";
 import UserController from "./controllers/authController.js";
+import PostController from "./controllers/postController.js";
 import auth from "./middlewares/auth.js";
 import upload from "./middlewares/uplaodImage.js";
 
@@ -17,7 +18,7 @@ routes.get('/usuarios/userName/:userName', UserController.getUserByUserName);
 routes.get('/usuarios/email/:email', auth.verifyStatus, UserController.getUserByEmail);
 
 // cadastro
-routes.post('/cadastrar', auth.verifyStatus, UserController.createUser);
+routes.post('/cadastrar', UserController.createUser);
 
 // login
 routes.post('/login', auth.verifyStatus, UserController.login);
@@ -35,6 +36,7 @@ routes.patch('/update-password-user', auth.verifyToken, UserController.updatePas
 // update status
 routes.patch('/delete-user', auth.verifyToken, UserController.updateDeleteUser);
 
-
+//posts routes (mover pra outro arquivo)
+routes.post('/create-post', auth.verifyToken, PostController.createPost);
 
 export default routes

@@ -50,7 +50,7 @@ const middlewares = {
             return res.status(401).json({
                 ok: false,
                 status: 401,
-                message: 'Erro no servidot'
+                message: 'Erro no servidor'
             });
         }
     }
