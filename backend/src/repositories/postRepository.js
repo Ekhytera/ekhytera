@@ -21,6 +21,25 @@ const postsRepository = {
         } catch (error) {
             throw new Error(`Falha ao criar post: ${error.message}`);
         }
+    },
+    async findAllPosts() {
+        const sql = `SELECT 
+            p.id_post, p.texto, p.imagem_post, p.curtidas, p.status, p.criado_erm, p.id_usuario, 
+            u.nome_usuario, u.endereco_imagem
+        FROM 
+            tb_posts p
+        INNER JOIN 
+            tb_usuarios u
+        ON 
+            p.id_usuario = u.id_usuario
+        WHERE p.status = 1;`
+
+        try {
+            const [result] = await connection.promise().execute(sql);
+            return result;
+        } catch (error) {
+            throw new Error(`Falha ao listar post: ${error.message}`);
+        }
     }
 }
 

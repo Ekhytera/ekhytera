@@ -1,12 +1,9 @@
 import postsRepository from "../repositories/postRepository.js";
-import jwt from 'jsonwebtoken';
-
-const SECRET = process.env.JWT_SECRET;
 
 const PostController = {
     createPost: async (req, res) => {
         const { texto } = req.body;
-        const token = req.headers.authorization?.split(' ')[1];
+        const userId = req.user.id;
 
         if (!texto) return res.status(400).json({
             ok: false,
@@ -23,9 +20,6 @@ const PostController = {
         }
 
         try {
-            const decoded = jwt.verify(token, SECRET);
-            const userId = decoded.id;
-
             const postData = {
                 texto: texto,
                 id_usuario: userId
@@ -58,6 +52,32 @@ const PostController = {
                 ok: false,
                 status: 500,
                 message: `Erro no servidor: ${error}`,
+            });
+        }
+    },
+    getAllPosts: async (req, res) => {
+        try {
+            const posts = await postsRepository.findAllPosts();
+
+            if (posts) return res.status(200).json({
+                ok: true,
+                status: 200,
+                message: 'Posts encontrados com sucesso',
+                posts: posts
+            });
+
+            return res.status(404).json({
+                ok: false,
+                status: 404,
+                message: 'Falha ao encontrar posts'
+            });
+
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                ok: false,
+                status: 500,
+                message: 'Erro no servidor'
             });
         }
     }
