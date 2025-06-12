@@ -8,7 +8,7 @@ const middlewares = {
         const tokenHeader = req.headers.authorization;
         const token = tokenHeader ? tokenHeader.split(' ')[1] || tokenHeader : null;
 
-        if(!token) return res.status(401).json({
+        if (!token) return res.status(401).json({
             ok: false,
             status: 401,
             message: 'Acesso negado'
@@ -34,12 +34,14 @@ const middlewares = {
         console.log(user);
 
         try {
-            if(!user.status){
-                return res.status(404).json({
-                    ok: false,
-                    status: 404,
-                    message: 'Usuario não encontrado'
-                })
+            if (user) {
+                if (!user.status) {
+                    return res.status(404).json({
+                        ok: false,
+                        status: 404,
+                        message: ['Usuario não encontrado', 'Email inválido']
+                    })
+                }
             }
 
             next()
