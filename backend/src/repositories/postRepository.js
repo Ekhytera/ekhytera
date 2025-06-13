@@ -11,7 +11,7 @@ const postsRepository = {
         }
     },
     async create(post) {
-        const sql = 'INSERT INTO tb_posts (texto, id_usuario, postado_em) VALUES (?, ?, NOW());';
+        const sql = 'INSERT INTO tb_posts (texto, id_usuario, criado_em) VALUES (?, ?, NOW());';
         try {
             const [result] = await connection.promise().execute(sql, [
                 post.texto,
@@ -24,7 +24,7 @@ const postsRepository = {
     },
     async findAllPosts() {
         const sql = `SELECT 
-            p.id_post, p.texto, p.imagem_post, p.curtidas, p.status, p.criado_erm, p.id_usuario, 
+            p.id_post, p.texto, p.imagem_post, p.curtidas, p.status, p.criado_em, p.id_usuario, 
             u.nome_usuario, u.endereco_imagem
         FROM 
             tb_posts p
@@ -42,7 +42,7 @@ const postsRepository = {
     },
     async findAllPostByStatus() {
         const sql = `SELECT 
-            p.id_post, p.texto, p.imagem_post, p.curtidas, p.status, p.criado_erm, p.id_usuario, 
+            p.id_post, p.texto, p.imagem_post, p.curtidas, p.status, p.criado_em, p.id_usuario, 
             u.nome_usuario, u.endereco_imagem
         FROM 
             tb_posts p
@@ -57,6 +57,45 @@ const postsRepository = {
             return result;
         } catch (error) {
             throw new Error(`Falha ao listar post: ${error.message}`);
+        }
+    },
+    async findPostById(id) {
+        const sql = `SELECT 
+            id_post, texto, curtidas, status, id_usuario
+        FROM 
+            tb_posts
+        WHERE 
+            status = 1 AND id_post = ?;`
+
+        try {
+            const [result] = await connection.promise().execute(sql, [id]);
+            return result
+        } catch (error) {
+            throw new Error(`Falha ao encontrar post: ${error.message}`);
+        }
+    },
+    async addLikeByPost(id) {
+        const sql = `UPDATE tb_posts 
+        SET curtidas = curtidas + 1 
+        WHERE id_post = ?;`
+        
+        try {
+            const [result] = await connection.promise().execute(sql, [id]);
+            return result
+        } catch (error) {
+            throw new Error(`Falha ao curtir post: ${error.message}`);
+        }
+    },
+    async removeLikeByPost(id) {
+        const sql = `UPDATE tb_posts 
+        SET curtidas = curtidas - 1 
+        WHERE id_post = ?;`
+        
+        try {
+            const [result] = await connection.promise().execute(sql, [id]);
+            return result
+        } catch (error) {
+            throw new Error(`Falha ao remover a curtida: ${error.message}`);
         }
     }
 }

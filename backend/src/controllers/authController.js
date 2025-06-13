@@ -291,6 +291,10 @@ const UserController = {
             endereco_imagem = file.filename;
         }
 
+        if(data.dt_nascimento === ''){
+            data.dt_nascimento = null
+        }
+
         if ('email' in data && !data.email) {
             return res.status(400).json({
                 ok: false,
@@ -326,12 +330,7 @@ const UserController = {
                 });
             }
 
-            console.log('Senha digitada: ', data.senha)
-            console.log('Senha salva: ', currentUser.senha)
-
             const isPasswordValid = await bcrypt.compare(data.senha, currentUser.senha);
-
-            console.log('Verificação da senha: ', isPasswordValid)
 
             if (!isPasswordValid) return res.status(400).json({
                 ok: false,
@@ -340,6 +339,8 @@ const UserController = {
             })
 
             const updated = await UserRepository.updateInfo(id, { ...data, endereco_imagem: endereco_imagem });
+
+            console.log({ ...data, endereco_imagem: endereco_imagem })
 
             if (updated) {
                 return res.status(200).json({

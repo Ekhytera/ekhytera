@@ -68,8 +68,8 @@ async function trocarSenha(form) {
     }
 
     try{
-        const updateResponse = await fetch(`http://localhost:3000/usuarios/senha/${user.id}`, {
-            method: 'PUT',
+        const updateResponse = await fetch(`http://localhost:3000/update-password-user`, {
+            method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
                 'authorization': `Bearer ${localStorage.getItem('token')}`

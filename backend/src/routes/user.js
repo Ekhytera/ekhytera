@@ -1,15 +1,9 @@
 import { Router } from "express";
-import UserController from "./controllers/authController.js";
-import PostController from "./controllers/postController.js";
-import auth from "./middlewares/auth.js";
-import upload from "./middlewares/uplaodImage.js";
+import UserController from "../controllers/authController.js";
+import auth from '../middlewares/auth.js';
+import upload from "../middlewares/uplaodImage.js";
 
 const routes = Router();
-
-// rota raiz
-routes.get('/', (req, res) => {
-    res.status(200).json({message: 'Raiz do sistema acessada'})
-})
 
 // get
 routes.get('/usuarios', UserController.getAllUser);
@@ -18,7 +12,7 @@ routes.get('/usuarios/userName/:userName', UserController.getUserByUserName);
 routes.get('/usuarios/email/:email', auth.verifyStatus, UserController.getUserByEmail);
 
 // cadastro
-routes.post('/cadastrar', UserController.createUser);
+routes.post('/cadastrar',auth.verifyStatus, UserController.createUser);
 
 // login
 routes.post('/login', auth.verifyStatus, UserController.login);
@@ -35,10 +29,5 @@ routes.patch('/update-password-user', auth.verifyToken, UserController.updatePas
 
 // update status
 routes.patch('/delete-user', auth.verifyToken, UserController.updateDeleteUser);
-
-//posts routes (mover pra outro arquivo)
-routes.post('/create-post', auth.verifyToken, PostController.createPost);
-routes.get('/list-posts', PostController.getAllPosts);
-routes.get('/list-posts/active', PostController.getAllPostsByStatus);
 
 export default routes

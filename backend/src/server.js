@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
-import routes from './routes.js';
+import userRoutes from './routes/user.js';
+import postRoutes from './routes/post.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -13,7 +14,8 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
-app.use(routes);
+app.use(userRoutes);
+app.use(postRoutes);
 app.use('/files', express.static('./src/uploads'));
 
 app.listen(process.env.PORT, process.env.HOST, () => {

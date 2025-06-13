@@ -15,6 +15,8 @@ const confirmButton = document.getElementById('confirm');
 const modal = document.querySelector('.confirmModal');
 const userFoto = document.getElementById('userFoto');
 const foto = document.getElementById('profile-input');
+const passwordModal = document.querySelector('.containerConfirmModal');
+
 let file;
 let fileChanged = false;
 
@@ -129,12 +131,13 @@ async function editProfile(senha) {
 
     if (updateResponse.ok) {
         createToast('Informação', 'Informações atualizadas com sucesso!', 'padrao');
+        passwordModal.classList.add('hide');
+
     } else {
         console.error('Erro ao atualizar informações:', result.message);
         alert('Erro ao atualizar informações: ' + result.message);
     }
 }
-const passwordModal = document.querySelector('.containerConfirmModal');
 
 saveButton.addEventListener('click', () => {
     passwordModal.classList.remove('hide');
@@ -143,7 +146,6 @@ saveButton.addEventListener('click', () => {
 
 document.querySelector('#confirmPass').addEventListener('click', () => {
     const input = document.querySelector('#confSenha');
-    console.log(input.value);
 
     if(input.value.trim() === ""){
         console.log('O campo é obrigatório');

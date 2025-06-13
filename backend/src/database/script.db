@@ -1,0 +1,162 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Schema ekhytera
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema ekhytera
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `ekhytera` DEFAULT CHARACTER SET utf8mb4 ;
+USE `ekhytera` ;
+
+-- -----------------------------------------------------
+-- Table `ekhytera`.`tb_usuarios`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ekhytera`.`tb_usuarios` (
+  `id_usuario` INT NOT NULL AUTO_INCREMENT,
+  `nome_usuario` CHAR(45) NULL,
+  `email` VARCHAR(100) NULL,
+  `senha` CHAR(120) NULL,
+  `endereco_imagem` VARCHAR(100) NULL,
+  `descricao` VARCHAR(160) NULL,
+  `num_telefone` VARCHAR(17) NULL,
+  `genero` CHAR(4) NULL,
+  `localizacao` VARCHAR(45) NULL,
+  `dt_nascimento` DATE NULL,
+  `cargo` ENUM('user', 'admin') NULL DEFAULT 'user',
+  `status` TINYINT NULL DEFAULT 1,
+  PRIMARY KEY (`id_usuario`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `ekhytera`.`tb_posts`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ekhytera`.`tb_posts` (
+  `id_post` INT NOT NULL AUTO_INCREMENT,
+  `texto` VARCHAR(500) NULL,
+  `imagem_post` VARCHAR(100) NULL,
+  `curtidas` INT NULL DEFAULT 0,
+  `status` TINYINT NULL DEFAULT 1,
+  `criado_em` DATE NULL,
+  `id_usuario` INT NOT NULL,
+  PRIMARY KEY (`id_post`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `ekhytera`.`tb_comentarios`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ekhytera`.`tb_comentarios` (
+  `id_comentario` INT NOT NULL AUTO_INCREMENT,
+  `texto` VARCHAR(500) NOT NULL,
+  `imagem` VARCHAR(100) NULL,
+  `curtidas` INT NULL DEFAULT 0,
+  `status` TINYINT NULL DEFAULT 1,
+  `criado_em` VARCHAR(11) NULL,
+  `id_post` INT NOT NULL,
+  PRIMARY KEY (`id_comentario`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `ekhytera`.`tb_materiais`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ekhytera`.`tb_materiais` (
+  `id_material` INT NOT NULL AUTO_INCREMENT,
+  `titulo` VARCHAR(100) NOT NULL,
+  `endereco_material` VARCHAR(100) NOT NULL,
+  `classificacao` FLOAT NULL,
+  `endereco_capa` VARCHAR(45) NULL,
+  `status` TINYINT NULL DEFAULT 1,
+  `id_usuario` INT NOT NULL,
+  PRIMARY KEY (`id_material`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `ekhytera`.`tb_aplicativos`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ekhytera`.`tb_aplicativos` (
+  `id_jogo` INT NOT NULL AUTO_INCREMENT,
+  `tipo` ENUM('jogo', 'software') NULL,
+  `nome` VARCHAR(45) NULL,
+  `endereco_imagem` VARCHAR(45) NULL,
+  `gpu_recomendada` VARCHAR(45) NULL,
+  `gpu_minima` VARCHAR(45) NULL,
+  `cpu_recomendada` VARCHAR(45) NULL,
+  `cpu_minima` VARCHAR(45) NULL,
+  `ram_recomendada` VARCHAR(45) NULL,
+  `ram_minima` VARCHAR(45) NULL,
+  `desenvolvedora` VARCHAR(45) NULL,
+  `jogos_id_jogos` INT NOT NULL,
+  PRIMARY KEY (`id_jogo`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `ekhytera`.`tb_pecas`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ekhytera`.`tb_pecas` (
+  `id_peca` INT ZEROFILL NOT NULL AUTO_INCREMENT,
+  `tipo` ENUM('gpu', 'cpu', 'ram') NULL,
+  `modelo` VARCHAR(45) NULL,
+  `endereco_imagem` VARCHAR(45) NULL,
+  `rating` VARCHAR(45) NULL,
+  `marca` VARCHAR(45) NULL,
+  `plataforma` VARCHAR(45) NULL,
+  `quantidade_vram` INT NULL,
+  `consumo_energia` FLOAT NULL,
+  `num_nucleos` INT NULL,
+  `num_threads` INT NULL,
+  `cpu_clock` INT NULL,
+  `frequencia` INT NULL,
+  `aplicativos_id_jogo` INT NOT NULL,
+  PRIMARY KEY (`id_peca`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `ekhytera`.`tb_montagem`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ekhytera`.`tb_montagem` (
+  `id_montagem` INT NOT NULL AUTO_INCREMENT,
+  `status` TINYINT NULL DEFAULT 1,
+  `id_usuario` INT NOT NULL,
+  PRIMARY KEY (`id_montagem`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `ekhytera`.`tb_computadores_pre_montados`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ekhytera`.`tb_computadores_pre_montados` (
+  `id_computador` INT NOT NULL AUTO_INCREMENT,
+  `modelo` VARCHAR(45) NULL,
+  `marca` VARCHAR(45) NULL,
+  `aplicativos_id_jogo` INT NOT NULL,
+  PRIMARY KEY (`id_computador`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `ekhytera`.`tb_aplicativos_montagem`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ekhytera`.`tb_aplicativos_montagem` (
+  `id_jogo` INT NOT NULL,
+  `id_montagem` INT NOT NULL,
+  PRIMARY KEY (`id_jogo`, `id_montagem`))
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
