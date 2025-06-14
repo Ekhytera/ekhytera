@@ -8,5 +8,6 @@ routes.post('/create-post', auth.verifyToken, PostController.createPost);
 routes.get('/list-posts', PostController.getAllPosts);
 routes.get('/list-posts/active', PostController.getAllPostsByStatus);
 routes.get('/list-posts/id/:id', PostController.getPostById);
+routes.patch('/delete-post/:id', auth.verifyToken, auth.authorizePostOwner, PostController.logicalDeletePost);
 
 export default routes

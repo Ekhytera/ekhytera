@@ -65,9 +65,7 @@ if (window.location.pathname === '/cadastrar.html') {
             return
         }
 
-
         try {
-            console.log(data)
             const req = await fetch(`http://localhost:3000/cadastrar`, {
                 method: 'POST',
                 headers: {
@@ -77,9 +75,9 @@ if (window.location.pathname === '/cadastrar.html') {
             })
 
             const resp = await req.json();
-            console.log(resp)
 
-            if (resp.message === 'email já cadastrado') {
+            if (resp.message === 'email já cadastrado' || resp.message === 'Usuario não encontrado ou email inválido') {
+                console.log('aq')
                 erroEmail.innerHTML = resp.message;
                 return
             }
@@ -136,7 +134,7 @@ if (window.location.pathname === '/login.html') {
 
             const resp = await req.json();
 
-            if (resp.message === 'Usuario não encontrado') {
+            if (resp.message === 'Usuario não encontrado' || resp.message === 'Usuario não encontrado ou email inválido') {
                 erroEmail.innerHTML = resp.message
                 return
             }

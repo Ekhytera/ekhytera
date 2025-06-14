@@ -12,7 +12,7 @@ routes.get('/usuarios/userName/:userName', UserController.getUserByUserName);
 routes.get('/usuarios/email/:email', auth.verifyStatus, UserController.getUserByEmail);
 
 // cadastro
-routes.post('/cadastrar',auth.verifyStatus, UserController.createUser);
+routes.post('/cadastrar', auth.verifyStatus, UserController.createUser);
 
 // login
 routes.post('/login', auth.verifyStatus, UserController.login);

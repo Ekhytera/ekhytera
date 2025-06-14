@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import usersRepository from '../repositories/userRepository.js';
+import postsRepository from '../repositories/postRepository.js';
 
 const SECRET = process.env.JWT_SECRET;
 
@@ -39,7 +40,7 @@ const middlewares = {
                     return res.status(404).json({
                         ok: false,
                         status: 404,
-                        message: ['Usuario não encontrado', 'Email inválido']
+                        message: 'Usuario não encontrado ou email inválido'
                     })
                 }
             }
@@ -51,6 +52,35 @@ const middlewares = {
                 ok: false,
                 status: 401,
                 message: 'Erro no servidor'
+            });
+        }
+    },
+    authorizePostOwner: async (req, res, next) => {
+        try {
+            const id = req.params.id;
+            console.log(id)
+            const user = req.user
+            const post = await postsRepository.findPostById(id);
+            
+            console.log(post)
+
+            if (post[0].id_usuario !== user.id || user.cargo == 'admin') {
+                console.log('permissão negada')
+                return res.status(403).json({
+                    ok: false,
+                    status: 403,
+                    message: "Permissão negada"
+                });
+            } 
+
+            next()
+
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({
+                ok: false,
+                status: 500,
+                message: "Erro no servidor"
             });
         }
     }

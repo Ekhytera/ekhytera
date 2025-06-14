@@ -97,6 +97,18 @@ const postsRepository = {
         } catch (error) {
             throw new Error(`Falha ao remover a curtida: ${error.message}`);
         }
+    },
+    async logicalDelete(id){
+        const sql = `UPDATE tb_posts 
+        SET status = 0
+        WHERE id_post = ?;`;
+
+        try {
+            const [result] = await connection.promise().execute(sql, [id]);
+            return result
+        } catch (error) {
+            throw new Error(`Falha ao apagar post: ${error.message}`);
+        }
     }
 }
 

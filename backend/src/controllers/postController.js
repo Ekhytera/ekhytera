@@ -126,6 +126,34 @@ const PostController = {
                 message: 'Erro no servidor'
             });
         }
+    },
+    logicalDeletePost: async (req, res) => {
+        const id = req.params.id;
+        console.log(id)
+
+        try {
+            const deleted = !!(await postsRepository.logicalDelete(id));
+
+            if(deleted) return res.status(200).json({
+                ok: true,
+                status: 200,
+                message: 'Post deletado com sucesso'
+            });
+
+            return res.status(400).json({
+                ok: false,
+                status: 400,
+                message: 'Erro ao deletar post'
+            });
+
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                ok: false,
+                status: 500,
+                message: 'Erro no servidor'
+            });
+        }
     }
 }
 

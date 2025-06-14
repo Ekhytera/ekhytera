@@ -49,7 +49,7 @@ function addPost(settings) {
 	let post = document.createElement('div');
 	post.className = 'postWrapper';
 
-	const htmlPost = `<article class="post" id="postagem" data-id="${settings.id}">
+	const htmlPost = `<article class="post" id="postagem" data-id="${settings.id_usuario}" data-post="${settings.id}">
                 <div class="postDetails">
                     <div class="postAuthor">
                     ${!settings.pfp || settings.pfp === '1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg' ?
@@ -265,7 +265,8 @@ async function carregarPosts() {
 					attachment: post.imagem_post || null,
 					categories: ['Geral'],
 					likes: post.curtidas,
-					createdAt: post.criado_em
+					createdAt: post.criado_em,
+					id_usuario: post.id_usuario
 				});
 			});
 		} else {

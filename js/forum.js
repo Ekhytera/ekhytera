@@ -48,9 +48,35 @@ function listItem(text) {
     return li;
 }
 
+async function handleDeletePost(id) {
+    try {
+        const deletePost = await fetch(`http://localhost:3000/delete-post/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        console.log(deletePost)
+
+        if(deletePost.ok == false){
+            throw new Error('Falha ao deletar post');
+        } else {
+            createToast("Informação", "Post deletado com sucesso.", "vermelho");
+        }
+
+    } catch (error) {
+        console.log(error)
+        createToast('Error', 'Erro ao deletar post', 'vermelho');
+    }
+
+
+}
+
 export function showMenu(caller) {
     const postElement = caller.closest('article');
     const userPostId = postElement.dataset.id;
+    const postId = postElement.dataset.post;
+    console.log(postElement.dataset.post)
 
     const postOptionsList = document.getElementsByClassName('postOptions');
     if (postOptionsList.length > 0) {
@@ -79,7 +105,7 @@ export function showMenu(caller) {
     ul.appendChild(document.createElement('hr'));
     ul.appendChild(listItem('Silenciar Usuário'));
 
-    if (cargo === 'admin' || userId === userPostId) {
+    if (cargo === 'admin' || userId == userPostId) {
         ul.appendChild(document.createElement('hr'));
         const deleteOption = listItem('Deletar');
         deleteOption.classList.add('delete');
@@ -94,7 +120,7 @@ export function showMenu(caller) {
                         document.body.removeChild(clickOutArea);
                         post.remove();
                         hideMenu();
-                        createToast("Informação", "Post deletado com sucesso.", "vermelho")
+                        handleDeletePost(postId);
                     }
                 });
             }
@@ -115,5 +141,36 @@ export function showMenu(caller) {
     postOptions.style.height = '';
     postOptions.style.opacity = '100%';
 }
+
+const button = document.getElementById('rascunho');
+const texto = document.getElementById('writePostInput');
+
+button.addEventListener('click', () => {
+    localStorage.setItem('rascunho', texto.value);
+});
+
+if (localStorage.getItem('rascunho')) {
+    texto.addEventListener('input', (e) => {
+        if (!e.target.value) {
+            localStorage.removeItem('rascunho')
+        }
+    })
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (localStorage.getItem('rascunho')) {
+        texto.value = localStorage.getItem('rascunho')
+    }
+});
+
+document.querySelectorAll('.not-available').forEach(el => {
+    el.addEventListener('click', () => {
+        createToast('Erro', 'Função ainda não disponivel', 'vermelho')
+    })
+})
+
+
+
+
 
 
