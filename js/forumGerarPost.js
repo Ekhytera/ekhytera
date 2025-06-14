@@ -12,16 +12,15 @@ authUser().then(dados => {
 	if (dados) {
 		userPost = dados.nome_usuario;
 		userId = dados.id_usuario;
-		userFoto = dados.foto;
-		console.log(userFoto);
-		fotoPerfil.src = dados.foto ? `http://localhost:3000/files/${dados.foto}` : 'imgs/1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg';
+		userFoto = dados.endereco_imagem;
+		fotoPerfil.src = dados.endereco_imagem ? `http://localhost:3000/files/${dados.endereco_imagem}` : 'imgs/1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg';
 	}
 })
 
 function addPost(settings) {
 	function loadCategories() {
 		let buttons = '';
-		if (settings.categories.length > 0) {
+		if (settings.categories && settings.categories.length > 0) {
 			settings.categories.forEach(element => {
 				buttons += `<button type="button" class="button secundario arredondado">${element}</button>`;
 			});
@@ -29,40 +28,58 @@ function addPost(settings) {
 		return buttons;
 	}
 
+	function formatDate(dateString) {
+		if (!dateString) return '2h atrás';
+
+		const postDate = new Date(dateString);
+		const now = new Date();
+		const diffMs = now - postDate;
+		const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+		const diffDays = Math.floor(diffHours / 24);
+
+		if (diffDays > 0) {
+			return `${diffDays}d atrás`;
+		} else if (diffHours > 0) {
+			return `${diffHours}h atrás`;
+		} else {
+			return 'Agora';
+		}
+	}
+
 	let post = document.createElement('div');
 	post.className = 'postWrapper';
 
 	const htmlPost = `<article class="post" id="postagem" data-id="${settings.id}">
-				<div class="postDetails">
-					<div class="postAuthor">
-					${!userFoto ?
-						`<img class="fotoPerfil" src="imgs/${settings.pfp}"></img>` :
-						`<img class="fotoPerfil" src="http://localhost:3000/files/${settings.pfp}"></img>`
-					}
-						
-						<div>
-							<span class="username">${settings.username}</span>
-							<span class="subtitle">2h atrás</span>
-						</div>
-					</div>
-					<div class="postAside">
-						<div class="categoryButtons">
-							${loadCategories()}                        
-						</div>
-						<div class="moreOptions">
-							<button type="button" class="iconButton" onclick="showMenu(this)"><img src="imgs/moreOptions.png"></button>
-						</div>
-					</div>
-				</div>
-				<div class="postBody">
-					<p>${settings.text}</p>
-					${settings.attachment ? `<img src="imgs/${settings.attachment}">` : ''}
-				</div>
-				<hr>
-				<div class="postFooter">
+                <div class="postDetails">
+                    <div class="postAuthor">
+                    ${!settings.pfp || settings.pfp === '1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg' ?
+			`<img class="fotoPerfil" src="imgs/${settings.pfp}"></img>` :
+			`<img class="fotoPerfil" src="http://localhost:3000/files/${settings.pfp}"></img>`
+		}
+                        
+                        <div>
+                            <span class="username">${settings.username}</span>
+                            <span class="subtitle">${formatDate(settings.createdAt)}</span>
+                        </div>
+                    </div>
+                    <div class="postAside">
+                        <div class="categoryButtons">
+                            ${loadCategories()}                        
+                        </div>
+                        <div class="moreOptions">
+                            <button type="button" class="iconButton" onclick="showMenu(this)"><img src="imgs/moreOptions.png"></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="postBody">
+                    <p>${settings.text}</p>
+                    ${settings.attachment ? `<img src="http://localhost:3000/files/${settings.attachment}">` : ''}
+                </div>
+                <hr>
+                <div class="postFooter">
                     <div class="icon">
                         <button class="iconButton likeIcon" onclick=darLike(this)><span class="material-symbols-outlined">thumb_up</span>
-                            <span class="likeCount">484</span>
+                            <span class="likeCount">${settings.likes || 0}</span>
                         </button>
                     </div>
                     <div class="icon">
@@ -75,8 +92,8 @@ function addPost(settings) {
                             <span class="comment">123</span>
                         </button>
                     </div>
-				</div>
-			</article>`;
+                </div>
+            </article>`;
 
 	post.innerHTML = htmlPost;
 	const postsContainer = document.getElementById('postsContainer');
@@ -123,7 +140,7 @@ async function compartilhar(el) {
 			console.error('Erro ao compartilhar:', error)
 		}
 	} else {
-		createToast('Erro','Função de compartilhar não suportada pelo navegador.', 'vermelho')
+		createToast('Erro', 'Função de compartilhar não suportada pelo navegador.', 'vermelho')
 	}
 }
 
@@ -185,54 +202,83 @@ authUser().then(dados => {
 	}
 })
 
-function postar() {
-	if (userPost === null) {
-		return
+async function postar() {
+	if (!userId) {
+		modal.classList.remove('hide');
+		return;
 	}
-	else if (textArea.value === '') {
-		return
+
+	if (textArea.value.trim() === '') {
+		createToast('Erro', 'O post não pode estar vazio', 'vermelho');
+		return;
 	}
-	else {
-		addPost({
-			id: userId,
-			username: userPost,
-			pfp: userFoto ? userFoto : '1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg',
-			text: document.getElementById('writePostInput').value,
-			categories: ['Teste']
+
+	const token = localStorage.getItem('token');
+	if (!token) {
+		createToast('Erro', 'Usuário não autenticado', 'vermelho');
+		return;
+	}
+
+	try {
+		const response = await fetch('http://127.0.0.1:3000/create-post', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `Bearer ${token}`
+			},
+			body: JSON.stringify({
+				texto: textArea.value.trim()
+			})
 		});
 
-		textArea.value = '';
-		createToast("Informação", "Seu post foi enviado!", "padrao")
+		const result = await response.json();
+
+		if (response.ok) {
+			textArea.value = '';
+			createToast("Informação", "Seu post foi enviado!", "padrao");
+
+			setTimeout(() => {
+				location.reload();
+			}, 1500);
+		} else {
+			console.error('Error creating post:', result.message);
+			createToast('Erro', 'Erro ao criar post: ' + result.message, 'vermelho');
+		}
+	} catch (error) {
+		console.error('Network error:', error);
+		createToast('Erro', 'Erro ao conectar com o servidor', 'vermelho');
 	}
 }
 
-addPost({
-	id: 1,
-	username: 'Usuário 1',
-	pfp: 'pexels-danxavier-1239291.jpg',
-	text: 'A placa de vídeo GT 730 roda Red Dead Redemption 2 em 4k?',
-	attachment: 'gpubackimg.png',
-	categories: ['Teste']
-})
+async function carregarPosts() {
+	try {
+		const response = await fetch('http://127.0.0.1:3000/list-posts/active');
+		const data = await response.json();
 
-addPost({
-	id: 2,
-	username: 'Usuário 2',
-	pfp: 'pexels-justin-shaifer-501272-1222271.jpg',
-	text: 'Acredito que a UniFOA seja a melhor faculdade do mundo.',
-	attachment: 'codebackimg.png',
-	categories: ['Code']
-})
+		if (data.ok && data.posts) {
+			data.posts.forEach(post => {
+				addPost({
+					id: post.id_post,
+					username: post.nome_usuario,
+					pfp: post.endereco_imagem || '1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg',
+					text: post.texto,
+					attachment: post.imagem_post || null,
+					categories: ['Geral'],
+					likes: post.curtidas,
+					createdAt: post.criado_em
+				});
+			});
+		} else {
+			console.error('Error loading posts:', data.message);
+			createToast('Erro', 'Não foi possível carregar os posts', 'vermelho');
+		}
+	} catch (error) {
+		console.error('Error fetching posts:', error);
+		createToast('Erro', 'Erro ao conectar com o servidor', 'vermelho');
+	}
+}
 
-addPost({
-	id: 3,
-	username: 'Usuário 3',
-	pfp: 'pexels-jjagtenberg-103123.jpg',
-	text: 'Como faz pra montar um pc gamer com 20 reais???',
-	attachment: '',
-	categories: ['Teste']
-})
-
+carregarPosts();
 
 // definindo variaveis, constantes e funções globais:
 window.postar = postar;
@@ -240,3 +286,4 @@ window.addCommunities = addCommunities;
 window.compartilhar = compartilhar;
 window.darLike = darLike;
 window.showMenu = showMenu;
+window.carregarPosts = carregarPosts;

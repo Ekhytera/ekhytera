@@ -5,17 +5,29 @@ const postInput = document.getElementById('writePostInput');
 let cargo;
 let userId;
 
-authUser().then(dados => {
-    if (dados) {
-        cargo = dados.cargo;
-        userId = dados.id_usuario;
-    }
-    console.log(dados)
+document.addEventListener('DOMContentLoaded', function () {
+    authUser().then(dados => {
+        console.log(dados)
+        if (dados) {
+            cargo = dados.cargo;
+            userId = dados.id_usuario;
 
-    if (!userId) {
-        postInput.setAttribute('readonly', 'true');
-        postInput.setAttribute('placeholder', 'Faça login ou crie uma conta para fazer postagens.')
-    }
+            const fotoPerfil = document.querySelector('.writePostContainer .fotoPerfil');
+            if (fotoPerfil) {
+                if (dados.endereco_imagem) {
+                    fotoPerfil.src = `http://localhost:3000/files/${dados.endereco_imagem}`;
+                } else {
+                    fotoPerfil.src = 'imgs/1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg';
+                }
+            }
+        }
+        console.log(dados)
+
+        if (!userId) {
+            postInput.setAttribute('readonly', 'true');
+            postInput.setAttribute('placeholder', 'Faça login ou crie uma conta para fazer postagens.')
+        }
+    })
 })
 
 

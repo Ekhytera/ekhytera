@@ -107,7 +107,7 @@ authUser().then(user => {
         Header({
             email: user.email,
             nome_usuario: user.nome_usuario,
-            foto: user.foto
+            foto: user.endereco_imagem
         });
     } else {
         Header({});

@@ -38,6 +38,15 @@ document.querySelector('.excluir').addEventListener('click', () => {
 let user;
 let currentUserId = null;
 
+function formatDateForInput(isoDate) {
+    if (!isoDate) return '';
+    const date = new Date(isoDate);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
 authUser().then(userData => {
     if (userData) {
         user = userData;
@@ -50,9 +59,9 @@ authUser().then(userData => {
         telefoneInput.value = user.num_telefone || '';
         localizacaoInput.value = user.localizacao || '';
         generoSelect.value = user.genero || '';
-        dataNascimentoInput.value = user.dt_nascimento || '';
+        dataNascimentoInput.value = formatDateForInput(user.dt_nascimento) || '';
 
-        if (user.foto) {
+        if (user.endereco_imagem) {
             userFoto.src = `http://localhost:3000/files/${user.endereco_imagem}`;
 
             const imageUrl = `http://localhost:3000/files/${user.endereco_imagem}`;
@@ -102,7 +111,7 @@ async function editProfile(senha) {
         { name: 'num_telefone', value: telefoneInput.value, current: user.num_telefone },
         { name: 'genero', value: generoSelect.value, current: user.genero },
         { name: 'localizacao', value: localizacaoInput.value, current: user.localizacao },
-        { name: 'dt_nascimento', value: dataNascimentoInput.value, current: user.dt_nascimento }
+        { name: 'dt_nascimento', value: dataNascimentoInput.value, current: formatDateForInput(user.dt_nascimento) }
     ];
 
     fieldsToCheck.forEach(field => {
@@ -147,7 +156,7 @@ saveButton.addEventListener('click', () => {
 document.querySelector('#confirmPass').addEventListener('click', () => {
     const input = document.querySelector('#confSenha');
 
-    if(input.value.trim() === ""){
+    if (input.value.trim() === "") {
         console.log('O campo é obrigatório');
         return
     }

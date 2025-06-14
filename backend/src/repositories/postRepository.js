@@ -78,7 +78,7 @@ const postsRepository = {
         const sql = `UPDATE tb_posts 
         SET curtidas = curtidas + 1 
         WHERE id_post = ?;`
-        
+
         try {
             const [result] = await connection.promise().execute(sql, [id]);
             return result
@@ -90,7 +90,7 @@ const postsRepository = {
         const sql = `UPDATE tb_posts 
         SET curtidas = curtidas - 1 
         WHERE id_post = ?;`
-        
+
         try {
             const [result] = await connection.promise().execute(sql, [id]);
             return result
