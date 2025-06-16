@@ -58,7 +58,7 @@ async function handleDeletePost(id) {
         });
         console.log(deletePost)
 
-        if(deletePost.ok == false){
+        if (deletePost.ok == false) {
             throw new Error('Falha ao deletar post');
         } else {
             createToast("Informação", "Post deletado com sucesso.", "vermelho");
@@ -68,8 +68,6 @@ async function handleDeletePost(id) {
         console.log(error)
         createToast('Error', 'Erro ao deletar post', 'vermelho');
     }
-
-
 }
 
 export function showMenu(caller) {
@@ -102,12 +100,19 @@ export function showMenu(caller) {
     ul.appendChild(listItem('Salvar'));
     ul.appendChild(document.createElement('hr'));
     ul.appendChild(listItem('Denunciar'));
-    ul.appendChild(document.createElement('hr'));
-    ul.appendChild(listItem('Silenciar Usuário'));
+
+    ul.children[0].addEventListener('click', () => {
+        createToast('Erro', 'Função ainda não disponivel', 'vermelho')
+    });
+
+    ul.children[2].addEventListener('click', () => {
+        createToast('Erro', 'Função ainda não disponivel', 'vermelho')
+    });
+
 
     if (cargo === 'admin' || userId == userPostId) {
-        ul.appendChild(document.createElement('hr'));
         const deleteOption = listItem('Deletar');
+        const editOption = listItem('Editar');
         deleteOption.classList.add('delete');
 
         deleteOption.addEventListener('click', function () {
@@ -125,6 +130,61 @@ export function showMenu(caller) {
                 });
             }
         });
+
+        editOption.addEventListener('click', () => {
+            document.body.removeChild(clickOutArea);
+            hideMenu();
+            const text = postElement.querySelector('#text');
+            text.removeAttribute('readonly');
+            text.focus();
+            text.classList.remove('not-edit');
+            text.classList.add('edit-post');
+
+            const textAntigo = text.value;
+            console.log(textAntigo);
+
+            text.addEventListener('blur', async () => {
+                if (!text.value) {
+                    text.focus();
+                    createToast('Erro', 'Valor invalido. Preencha o campo.', 'vermelho');
+                } else {
+                    text.classList.remove('edit-post');
+                    text.classList.add('not-edit');
+
+                    try {
+                        if (text.value != textAntigo) {
+                            const response = await fetch(`http://127.0.0.1:3000/edit-post/${postId}`, {
+                                method: 'PATCH',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                                },
+                                body: JSON.stringify({
+                                    texto: text.value.trim()
+                                })
+                            });
+
+                            const result = await response.json()
+
+                            if (!result.ok) {
+                                throw new Error('Erro ao editar');
+                            } else {
+                                createToast("Informação", "Post atualizado com sucesso!", "padrao");
+                            }
+                        } else {
+                            createToast("Informação", "Nenhuma alteração encontrada!", "padrao");
+                        }
+                        text.setAttribute('readonly', true);
+                    } catch (error) {
+                        console.log(error)
+                    }
+                }
+            });
+        })
+
+        ul.appendChild(document.createElement('hr'));
+        ul.appendChild(editOption)
+        ul.appendChild(document.createElement('hr'));
         ul.appendChild(deleteOption);
     }
 
@@ -157,11 +217,14 @@ if (localStorage.getItem('rascunho')) {
     })
 }
 
+
 document.addEventListener('DOMContentLoaded', () => {
     if (localStorage.getItem('rascunho')) {
         texto.value = localStorage.getItem('rascunho')
     }
 });
+
+
 
 document.querySelectorAll('.not-available').forEach(el => {
     el.addEventListener('click', () => {

@@ -72,7 +72,7 @@ function addPost(settings) {
                     </div>
                 </div>
                 <div class="postBody">
-                    <p>${settings.text}</p>
+					<textarea id="text" class="not-edit" readonly>${settings.text}</textarea>
                     ${settings.attachment ? `<img src="http://localhost:3000/files/${settings.attachment}">` : ''}
                 </div>
                 <hr>

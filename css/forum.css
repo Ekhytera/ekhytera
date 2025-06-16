@@ -24,6 +24,22 @@ main {
 	flex-direction: column-reverse;
 }
 
+#text {
+	resize: none;
+	outline: none;
+	background-color: transparent;
+	padding: 5px;
+	height: auto;
+}
+
+.not-edit{
+	border: none;
+}
+
+.edit-post{
+	border: 1px gainsboro solid;
+}
+
 article.post {
 	background-color: rgba(0, 0, 0, 0.55);
 	color: #E0E1DD;

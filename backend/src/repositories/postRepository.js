@@ -109,6 +109,17 @@ const postsRepository = {
         } catch (error) {
             throw new Error(`Falha ao apagar post: ${error.message}`);
         }
+    },
+    async editTextPost(id, text){
+        const sql = `UPDATE tb_posts 
+        SET texto = ?
+        WHERE id_post = ?;`;
+        try {
+            const [result] = await connection.promise().execute(sql, [text, id]);
+            return result
+        } catch (error) {
+            throw new Error(`Falha ao apagar post: ${error.message}`);
+        }
     }
 }
 

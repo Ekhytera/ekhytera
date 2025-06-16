@@ -150,6 +150,7 @@ async function editProfile(senha) {
 
 saveButton.addEventListener('click', () => {
     passwordModal.classList.remove('hide');
+    document.querySelector('#confSenha').focus();
 });
 
 

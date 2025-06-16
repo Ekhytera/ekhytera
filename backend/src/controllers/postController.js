@@ -34,7 +34,7 @@ const PostController = {
                         texto: texto,
                         id_usuario: user.id,
                         nome_usuario: userLogged.nome_usuario,
-                        endereco_imagem: userLogged.endereco_imagem 
+                        endereco_imagem: userLogged.endereco_imagem
                     }
                 });
             }
@@ -168,7 +168,7 @@ const PostController = {
         try {
             const like = !!(await postsRepository.addLikeByPost(id));
 
-            if(like) return res.status(200).json({
+            if (like) return res.status(200).json({
                 ok: true,
                 status: 200,
                 message: 'Post curtido',
@@ -197,7 +197,7 @@ const PostController = {
         try {
             const like = !!(await postsRepository.removeLikeByPost(id));
 
-            if(like) return res.status(200).json({
+            if (like) return res.status(200).json({
                 ok: true,
                 status: 200,
                 message: 'Curtida removida',
@@ -220,6 +220,55 @@ const PostController = {
             });
         }
     },
+    editPost: async (req, res) => {
+        const { texto } = req.body;
+        const { id } = req.params;
+
+        if (!texto) {
+            return res.status(400).json({
+                ok: false,
+                status: 400,
+                message: 'Post não pode ser vazio'
+            });
+        }
+
+        try {
+            const post = await postsRepository.findPostById(id);
+
+            if (!post) {
+                return res.status(404).json({
+                    ok: false,
+                    status: 404,
+                    message: 'Post não encontrado'
+                });
+            }
+
+            const editPost = await postsRepository.editTextPost(id, texto);
+            console.log(editPost)
+
+            if (editPost.affectedRows == 1) {
+                return res.status(200).json({
+                    ok: true,
+                    status: 200,
+                    message: 'Post editado com sucesso'
+                });
+            }
+
+            return res.status(400).json({
+                ok: false,
+                status: 400,
+                message: 'Falha ao editar post'
+            });
+
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                ok: false,
+                status: 500,
+                message: 'Erro no servidor'
+            });
+        }
+    }
 }
 
 export default PostController;
