@@ -136,6 +136,7 @@ export function showMenu(caller) {
             hideMenu();
             const text = postElement.querySelector('#text');
             text.removeAttribute('readonly');
+            text.removeAttribute('disabled');
             text.focus();
             text.classList.remove('not-edit');
             text.classList.add('edit-post');
@@ -174,7 +175,7 @@ export function showMenu(caller) {
                         } else {
                             createToast("Informação", "Nenhuma alteração encontrada!", "padrao");
                         }
-                        text.setAttribute('readonly', true);
+                        text.setAttribute('disabled', true);
                     } catch (error) {
                         console.log(error)
                     }
@@ -231,7 +232,6 @@ document.querySelectorAll('.not-available').forEach(el => {
         createToast('Erro', 'Função ainda não disponivel', 'vermelho')
     })
 })
-
 
 
 
