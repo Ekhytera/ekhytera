@@ -133,10 +133,11 @@ async function editProfile(senha) {
         headers: {
             'authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: formData,
+        body: formData
     });
 
     const result = await updateResponse.json();
+    console.log(result.status)
 
     if (updateResponse.ok) {
         createToast('Informação', 'Informações atualizadas com sucesso!', 'padrao');
@@ -150,7 +151,9 @@ async function editProfile(senha) {
 
 saveButton.addEventListener('click', () => {
     passwordModal.classList.remove('hide');
-    document.querySelector('#confSenha').focus();
+    const input = document.querySelector('#confSenha');
+    input.value = '';
+    input.focus();
 });
 
 

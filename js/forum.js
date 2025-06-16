@@ -134,24 +134,28 @@ export function showMenu(caller) {
         editOption.addEventListener('click', () => {
             document.body.removeChild(clickOutArea);
             hideMenu();
-            const text = postElement.querySelector('#text');
-            text.removeAttribute('readonly');
-            text.removeAttribute('disabled');
+            const p = postElement.querySelector('#p-text');
+            const divText = postElement.querySelector('.div-text');
+            const text = document.createElement('textarea');
+            text.id = 'text';
+            text.value = p.innerHTML;
+            divText.removeChild(p);
+            divText.appendChild(text);
             text.focus();
-            text.classList.remove('not-edit');
-            text.classList.add('edit-post');
 
             const textAntigo = text.value;
-            console.log(textAntigo);
 
             text.addEventListener('blur', async () => {
+                const p = document.createElement('p');
+                p.id = 'p-text';
+                p.innerText = text.value;
+                divText.removeChild(text);
+                divText.appendChild(p);
+
                 if (!text.value) {
                     text.focus();
                     createToast('Erro', 'Valor invalido. Preencha o campo.', 'vermelho');
                 } else {
-                    text.classList.remove('edit-post');
-                    text.classList.add('not-edit');
-
                     try {
                         if (text.value != textAntigo) {
                             const response = await fetch(`http://127.0.0.1:3000/edit-post/${postId}`, {
@@ -175,7 +179,6 @@ export function showMenu(caller) {
                         } else {
                             createToast("Informação", "Nenhuma alteração encontrada!", "padrao");
                         }
-                        text.setAttribute('disabled', true);
                     } catch (error) {
                         console.log(error)
                     }

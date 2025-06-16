@@ -32,14 +32,6 @@ main {
 	height: auto;
 }
 
-.not-edit{
-	border: none;
-}
-
-.edit-post{
-	border: 1px gainsboro solid;
-}
-
 article.post {
 	background-color: rgba(0, 0, 0, 0.55);
 	color: #E0E1DD;
@@ -55,6 +47,15 @@ article.post>.postBody {
 	display: flex;
 	flex-direction: column;
 	width: auto;
+}
+
+.postBody > div {
+	width: 100%;
+	height: 100%;
+}
+
+.postBody > div > textarea {
+	width: 100%;
 }
 
 .postBody img {
