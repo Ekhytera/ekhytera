@@ -9,5 +9,7 @@ routes.get('/list-posts', PostController.getAllPosts);
 routes.get('/list-posts/active', PostController.getAllPostsByStatus);
 routes.get('/list-posts/id/:id', PostController.getPostById);
 routes.patch('/delete-post/:id', auth.verifyToken, auth.authorizePostOwner, PostController.logicalDeletePost);
+routes.patch('/add-like/:id', auth.verifyToken, PostController.addLike)
+routes.patch('/remove-like/:id', auth.verifyToken, PostController.removeLike)
 
 export default routes

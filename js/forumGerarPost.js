@@ -102,15 +102,33 @@ function addPost(settings) {
 
 // Função dar Like -------------------------------
 
-function darLike(el) {
+async function darLike(el) {
 	const likeCount = el.querySelector('.likeCount');
+	let postId;
+	document.querySelectorAll('.post').forEach(el => {
+		postId = el.dataset.post;
+	});
 	if (userId) {
 		if (!el.classList.contains('like')) {
 			el.classList.add('like')
 			likeCount.innerHTML = parseInt(likeCount.innerHTML) + 1;
+
+			await fetch(`http://localhost:3000/add-like/${postId}`, {
+				method: 'PATCH',
+				headers: {
+					'authorization': `Bearer ${localStorage.getItem('token')}`
+				}
+			});
 		} else {
 			el.classList.remove('like');
 			likeCount.innerHTML = parseInt(likeCount.innerHTML) - 1;
+
+			await fetch(`http://localhost:3000/remove-like/${postId}`, {
+				method: 'PATCH',
+				headers: {
+					'authorization': `Bearer ${localStorage.getItem('token')}`
+				}
+			});
 		}
 	} else {
 		modal.classList.remove('hide');
@@ -237,9 +255,19 @@ async function postar() {
 			textArea.value = '';
 			createToast("Informação", "Seu post foi enviado!", "padrao");
 
-			setTimeout(() => {
-				location.reload();
-			}, 1500);
+			console.log(result)
+
+			addPost({
+				id: result.id,
+				username: result.post.nome_usuario,
+				pfp: result.post.endereco_imagem || '1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg',
+				text: result.post.texto,
+				attachment: result.post.imagem_post || null,
+				categories: ['Geral'],
+				likes: 0,
+				createdAt: Date.now(),
+				id_usuario: result.post.id_usuario
+			})
 		} else {
 			console.error('Error creating post:', result.message);
 			createToast('Erro', 'Erro ao criar post: ' + result.message, 'vermelho');
