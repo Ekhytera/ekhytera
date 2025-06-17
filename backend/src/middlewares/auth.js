@@ -6,7 +6,6 @@ const SECRET = process.env.JWT_SECRET;
 
 const middlewares = {
     verifyToken: (req, res, next) => {
-        console.log('Middleware de autenticação foi chamado')
         const tokenHeader = req.headers.authorization;
         const token = tokenHeader ? tokenHeader.split(' ')[1] || tokenHeader : null;
 

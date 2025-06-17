@@ -37,7 +37,7 @@ async function trocarSenha(form) {
         email: email,
         senhaAtual: senhaAtual,
         senhaNova: senhaNova,
-        confSenha: confSenhaNova
+        confirmar: confSenhaNova
     };
 
     if(!data.email) {
@@ -52,7 +52,7 @@ async function trocarSenha(form) {
         erroSenhaNova.textContent = 'O campo nova senha é obrigatório';
         return
     }
-    if(!data.confSenha) {
+    if(!data.confirmar) {
         erroConfSenha.textContent = 'O campo de confirmação da senha é obrigatório';
         return
     }
@@ -62,7 +62,7 @@ async function trocarSenha(form) {
         return
     }
 
-    if(data.senhaNova !== data.confSenha) {
+    if(data.senhaNova !== data.confirmar) {
         erroConfSenha.textContent = 'As senhas não conferem';
         return
     }

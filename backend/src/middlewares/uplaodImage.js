@@ -1,5 +1,5 @@
 import multer from 'multer';
-import path from 'path'
+import path from 'path';
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -16,7 +16,7 @@ const fileFilter = (req, file, cb) => {
     if (ext.includes(file.mimetype)) {
         cb(null, true)
     } else {
-        cb({ erro: 'Apenas arquivos PNG, JPEG e JPG são permitidos' }, false)
+        cb(new Error('Apenas arquivos PNG, JPEG e JPG são permitidos'), false)
     }
 };
 

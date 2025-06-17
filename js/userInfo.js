@@ -70,8 +70,15 @@ authUser().then(userData => {
             fetch(imageUrl)
                 .then(response => response.blob())
                 .then(blob => {
-                    const convertFile = new File([blob], user.foto, { type: blob.type });
-                    file = convertFile
+                    const validTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+
+                    if (!validTypes.includes(blob.type)) {
+                        console.warn('Tipo de imagem inválido:', blob.type);
+                        return;
+                    }
+
+                    const convertFile = new File([blob], user.foto || 'imagem.jpg', { type: blob.type });
+                    file = convertFile;
                 })
                 .catch(error => {
                     console.error('Erro ao converter imagem para File:', error);
