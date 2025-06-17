@@ -62,9 +62,9 @@ const middlewares = {
             const user = req.user
             const post = await postsRepository.findPostById(id);
             
-            console.log(post)
+            console.log(user.cargo)
 
-            if (post[0].id_usuario !== user.id || user.cargo == 'admin') {
+            if (post[0].id_usuario !== user.id && user.cargo !== 'admin') {
                 console.log('permissão negada')
                 return res.status(403).json({
                     ok: false,

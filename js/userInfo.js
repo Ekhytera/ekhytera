@@ -144,15 +144,19 @@ async function editProfile(senha) {
     });
 
     const result = await updateResponse.json();
-    console.log(result.status)
+
+    if(result.status == 400) {
+        createToast('Erro', `${result.message}`, 'vermelho');
+        console.log('erro de status')
+        return;
+    }
 
     if (updateResponse.ok) {
         createToast('Informação', 'Informações atualizadas com sucesso!', 'padrao');
         passwordModal.classList.add('hide');
-
     } else {
         console.error('Erro ao atualizar informações:', result.message);
-        alert('Erro ao atualizar informações: ' + result.message);
+        createToast('Erro', `${result.message}, 'vermelho'`);
     }
 }
 
