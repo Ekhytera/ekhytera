@@ -148,13 +148,13 @@ export function showMenu(caller) {
             text.addEventListener('blur', async () => {
                 const p = document.createElement('p');
                 p.id = 'p-text';
-                p.innerText = text.value;
+                p.innerText = text.value || textAntigo;
                 divText.removeChild(text);
                 divText.appendChild(p);
 
                 if (!text.value) {
                     text.focus();
-                    createToast('Erro', 'Valor invalido. Preencha o campo.', 'vermelho');
+                    createToast('Erro', 'Valor invalido. O post não pode estar vazio.', 'vermelho');
                 } else {
                     try {
                         if (text.value != textAntigo) {
