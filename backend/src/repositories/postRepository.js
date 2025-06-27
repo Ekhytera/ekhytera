@@ -61,11 +61,15 @@ const postsRepository = {
     },
     async findPostById(id) {
         const sql = `SELECT 
-            id_post, texto, curtidas, status, id_usuario
+            p.id_post, p.texto, p.imagem_post, p.curtidas, p.status, p.criado_em, p.id_usuario, 
+            u.nome_usuario, u.endereco_imagem
         FROM 
-            tb_posts
-        WHERE 
-            status = 1 AND id_post = ?;`
+            tb_posts p
+        INNER JOIN 
+            tb_usuarios u
+        ON 
+            p.id_usuario = u.id_usuario
+        WHERE p.status = 1 AND p.id_post = ?;`
 
         try {
             const [result] = await connection.promise().execute(sql, [id]);
@@ -98,7 +102,7 @@ const postsRepository = {
             throw new Error(`Falha ao remover a curtida: ${error.message}`);
         }
     },
-    async logicalDelete(id){
+    async logicalDelete(id) {
         const sql = `UPDATE tb_posts 
         SET status = 0
         WHERE id_post = ?;`;
@@ -110,7 +114,7 @@ const postsRepository = {
             throw new Error(`Falha ao apagar post: ${error.message}`);
         }
     },
-    async editTextPost(id, text){
+    async editTextPost(id, text) {
         const sql = `UPDATE tb_posts 
         SET texto = ?
         WHERE id_post = ?;`;
