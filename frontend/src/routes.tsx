@@ -2,19 +2,7 @@ import { createBrowserRouter } from 'react-router-dom'
 import Layout from './components/Layout';
 import Home from './pages/Home';
 import Login from './pages/Login';
-
-// export default function AppRoutes() {
-//     return (
-//         <>
-//             <BrowserRouter>
-//                 <Routes>
-//                     <Route path="/" element={< Home />}></Route>
-
-//                 </Routes>
-//             </BrowserRouter>
-//         </>
-//     )
-// }
+import Register from './pages/Register';
 
 export const router = createBrowserRouter([
     {
@@ -29,7 +17,7 @@ export const router = createBrowserRouter([
                 // element: componente
             },
             {
-                path: '/educacao',
+                path: '/educação',
                 // element: componente
             },
             {
@@ -41,7 +29,7 @@ export const router = createBrowserRouter([
                 // element: componente
             },
             {
-                path: '/Promocoes',
+                path: '/Promoções',
                 // element: componente
             },
             {
@@ -63,6 +51,6 @@ export const router = createBrowserRouter([
     },
     {
         path: '/register',
-        // element: componente
+        element: <Register />
     }
 ])

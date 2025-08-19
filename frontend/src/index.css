@@ -8,6 +8,17 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.gradient-animate {
+    background-size: 200% 100%;
+    background-position: 0% 0%;
+    transition: background-position 0.5s, transform 0.3s;
+}
+
+.gradient-animate:hover {
+    background-position: 100% 0%;
+}
+
+
 body {
   margin: 0;
 }
