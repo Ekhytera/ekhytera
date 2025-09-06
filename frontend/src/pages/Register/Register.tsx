@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import Input from "../../components/Input";
+import Input from "../../components/Input/Input";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa6";
 import background from '../../assets/ekhytera_background_pattern1.png';

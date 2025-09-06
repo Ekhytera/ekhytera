@@ -1,31 +1,26 @@
-import Header from "../Header";
-
 import videoSrc from '../../assets/background_ekhytera.mp4';
 
 export default function Hero() {
-
   return (
     <>
-      < Header />
-
       <div className="bg-gray-950">
 
         <video
-              className="absolute top-0 left-0 w-full h-full object-cover pointer-events-none opacity-60 overflow-x-hidden"
-              src={videoSrc}
-              autoPlay
-              loop
-              muted 
-              playsInline
-            />
+          className="absolute top-0 left-0 w-full h-full object-cover pointer-events-none opacity-60 overflow-x-hidden"
+          src={videoSrc}
+          autoPlay
+          loop
+          muted
+          playsInline
+        />
 
         <div className="relative isolate px-6 lg:px-8">
-          
+
           <div
             aria-hidden="true"
             className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
           >
-            
+
             <div
               style={{
                 clipPath:
@@ -33,7 +28,7 @@ export default function Hero() {
               }}
               className="relative left-[calc(50%-11rem)] aspect-1155/678 w-144.5 -translate-x-1/2 rotate-30 bg-linear-to-tr from-[#79A7DD] to-[#415A77] opacity-30 sm:left-[calc(50%-30rem)] sm:w-288.75"
             />
-            
+
           </div>
           <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
             <div className="hidden sm:mb-8 sm:flex sm:justify-center">
@@ -72,7 +67,7 @@ export default function Hero() {
               }}
               className="relative left-[calc(50%+3rem)] aspect-1155/678 w-144.5 -translate-x-1/2 bg-linear-to-tr from-[#79A7DD] to-[#415A77] opacity-30 sm:left-[calc(50%+36rem)] sm:w-288.75"
             />
-            
+
           </div>
         </div>
       </div>
