@@ -7,7 +7,7 @@ interface InputProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     register: UseFormRegister<any>;
     error?: string;
-    rules?: RegisterOptions
+    rules?: RegisterOptions;
 }
 
 function Input({ name, type, placeholder, register, rules, error }: InputProps) {
@@ -22,7 +22,7 @@ function Input({ name, type, placeholder, register, rules, error }: InputProps) 
                 className="block w-full rounded-md bg-white/5 px-3 py-2 text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600"
             />
             {
-                error && <p className="text-red-600">* {error}</p>
+                (error) && <p className="text-red-600">* {error}</p>
             }
         </>
     )

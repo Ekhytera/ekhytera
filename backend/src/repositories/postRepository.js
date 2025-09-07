@@ -1,4 +1,4 @@
-import connection from "../database/mysqlconnection.js";
+// import connection from "../database/mysqlconnection.js";
 
 const postsRepository = {
     async getAllPosts() {

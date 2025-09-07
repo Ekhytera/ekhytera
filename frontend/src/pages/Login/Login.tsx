@@ -6,12 +6,15 @@ import background from '../../assets/ekhytera_background_pattern1.png';
 import { useForm } from "react-hook-form";
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from "react";
-
+import { useState,useEffect } from "react";
+import api from "../../services/api";
+import { useAuth } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { AxiosError } from "axios";
 
 const schema = z.object({
     email: z.string().email('Insira um email valido').nonempty('O campo email é obrigatório'),
-    password: z.string().nonempty('O campo senha é obrigatório')
+    senha: z.string().nonempty('O campo senha é obrigatório')
 });
 
 type FormData = z.infer<typeof schema>
@@ -22,15 +25,35 @@ function Login() {
         resolver: zodResolver(schema),
         mode: "onChange",
     });
-    const [viewPassword, setViewPassword] = useState(false)
+    const [viewPassword, setViewPassword] = useState(false);
+    const [msgErro, setMsgErro] = useState('');
+    const { getUser } = useAuth();
+    const navigate = useNavigate();
 
     async function onSubmit(data: FormData) {
         try {
-            console.log(data)
+            const req = await api.post('/login', data);
+            const token = req.data.token;
+
+            localStorage.setItem('token', token);
+            console.log(localStorage.getItem('token'))
+            getUser();
+            navigate('/', { replace: true });
+
         } catch (error) {
-            console.log(error)
+            console.log(error);
+
+            if (error instanceof AxiosError && error.response) {
+                setMsgErro(error.response.data.message || 'Erro no servidor');
+            } else {
+                setMsgErro('Erro de conexão. Tente novamente.');
+            }
         }
     }
+
+    useEffect(() => {
+            // TODO: caso o usuario entre na pagina, efetuar o logout
+        }, []);
 
     return (
         <>
@@ -70,10 +93,10 @@ function Login() {
                                 </div>
                                 <div className="mt-2 relative">
                                     <Input
-                                        name="password"
+                                        name="senha"
                                         type={viewPassword ? 'text' : 'password'}
                                         placeholder="********"
-                                        error={errors.password?.message}
+                                        error={errors.senha?.message}
                                         register={register}
                                     />
                                     <button
@@ -90,6 +113,8 @@ function Login() {
                                     </button>
                                 </div>
                             </div>
+
+                            {msgErro && <p className="text-red-600">* {msgErro}</p>}
 
                             <div>
                                 <button

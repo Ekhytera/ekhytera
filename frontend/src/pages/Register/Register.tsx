@@ -6,16 +6,19 @@ import background from '../../assets/ekhytera_background_pattern1.png';
 import { useForm } from "react-hook-form";
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import api from "../../services/api";
+import { AxiosError } from "axios";
 
 
 const schema = z.object({
     email: z.string().email('Insira um email valido').nonempty('O campo email é obrigatório'),
-    name: z.string()
+    nome_usuario: z.string()
         .trim()
         .nonempty('O campo nome é obrigatótio')
         .regex(/^\S+$/, "Não pode conter espaços"),
-    password: z.string()
+    senha: z.string()
         .nonempty('O campo senha é obrigatótio')
         .min(6, "A senha deve conter no mínimo 6 caracteres")
         .refine((val) => !/123456|234567|345678|012345/.test(val), {
@@ -42,18 +45,64 @@ type FormData = z.infer<typeof schema>
 
 function Register() {
 
-    const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
+    const { register, handleSubmit, formState: { errors }, watch } = useForm<FormData>({
         resolver: zodResolver(schema),
         mode: "onChange",
     });
     const [viewPassword, setViewPassword] = useState(false);
-    const [nameError, setNameError] = useState('');
+    const [msgErro, setMsgErro] = useState('');
+    const [errorInputName, setErrorInputName] = useState('');
+    const navigate = useNavigate();
+
+    const watchedUsername = watch('nome_usuario');
+
+    async function handleVerifyName(username: string) {
+        if (!username || username.trim() === '') {
+            setErrorInputName('');
+            return;
+        }
+
+        try {
+            const req = await api.get(`/usuarios/userName/${username}`);
+
+            if (req.data.error) {
+                setErrorInputName(req.data.message);
+            } else {
+                setErrorInputName('');
+            }
+        } catch (error) {
+            setErrorInputName('');
+        }
+    }
+
+    useEffect(() => {
+        // TODO: caso o usuario entre na pagina, efetuar o logout
+    }, []);
+
+    useEffect(() => {
+        const delay = setTimeout(() => {
+            if (watchedUsername) {
+                handleVerifyName(watchedUsername);
+            } else {
+                setErrorInputName('');
+            }
+        }, 700);
+
+        return () => clearTimeout(delay);
+    }, [watchedUsername])
 
     async function onSubmit(data: FormData) {
         try {
-            console.log(data)
+            await api.post('/cadastrar', data);
+
+            navigate('/login', { replace: true });
         } catch (error) {
-            console.log(error)
+            console.log(error);
+            if (error instanceof AxiosError && error.response) {
+                setMsgErro(error.response.data.message || 'Erro no servidor');
+            } else {
+                setMsgErro('Erro de conexão. Tente novamente.');
+            }
         }
     }
 
@@ -88,15 +137,15 @@ function Register() {
                             </div>
 
                             <div>
-                                <label htmlFor="email" className="block font-medium text-gray-100 text-xl">
+                                <label htmlFor="nome_usuario" className="block font-medium text-gray-100 text-xl">
                                     Nome de usuario
                                 </label>
                                 <div className="mt-2">
                                     <Input
-                                        name="name"
+                                        name="nome_usuario"
                                         type="text"
                                         placeholder="exemplo123"
-                                        error={errors.name?.message || nameError}
+                                        error={errors.nome_usuario?.message || errorInputName}
                                         register={register}
                                     />
                                 </div>
@@ -110,10 +159,10 @@ function Register() {
                                 </div>
                                 <div className="mt-2 relative">
                                     <Input
-                                        name="password"
+                                        name="senha"
                                         type={viewPassword ? 'text' : 'password'}
                                         placeholder="********"
-                                        error={errors.password?.message}
+                                        error={errors.senha?.message}
                                         register={register}
                                     />
                                     <button
@@ -130,6 +179,8 @@ function Register() {
                                     </button>
                                 </div>
                             </div>
+
+                            {msgErro && <p className="text-red-600">* {msgErro}</p>}
 
                             <div>
                                 <button

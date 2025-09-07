@@ -32,14 +32,6 @@ const UserController = {
             message: 'email já cadastrado'
         });
 
-        const nomeUser = await UserRepository.findUserByUsername(nome_usuario);
-
-        if (nomeUser && nome_usuario === nomeUser.nome_usuario) return res.status(400).json({
-            ok: false,
-            status: 400,
-            message: 'esse nome de usuario já esta sendo utilizado'
-        });
-
         try {
             const salt = await bcrypt.genSalt(10);
             const hashSenha = await bcrypt.hash(senha, salt);
@@ -99,6 +91,7 @@ const UserController = {
                 message: 'Usuario não encontrado'
             });
 
+            console.log(senha, user.senha)
             const checarSenha = await bcrypt.compare(senha, user.senha);
 
             if (!checarSenha) return res.status(400).json({
@@ -164,16 +157,16 @@ const UserController = {
 
     getUserById: async (req, res) => {
         try {
-            const id = req.params.id;
+            const id = req.user.id;
 
-            const user = await UserRepository.findUserByID(id);
+            const user = await UserRepository.findUserById(id);
 
             if (user) {
                 return res.status(200).json({
                     ok: true,
                     status: 200,
                     message: 'Usuário encontrado com sucesso',
-                    users: user
+                    user: user
                 });
             }
 
@@ -192,83 +185,26 @@ const UserController = {
         }
     },
 
-    getUserByToken: async (req, res) => {
-        try {
-            const userId = req.user.id;
-
-            const user = await UserRepository.findUserByToken(userId);
-
-            if (!user) {
-                return res.status(404).json({
-                    ok: false,
-                    status: 404,
-                    message: 'Usuário não encontrado'
-                });
-            }
-
-            delete user.senha;
-
-            return res.status(200).json({
-                ok: true,
-                status: 200,
-                message: 'Usuário encontrado com sucesso',
-                user: user
-            });
-        } catch (error) {
-            console.error(error);
-            return res.status(500).json({
-                ok: false,
-                status: 500,
-                message: 'Erro ao verificar o token'
-            });
-        }
-    },
-
     getUserByUserName: async (req, res) => {
         const { userName } = req.params;
+        console.log(userName)
 
-        const nomeUser = await UserRepository.findUserByUsername(userName);
+        if(!userName) {
+            return res.status(200).json({
+                message: 'O campo nome é obrigatório'
+            });
+        }
+
+        const nomeUser = await UserRepository.findUserByUserName(userName);
 
         try {
             if (nomeUser) return res.status(200).json({
-                ok: true,
-                status: 200,
-                message: 'usuario encontrado com sucesso',
-                user: nomeUser.nome_usuario,
+                error: true,
+                message: 'Esse nome de usuário já esta em uso'
             });
 
             return res.status(404).json({
-                ok: false,
-                status: 404,
-                message: 'nenhum usuario com esse nome foi encontrado',
-            });
-
-        } catch (error) {
-            console.log(error);
-            return res.status(500).json({
-                ok: false,
-                status: 500,
-                message: 'Erro no servidor'
-            });
-        }
-    },
-
-    getUserByEmail: async (req, res) => {
-        const { email } = req.params;
-        const user = await UserRepository.findUserByEmail(email);
-
-        try {
-            if (user) return res.status(200).json({
-                ok: true,
-                status: 200,
-                message: 'Usuario encontrado com sucesso',
-                user: user
-            });
-
-            return res.status(404).json({
-                ok: false,
-                status: 404,
-                message: 'Usuario não encontrado',
+                error: false
             });
 
         } catch (error) {

@@ -4,6 +4,9 @@ import { useState } from 'react'
 import { Dialog, DialogPanel } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Link } from 'react-router-dom'
+import { useAuth } from '../../contexts/AuthContext'
+import { FaUserLarge } from "react-icons/fa6";
+
 
 const navigation = [
     { name: 'Montagem', href: '/montagem' },
@@ -15,7 +18,8 @@ const navigation = [
 ]
 
 export default function Header() {
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const { signed } = useAuth();
 
     return (
         <>
@@ -58,13 +62,22 @@ export default function Header() {
                     </div>
 
                     <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-                        <Link
-                            to={"/login"}
-                            className="relative px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25 hover:scale-105 whitespace-nowrap"
-                        >
-                            Log in
-                            <span aria-hidden="true" className="ml-1">&rarr;</span>
-                        </Link>
+                        {!signed ?
+                            <Link
+                                to={"/login"}
+                                className="relative px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25 hover:scale-105 whitespace-nowrap"
+                            >
+                                Log in
+                                <span aria-hidden="true" className="ml-1">&rarr;</span>
+                            </Link>
+                            :
+                            <Link
+                                to={"/perfil"}
+                                className="relative px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25 hover:scale-105 whitespace-nowrap flex items-center justify-center"
+                            >
+                                Perfil <FaUserLarge className='ml-4' />
+                            </Link>
+                        }
                     </div>
                 </nav>
 
@@ -106,13 +119,24 @@ export default function Header() {
                                     ))}
                                 </div>
                                 <div className="py-6">
-                                    <Link
-                                        to={"/login"}
-                                        onClick={() => setMobileMenuOpen(false)}
-                                        className="-mx-3 block rounded-lg px-3 py-3 text-base font-semibold bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 transition-all duration-200 text-center"
-                                    >
-                                        Log in
-                                    </Link>
+                                    {
+                                        !signed ?
+                                            <Link
+                                                to={"/login"}
+                                                onClick={() => setMobileMenuOpen(false)}
+                                                className="-mx-3 block rounded-lg px-3 py-3 text-base font-semibold bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 transition-all duration-200 text-center"
+                                            >
+                                                Log in
+                                            </Link>
+                                            :
+                                            <Link
+                                                to={"/perfil"}
+                                                onClick={() => setMobileMenuOpen(false)}
+                                                className="-mx-3 rounded-lg px-3 py-3 text-base font-semibold bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 transition-all duration-200 text-center flex items-center justify-center"
+                                            >
+                                                Perfil <FaUserLarge className='ml-4' />
+                                            </Link>
+                                    }
                                 </div>
                             </div>
                         </div>
