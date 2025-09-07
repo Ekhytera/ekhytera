@@ -3,8 +3,9 @@ import Layout from './components/Layout/Layout';
 import Home from './pages/Home/Home';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
-import { Montagem } from './pages/Montagem';
 import Community from './pages/Community/Community';
+import Montagem from './pages/Montagem/Montagem';
+import NotFound from './pages/NotFound/NotFound';
 
 export const router = createBrowserRouter([
     {
@@ -39,7 +40,7 @@ export const router = createBrowserRouter([
             */
             {
                 path: '*',
-                // element: Pagina não encontrada
+                element: <NotFound />,
             },
         ]
     },
