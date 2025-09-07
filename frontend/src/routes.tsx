@@ -1,9 +1,11 @@
 import { createBrowserRouter } from 'react-router-dom'
-import Layout from './components/Layout';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import { Montagem } from './pages/Montagem';
+import Layout from './components/Layout/Layout';
+import Home from './pages/Home/Home';
+import Login from './pages/Login/Login';
+import Register from './pages/Register/Register';
+import Community from './pages/Community/Community';
+import Montagem from './pages/Montagem/Montagem';
+import NotFound from './pages/NotFound/NotFound';
 
 export const router = createBrowserRouter([
     {
@@ -15,7 +17,7 @@ export const router = createBrowserRouter([
             },
             {
                 path: '/montagem',
-                // element: componente
+                element: <Montagem />
             },
             {
                 path: '/community',
@@ -38,7 +40,7 @@ export const router = createBrowserRouter([
             */
             {
                 path: '*',
-                // element: Pagina não encontrada
+                element: <NotFound />,
             },
         ]
     },

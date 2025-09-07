@@ -75,7 +75,7 @@ export default function Testimonials() {
 
 
                     <Swiper
-                        modules={[Pagination, Autoplay]} 
+                        modules={[Pagination, Autoplay]}
                         slidesPerView={1}
                         spaceBetween={32}
                         loop={true}
@@ -95,7 +95,7 @@ export default function Testimonials() {
                         {testimonialData.map((testimonial) => (
                             <SwiperSlide key={testimonial.id}>
 
-                                <div className="group bg-zinc-900/50 bg-clip-padding backdrop-filter backdrop-blur-sm border border-1 border-zinc-800 rounded-xl p-6 transition-all duration-500 w-full mx-auto hover:border-gray-700 [&.swiper-slide-active]:border-gray-700 hover:shadow-[0px_0px_45px_-22px_#969fff]">
+                                <div className="group bg-zinc-900/50 bg-clip-padding backdrop-filter backdrop-blur-sm border-1 border-zinc-800 rounded-xl p-6 transition-all duration-500 w-full mx-auto hover:border-gray-700 [&.swiper-slide-active]:border-gray-700 hover:shadow-[0px_0px_45px_-22px_#969fff]">
                                     <div>
                                         <div className="flex items-center mb-7 gap-2 text-amber-500">
                                             <svg className="w-5 h-5" viewBox="0 0 18 17" fill="none" xmlns="http://www.w3.org/2000/svg">
