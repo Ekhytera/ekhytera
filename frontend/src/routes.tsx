@@ -25,19 +25,16 @@ export const router = createBrowserRouter([
             },
             {
                 path: '/catalogo',
-                // element: componente
+                element: <NotFound />
             },
             {
                 path: '/Promoções',
-                // element: componente
+                element: <NotFound />
             },
             {
                 path: '/Sobre',
-                // element: componente
+                element: <NotFound />
             },
-            /*
-                Caso tenha mais paginas, rederizar acima da not found.
-            */
             {
                 path: '*',
                 element: <NotFound />,
