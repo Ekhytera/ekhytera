@@ -10,8 +10,7 @@ import { FaUserLarge } from "react-icons/fa6";
 
 const navigation = [
     { name: 'Montagem', href: '/montagem' },
-    { name: 'Educação', href: '/educacao' },
-    { name: 'Fórum', href: '/forum' },
+    { name: 'Comunidade', href: '/community' },
     { name: 'Catálogo', href: '/catalogo' },
     { name: 'Promoções', href: '/promocoes' },
     { name: 'Sobre Nós', href: '/sobre' }
