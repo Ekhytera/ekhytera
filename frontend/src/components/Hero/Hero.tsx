@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import videoSrc from '../../assets/background_ekhytera.mp4';
+import SplitText from '../../reactbits/SplitText';
 
 export default function Hero() {
   return (
@@ -38,9 +39,19 @@ export default function Hero() {
             </div>
 
             <div className="text-center">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-semibold tracking-tight text-balance bg-gradient-to-r from-[#79A7DD] to-white bg-clip-text text-transparent">
-                Faça a escolha certa
-              </h1>
+              <SplitText
+                text="Faça a escolha certa!"
+                className="text-6xl text-white font-semibold text-center"
+                delay={100}
+                duration={2}
+                ease="elastic.out"
+                splitType="chars"
+                from={{ opacity: 0, y: 20 }}
+                to={{ opacity: 1, y: 0 }}
+                threshold={0.1}
+                rootMargin="-100px"
+                textAlign="center"
+              />
               <p className="mt-6 sm:mt-8 text-base sm:text-lg md:text-xl font-medium text-pretty text-gray-200 max-w-3xl mx-auto px-4 sm:px-0">
                 Utilize nosso serviço de recomendações personalizadas e tenha mais assertividade ao montar sua máquina.
               </p>
