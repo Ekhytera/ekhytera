@@ -41,7 +41,7 @@ export default function Hero() {
             <div className="text-center">
               <SplitText
                 text="Faça a escolha certa!"
-                className="text-6xl text-white font-semibold text-center"
+                className="text-6xl text-white font-semibold text-center p-3"
                 delay={100}
                 duration={2}
                 ease="elastic.out"
