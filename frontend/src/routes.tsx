@@ -6,6 +6,7 @@ import Register from './pages/Register/Register';
 import Community from './pages/Community/Community';
 import Montagem from './pages/Montagem/Montagem';
 import NotFound from './pages/NotFound/NotFound';
+import Perfil from './pages/Perfil/Perfil';
 
 export const router = createBrowserRouter([
     {
@@ -34,6 +35,10 @@ export const router = createBrowserRouter([
             {
                 path: '/Sobre',
                 element: <NotFound />
+            },
+            {
+                path: '/Perfil',
+                element: <Perfil />
             },
             {
                 path: '*',
