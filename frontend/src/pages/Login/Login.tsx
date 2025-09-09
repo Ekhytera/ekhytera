@@ -41,8 +41,6 @@ function Login() {
             navigate('/', { replace: true });
 
         } catch (error) {
-            console.log(error);
-
             if (error instanceof AxiosError && error.response) {
                 setMsgErro(error.response.data.message || 'Erro no servidor');
             } else {

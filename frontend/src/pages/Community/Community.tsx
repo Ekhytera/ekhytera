@@ -8,10 +8,10 @@ import {
     FaceSmileIcon,
     EllipsisHorizontalIcon,
     NewspaperIcon,
-    AcademicCapIcon,
     ChevronRightIcon
 } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
+import ContentCard from '../../components/ContentCard/ContentCard';
 
 interface Post {
     id: number;
@@ -297,34 +297,7 @@ export default function Community() {
                         </div>
 
                         <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl p-6">
-                            <div className="flex items-center gap-2 mb-4">
-                                <AcademicCapIcon className="w-5 h-5 text-green-400" />
-                                <h2 className="font-bold text-white text-lg">Conteúdo Educativo</h2>
-                            </div>
-
-                            <div className="space-y-4">
-                                {educationalContent.map((content, index) => (
-                                    <div key={index} className="group cursor-pointer">
-                                        <div className="flex items-center justify-between mb-1">
-                                            <span className="text-xs text-green-400 font-medium">{content.type}</span>
-                                            <span className={`text-xs px-2 py-1 rounded-full ${content.difficulty === 'Iniciante' ? 'bg-green-500/20 text-green-400' :
-                                                content.difficulty === 'Intermediário' ? 'bg-yellow-500/20 text-yellow-400' :
-                                                    'bg-red-500/20 text-red-400'
-                                                }`}>
-                                                {content.difficulty}
-                                            </span>
-                                        </div>
-                                        <h3 className="text-white font-medium group-hover:text-green-300 transition-colors">
-                                            {content.title}
-                                        </h3>
-                                    </div>
-                                ))}
-                            </div>
-
-                            <button className="w-full mt-4 text-green-400 hover:text-green-300 transition-colors text-sm font-medium flex items-center justify-center gap-1">
-                                Ver todos os guias
-                                <ChevronRightIcon className="w-4 h-4" />
-                            </button>
+                            <ContentCard title='Conteúdo Educativo' nameButton='Ver todos os guias' contentList={educationalContent} />
                         </div>
 
                         <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl p-6">

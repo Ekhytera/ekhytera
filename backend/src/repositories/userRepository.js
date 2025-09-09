@@ -37,13 +37,16 @@ const UserRepository = {
     },
     async updateInfo(id, data) {
         const update = await prisma.tb_usuarios.update({
-            where: { id: id },
+            where: { id_usuario: id },
             data: data
         });
         return update;
     },
-    async updatePassword(){
-
+    async deleteUser(id){
+        const deleted = await prisma.tb_usuarios.delete({
+            where: { id_usuario: id },
+        });
+        return !!deleted;
     }
 }
 

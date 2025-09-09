@@ -13,11 +13,15 @@ import { AxiosError } from "axios";
 
 
 const schema = z.object({
-    email: z.string().email('Insira um email valido').nonempty('O campo email é obrigatório'),
+    email: z.string()
+    .email('Insira um email valido')
+    .nonempty('O campo email é obrigatório'),
     nome_usuario: z.string()
         .trim()
         .nonempty('O campo nome é obrigatótio')
-        .regex(/^\S+$/, "Não pode conter espaços"),
+        .regex(/^\S+$/, "Não pode conter espaços")
+        .min(3, 'O nome deve conter no mínimo 3 caracteres')
+        .max(25, 'O nome deve conter no maximo 25 caracteres'),
     senha: z.string()
         .nonempty('O campo senha é obrigatótio')
         .min(6, "A senha deve conter no mínimo 6 caracteres")
@@ -70,6 +74,7 @@ function Register() {
             } else {
                 setErrorInputName('');
             }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
             setErrorInputName('');
         }
@@ -97,7 +102,6 @@ function Register() {
 
             navigate('/login', { replace: true });
         } catch (error) {
-            console.log(error);
             if (error instanceof AxiosError && error.response) {
                 setMsgErro(error.response.data.message || 'Erro no servidor');
             } else {

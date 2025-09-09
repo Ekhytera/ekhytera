@@ -1,4 +1,4 @@
-import UserRepository from "../repositories/userRepository.js";
+import UserRepository from "../repositories/UserRepository.js";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -67,7 +67,6 @@ const UserController = {
             });
         }
     },
-
     login: async (req, res) => {
         const { email, senha } = req.body;
 
@@ -91,7 +90,6 @@ const UserController = {
                 message: 'Usuario não encontrado'
             });
 
-            console.log(senha, user.senha)
             const checarSenha = await bcrypt.compare(senha, user.senha);
 
             if (!checarSenha) return res.status(400).json({
@@ -111,8 +109,6 @@ const UserController = {
                 { expiresIn: '14d' }
             );
 
-            console.log('Usuario logado: ', user);
-
             res.status(200).json({
                 status: 200,
                 ok: true,
@@ -129,7 +125,6 @@ const UserController = {
             });
         }
     },
-
     getAllUser: async (req, res) => {
         try {
             const users = await UserRepository.getAllUsers();
@@ -154,7 +149,6 @@ const UserController = {
             });
         }
     },
-
     getUserById: async (req, res) => {
         try {
             const id = req.user.id;
@@ -184,12 +178,10 @@ const UserController = {
             });
         }
     },
-
     getUserByUserName: async (req, res) => {
         const { userName } = req.params;
-        console.log(userName)
 
-        if(!userName) {
+        if (!userName) {
             return res.status(200).json({
                 message: 'O campo nome é obrigatório'
             });
@@ -216,28 +208,10 @@ const UserController = {
             });
         }
     },
-
     updateUser: async (req, res) => {
         const id = req.user.id;
         const data = req.body;
-        const file = req.file;
         let endereco_imagem;
-
-        if (file) {
-            endereco_imagem = file.filename;
-        }
-
-        if(data.dt_nascimento === ''){
-            data.dt_nascimento = null
-        }
-
-        if ('email' in data && !data.email) {
-            return res.status(400).json({
-                ok: false,
-                status: 400,
-                message: 'O campo email é obrigatório'
-            });
-        }
 
         if ('nome_usuario' in data && !data.nome_usuario) {
             return res.status(400).json({
@@ -246,51 +220,35 @@ const UserController = {
                 message: 'O campo nome é obrigatório'
             });
         }
-
-        if ('senha' in data && !data.senha) {
+        if ('email' in data && !data.email) {
             return res.status(400).json({
                 ok: false,
                 status: 400,
-                message: 'A senha é obrigatória para atualizar as informações'
+                message: 'O campo email é obrigatório'
             });
         }
 
         try {
-            const currentUser = await UserRepository.findUserByID(id);
+            const updated = await UserRepository.updateInfo(id, data);
 
-            if (!currentUser) {
-                return res.status(404).json({
-                    ok: false,
-                    status: 404,
-                    message: 'Usuário não encontrado'
-                });
-            }
-
-            const isPasswordValid = await bcrypt.compare(data.senha, currentUser.senha);
-
-            if (!isPasswordValid) return res.status(400).json({
-                ok: false,
-                status: 400,
-                message: 'Senha inválida'
-            })
-
-            const updated = await UserRepository.updateInfo(id, { ...data, endereco_imagem: endereco_imagem });
-
-            console.log({ ...data, endereco_imagem: endereco_imagem })
+            console.log(updated)
 
             if (updated) {
                 return res.status(200).json({
                     ok: true,
                     status: 200,
-                    message: 'Usuário atualizado com sucesso'
-                });
+                    message: 'Informações atualizadas com sucesso'
+                })
             }
 
             return res.status(400).json({
                 ok: false,
                 status: 400,
-                message: 'Nenhuma alteração foi feita'
+                message: 'Erro ao atualizar informações'
             });
+
+
+
         } catch (error) {
             console.error(error);
             return res.status(500).json({
@@ -300,124 +258,50 @@ const UserController = {
             });
         }
     },
-
-    updatePassword: async (req, res) => {
-        const id = req.user.id;
-        const { email, senhaAtual, senhaNova, confirmar } = req.body;
-
-        if (!email) return res.status(400).json({
-            ok: false,
-            status: 400,
-            message: 'O campo email é obrigatório'
-        });
-
-        if (!senhaAtual) return res.status(400).json({
-            ok: false,
-            status: 400,
-            message: 'O campo da senha atual é obrigatório'
-        });
-
-        if (!senhaNova) return res.status(400).json({
-            ok: false,
-            status: 400,
-            message: 'O campo da nova senha é obrigatório'
-        });
-
-        if (!confirmar) return res.status(400).json({
-            ok: false,
-            status: 400,
-            message: 'O campo de confirmação da senha é obrigatório'
-        });
-
-        const currentUser = await UserRepository.findUserByID(id);
-
-        if (!currentUser) return res.status(404).json({
-            ok: false,
-            status: 404,
-            message: 'Erro ao encontrar usuario atual'
-        });
-
-        try {
-            if (currentUser.email !== email) return res.status(400).json({
-                ok: false,
-                status: 400,
-                message: 'Email incorreto'
-            });
-
-            const isCurrentPassordValid = await bcrypt.compare(senhaAtual, currentUser.senha);
-
-            if(!isCurrentPassordValid) return res.status(400).json({
-                ok: false,
-                status: 400,
-                message: 'Senha incorreta'
-            });
-
-            if(senhaNova !== confirmar) return res.status(400).json({
-                ok: false,
-                status: 400,
-                message: 'As senhas são diferentes'
-            });
-
-            const isNewPasswordValid = await bcrypt.compare(senhaNova, currentUser.senha);
-
-            if(isNewPasswordValid) return res.status(400).json({
-                ok: false,
-                status: 400,
-                message: 'A nova senha é igual a atual'
-            });
-
-            const salt = await bcrypt.genSalt(10);
-            const hashSenha = await bcrypt.hash(senhaNova, salt);
-
-            const updateUser = await UserRepository.updatePassword(id, hashSenha);
-
-            if (updateUser) return res.status(200).json({
-                ok: true,
-                status: 200,
-                message: 'Senha atualizada com sucesso'
-            });
-
-            return res.status(404).json({
-                ok: false,
-                status: 404,
-                message: 'erro ao atualizar'
-            });
-
-        } catch (error) {
-            console.log(error);
-            return res.status(500).json({
-                ok: false,
-                status: 500,
-                message: 'Erro no servidor'
-            });
-        }
-    },
-
-    updateDeleteUser: async (req, res) => {
+    deleteUser: async (req, res) => {
         try {
             const id = req.user.id;
+            const { senha } = req.body;
 
-            const userDelete = await UserRepository.logicalDelete(id);
+            const user = await UserRepository.findUserByEmail(req.user.email);
 
-            if (userDelete) return res.status(200).json({
-                ok: true,
+            if (!user) {
+                return res.status(404).json({
+                    ok: false,
+                    status: 404,
+                    message: "Usuario não encontrado"
+                });
+            }
+
+            const checarSenha = await bcrypt.compare(senha, user.senha);
+
+            if (!checarSenha) {
+                return res.status(400).json({
+                    status: 400,
+                    ok: false,
+                    message: 'Senha inválida'
+                });
+            }
+
+            const deleted = await UserRepository.deleteUser(id);
+
+            if (!deleted) {
+                return res.status(400).json({
+                    status: 400,
+                    ok: false,
+                    message: 'Falha ao deletar usuario'
+                });
+            }
+
+            return res.status(200).json({
                 status: 200,
-                message: 'usuario deletado com sucesso'
-            });
-
-            return res.status(404).json({
                 ok: true,
-                status: 200,
-                message: 'Falha ao deletadar usuario'
+                message: 'Usuario deletado'
             });
 
         } catch (error) {
             console.log(error);
-            return res.status(500).json({
-                ok: false,
-                status: 500,
-                message: 'Erro no servidor'
-            });
+
         }
     }
 }

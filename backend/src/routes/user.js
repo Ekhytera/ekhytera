@@ -16,8 +16,9 @@ routes.post('/login', UserController.login);
 // ROTAS PRIVADAS --------------------------------------------
 
 routes.get('/usuarios/id', auth.verifyToken, UserController.getUserById);
-routes.put('/update-user', auth.verifyToken, upload.single('file'), UserController.updateUser);
-routes.patch('/update-password-user', auth.verifyToken, UserController.updatePassword);
-routes.patch('/delete-user', auth.verifyToken, UserController.updateDeleteUser);
+routes.patch('/update-user', auth.verifyToken, upload.array('files', 10), UserController.updateUser);
+routes.delete('/delete-user', auth.verifyToken, UserController.deleteUser);
+
+
 
 export default routes

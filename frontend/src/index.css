@@ -18,6 +18,11 @@
     background-position: 100% 0%;
 }
 
+.scroll-profile {
+  scrollbar-width: thin;
+  scrollbar-color: #6b7280 transparent;
+}
+
 
 body {
   margin: 0;
