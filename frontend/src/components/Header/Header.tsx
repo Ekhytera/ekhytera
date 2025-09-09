@@ -72,7 +72,8 @@ export default function Header() {
                             :
                             <Link
                                 to={"/perfil"}
-                                className="relative px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25 hover:scale-105 whitespace-nowrap flex items-center justify-center"
+                                className="relative px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-[#79A7DD] to-[#415A77]
+                                rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25 hover:scale-105 whitespace-nowrap flex items-center justify-center"
                             >
                                 Perfil <FaUserLarge className='ml-4' />
                             </Link>
@@ -123,7 +124,8 @@ export default function Header() {
                                             <Link
                                                 to={"/login"}
                                                 onClick={() => setMobileMenuOpen(false)}
-                                                className="-mx-3 block rounded-lg px-3 py-3 text-base font-semibold bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 transition-all duration-200 text-center"
+                                                className="relative px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-[#79A7DD] to-[#415A77]
+                                                rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25 hover:scale-105 whitespace-nowrap flex items-center justify-center"
                                             >
                                                 Log in
                                             </Link>
@@ -131,7 +133,8 @@ export default function Header() {
                                             <Link
                                                 to={"/perfil"}
                                                 onClick={() => setMobileMenuOpen(false)}
-                                                className="-mx-3 rounded-lg px-3 py-3 text-base font-semibold bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 transition-all duration-200 text-center flex items-center justify-center"
+                                                className="relative px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-[#79A7DD] to-[#415A77]
+                                                rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25 hover:scale-105 whitespace-nowrap flex items-center justify-center"
                                             >
                                                 Perfil <FaUserLarge className='ml-4' />
                                             </Link>

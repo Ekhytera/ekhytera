@@ -153,7 +153,7 @@ function Config({ setConfigIsOpen }: ConfigProps) {
                         className="bg-gray-600 px-3 py-1 rounded text-white hover:bg-gray-700 transition-colors"
                         onClick={() => toast.dismiss()}
                     >
-                        não
+                        Não
                     </button>
                     <button
                         className="bg-red-600 px-3 py-1 rounded text-white hover:bg-red-700 transition-colors"
@@ -162,7 +162,7 @@ function Config({ setConfigIsOpen }: ConfigProps) {
                             toast.dismiss();
                         }}
                     >
-                        Sair
+                        Sim
                     </button>
                 </div>
             </div>
