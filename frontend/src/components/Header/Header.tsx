@@ -22,7 +22,7 @@ export default function Header() {
 
     return (
         <>
-            <header className="fixed inset-x-0 top-0 z-50 backdrop-blur-md bg-gray-950/80 border-b border-white/10 shadow-lg">
+            <header className="fixed inset-x-0 top-0 z-50 backdrop-blur-md bg-gray-950/55 border-b border-white/10 shadow-lg">
                 <nav aria-label="Global" className="flex items-center justify-between p-4 sm:p-6 lg:px-8">
                     <div className="flex lg:flex-1">
                         <Link to={"/"} className="-m-1.5 p-1.5 transition-transform hover:scale-105">
@@ -64,7 +64,7 @@ export default function Header() {
                         {!signed ?
                             <Link
                                 to={"/login"}
-                                className="relative px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25 hover:scale-105 whitespace-nowrap"
+                                className="relative px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-[#79A7DD] to-[#415A77] rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25 hover:scale-105 whitespace-nowrap"
                             >
                                 Log in
                                 <span aria-hidden="true" className="ml-1">&rarr;</span>
