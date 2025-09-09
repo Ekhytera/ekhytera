@@ -145,10 +145,6 @@ export default function Catalog() {
         setCurrentSlide((prev) => (prev + 1) % featuredGames.length);
     };
 
-    const prevSlide = () => {
-        setCurrentSlide((prev) => (prev - 1 + featuredGames.length) % featuredGames.length);
-    };
-
     useEffect(() => {
         const interval = setInterval(nextSlide, 5000);
         return () => clearInterval(interval);
@@ -173,17 +169,6 @@ export default function Catalog() {
                         </div>
                     ))}
                 </div>
-
-                <button
-                    onClick={prevSlide}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
-                >
-                </button>
-                <button
-                    onClick={nextSlide}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
-                >
-                </button>
 
                 <div className="absolute inset-0 flex items-center">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
