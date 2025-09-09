@@ -168,6 +168,9 @@ function Perfil() {
     };
 
     async function handleRemoveBanner() {
+
+        if(!auth?.endereco_banner) return;
+
         try {
             const req = await api.patch('update-user?typeImage=banner', {endereco_banner: null}, {
                 headers: {
@@ -177,10 +180,10 @@ function Perfil() {
             });
 
             if (!req.data.ok) {
-                throw new Error("Falha ao adicionar imagem")
+                throw new Error("Falha ao remover imagem")
             }
 
-            toast.success(`Imagem adicionada com sucesso`, {
+            toast.success(`Imagem removida com sucesso`, {
                 position: "bottom-right",
                 autoClose: 4000,
                 pauseOnHover: false,
@@ -191,7 +194,7 @@ function Perfil() {
 
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
-            toast.error(`Falha ao adicionar imagem`, {
+            toast.error(`Falha ao remover imagem`, {
                 position: "bottom-right",
                 autoClose: 4000,
                 pauseOnHover: false,
@@ -201,6 +204,9 @@ function Perfil() {
     };
 
     async function handleRemoveProfile() {
+
+        if(!auth?.endereco_imagem) return;
+
         try {
             const req = await api.patch('update-user?typeImage=perfil', {endereco_imagem: null}, {
                 headers: {
@@ -210,10 +216,10 @@ function Perfil() {
             });
 
             if (!req.data.ok) {
-                throw new Error("Falha ao adicionar imagem")
+                throw new Error("Falha ao remover imagem")
             }
 
-            toast.success(`Imagem adicionada com sucesso`, {
+            toast.success(`Imagem removida com sucesso`, {
                 position: "bottom-right",
                 autoClose: 4000,
                 pauseOnHover: false,
@@ -224,7 +230,7 @@ function Perfil() {
 
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
-            toast.error(`Falha ao adicionar imagem`, {
+            toast.error(`Falha ao remover imagem`, {
                 position: "bottom-right",
                 autoClose: 4000,
                 pauseOnHover: false,
@@ -276,6 +282,7 @@ function Perfil() {
                                 value={descricao}
                                 onChange={(e) => setDescricao(e.target.value)}
                                 onBlur={(e) => handleUpdateDescription(e.target.value)}
+                                maxLength={300}
                             ></textarea>
                         </div>
 
