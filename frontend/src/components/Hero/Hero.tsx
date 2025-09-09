@@ -41,7 +41,7 @@ export default function Hero() {
             <div className="text-center">
               <SplitText
                 text="Faça a escolha certa!"
-                className="text-6xl text-white font-semibold text-center p-3"
+                className="text-6xl font-semibold text-center p-3 bg-gradient-to-r from-[#79A7DD] to-white bg-clip-text text-transparent"
                 delay={100}
                 duration={2}
                 ease="elastic.out"

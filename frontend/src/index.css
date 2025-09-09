@@ -24,6 +24,40 @@
 }
 
 
+.gradient-animate {
+    background-size: 200% 100%;
+    background-position: 0% 0%;
+    transition: background-position 0.5s, transform 0.3s;
+}
+
+.gradient-animate:hover {
+    background-position: 100% 0%;
+}
+
+.swiper-horizontal > .swiper-pagination-bullets .swiper-pagination-bullet,
+.swiper-pagination-horizontal.swiper-pagination-bullets .swiper-pagination-bullet {
+  width: 16px !important;
+  height: 4px !important;
+  border-radius: 5px !important;
+  margin: 0 6px !important;
+  background: #79A7DD !important;
+}
+
+.swiper-pagination {
+  bottom: 2px !important;
+}
+
+.swiper-wrapper {
+  /* O padding agora é controlado pelo Swiper, mas podemos garantir altura */
+  height: max-content !important;
+  padding-bottom: 64px; /* Garante espaço para a paginação */
+}
+
+.swiper-pagination-bullet-active {
+  background: #79A7DD !important;
+}
+
+
 body {
   margin: 0;
   background-color: black;
