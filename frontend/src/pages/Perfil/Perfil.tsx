@@ -8,10 +8,11 @@ import Config from "../../components/ConfigModal/Config";
 import { useEffect, useState } from "react";
 import api from "../../services/api";
 import { toast } from "react-toastify";
+import EditImageMenu from "../../components/EditImageMenu/EditImageMenu";
 
 function Perfil() {
 
-    const { auth } = useAuth();
+    const { auth, getUser } = useAuth();
     const banner = 'https://www.womantowomanmentoring.org/wp-content/uploads/placeholder.jpg';
     const foto = 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png';
     const [configIsOpen, setConfigIsOpen] = useState(false);
@@ -46,7 +47,6 @@ function Perfil() {
     };
 
     async function handleUpdateDescription(descricao: string) {
-
         if (descricao === auth?.descricao) return;
 
         descricao = descricao.replace(/^[\s\n\r]+|[\s\n\r]+$/g, '');
@@ -70,8 +70,8 @@ function Perfil() {
                 pauseOnHover: false,
                 theme: 'dark'
             })
-            
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
             setDescricao(auth?.descricao || '');
             toast.error(`Erro ao salvar, tente novamente.`, {
@@ -81,13 +81,162 @@ function Perfil() {
                 theme: 'dark'
             });
         }
-
-
     }
+
+    function formatedImage(file: File) {
+        if (!file) return;
+
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+        if (!allowedTypes.includes(file.type)) {
+            toast.error('Formato de imagem não suportado. Use JPEG, PNG ou WebP.', { theme: 'dark' });
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('imagem', file);
+        return formData;
+    }
+
+    async function handleEditBanner(file: File) {
+        const data = formatedImage(file);
+
+        try {
+            const req = await api.patch('update-user?typeImage=banner', data, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    "Content-Type": 'multipart/form-data'
+                }
+            });
+
+            if (!req.data.ok) {
+                throw new Error("Falha ao adicionar imagem")
+            }
+
+            toast.success(`Imagem adicionada com sucesso`, {
+                position: "bottom-right",
+                autoClose: 4000,
+                pauseOnHover: false,
+                theme: 'dark'
+            });
+
+            getUser();
+
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (error) {
+            toast.error(`Falha ao adicionar imagem`, {
+                position: "bottom-right",
+                autoClose: 4000,
+                pauseOnHover: false,
+                theme: 'dark'
+            });
+        }
+    };
+
+    async function handleEditProfile(file: File) {
+        const data = formatedImage(file);
+
+        try {
+            const req = await api.patch('update-user?typeImage=perfil', data, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    "Content-Type": 'multipart/form-data'
+                }
+            });
+
+            if (!req.data.ok) {
+                throw new Error("Falha ao adicionar imagem")
+            }
+
+            toast.success(`Imagem adicionada com sucesso`, {
+                position: "bottom-right",
+                autoClose: 4000,
+                pauseOnHover: false,
+                theme: 'dark'
+            });
+
+            getUser();
+
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (error) {
+            toast.error(`Falha ao adicionar imagem`, {
+                position: "bottom-right",
+                autoClose: 4000,
+                pauseOnHover: false,
+                theme: 'dark'
+            });
+        }
+    };
+
+    async function handleRemoveBanner() {
+        try {
+            const req = await api.patch('update-user?typeImage=banner', {endereco_banner: null}, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    "Content-Type": 'multipart/form-data'
+                }
+            });
+
+            if (!req.data.ok) {
+                throw new Error("Falha ao adicionar imagem")
+            }
+
+            toast.success(`Imagem adicionada com sucesso`, {
+                position: "bottom-right",
+                autoClose: 4000,
+                pauseOnHover: false,
+                theme: 'dark'
+            });
+
+            getUser();
+
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (error) {
+            toast.error(`Falha ao adicionar imagem`, {
+                position: "bottom-right",
+                autoClose: 4000,
+                pauseOnHover: false,
+                theme: 'dark'
+            });
+        }
+    };
+
+    async function handleRemoveProfile() {
+        try {
+            const req = await api.patch('update-user?typeImage=perfil', {endereco_imagem: null}, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    "Content-Type": 'multipart/form-data'
+                }
+            });
+
+            if (!req.data.ok) {
+                throw new Error("Falha ao adicionar imagem")
+            }
+
+            toast.success(`Imagem adicionada com sucesso`, {
+                position: "bottom-right",
+                autoClose: 4000,
+                pauseOnHover: false,
+                theme: 'dark'
+            });
+
+            getUser();
+
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (error) {
+            toast.error(`Falha ao adicionar imagem`, {
+                position: "bottom-right",
+                autoClose: 4000,
+                pauseOnHover: false,
+                theme: 'dark'
+            });
+        }
+    };
 
     return (
         <div className="min-h-screen bg-gray-950 pt-25 pb-12">
             {configIsOpen && <Config setConfigIsOpen={setConfigIsOpen} />}
+
             <main className="w-full max-w-6xl mx-auto mb-5 bg-gray-900/50 border-2 border-gray-900 rounded-md backdrop-blur-2xl">
                 <section className="flex items-center relative">
                     <button className="bg-gray-900 rounded-md px-2 py-1 absolute top-2 left-5 hover:text-[#79A7DD] text-[#E0E1DD] transition-colors duration-200 flex items-center">
@@ -95,9 +244,18 @@ function Perfil() {
                         Editar
                     </button>
 
-                    <img src={banner} alt="banner" className="w-full h-45 object-cover rounded-t-lg" />
+                    <div className="absolute top-2 left-5 z-10">
+                        <EditImageMenu
+                            onEditBanner={handleEditBanner}
+                            onEditProfile={handleEditProfile}
+                            onRemoveBanner={handleRemoveBanner}
+                            onRemoveProfile={handleRemoveProfile}
+                        />
+                    </div>
 
-                    <img src={foto || auth?.endereco_imagem} alt="foto de perfil do usuario" className="w-30 h-30 xl:w-40 xl:h-40 rounded-full absolute left-10 -bottom-10 border-gray-900 border-2" />
+                    <img src={auth?.endereco_banner || banner} alt="banner" className="w-full h-45 object-cover rounded-t-lg" />
+
+                    <img src={auth?.endereco_imagem || foto} alt="foto de perfil do usuario" className="w-30 h-30 xl:w-40 xl:h-40 rounded-full absolute left-10 -bottom-10 border-gray-900 border-2" />
                 </section>
 
                 <div className="flex flex-col md:flex-row w-full mt-15 px-5 gap-8">

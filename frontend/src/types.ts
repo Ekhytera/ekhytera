@@ -6,6 +6,7 @@ export interface User {
     nome_usuario: string | null;
     email: string | null;
     endereco_imagem: string | null;
+    endereco_banner: string | null;
     descricao: string | null;
     num_telefone: string | null;
     genero: string | null;

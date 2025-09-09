@@ -210,8 +210,28 @@ const UserController = {
     },
     updateUser: async (req, res) => {
         const id = req.user.id;
-        const data = req.body;
-        let endereco_imagem;
+        let data = req.body;
+        const image = req.query.typeImage;
+        let imagePath;
+
+        if (req.file) {
+            imagePath = req.file.filename;
+        } 
+
+        if(image == 'perfil'){
+            if(imagePath){
+                data = { endereco_imagem: `http://localhost:3000/files/${imagePath}` }
+            } else {
+                data = { endereco_imagem: null }
+            }
+        } else if(image == 'banner') {
+            data = { endereco_banner: `http://localhost:3000/files/${imagePath}` }
+            if(imagePath){
+                data = { endereco_banner: `http://localhost:3000/files/${imagePath}` }
+            } else {
+                data = { endereco_banner: null }
+            }
+        }
 
         if ('nome_usuario' in data && !data.nome_usuario) {
             return res.status(400).json({
