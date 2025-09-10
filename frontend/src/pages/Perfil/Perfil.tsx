@@ -322,7 +322,7 @@ function Perfil() {
                                 maxLength={300}
                             ></textarea>
                             :
-                            <p className="break-words whitespace-pre-line w-full max-h-30 text-gray-300 border-l-2 pl-2 py-2">{profile?.descricao || "Sem descrição"}</p>
+                            <p className="break-words whitespace-pre-line w-full text-gray-300 border-l-2 pl-2 py-2 scroll-profile text-justify">{profile?.descricao || "Sem descrição"}</p>
                         }
                         </div>
 
