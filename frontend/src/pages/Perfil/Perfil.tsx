@@ -8,13 +8,14 @@ import { useEffect, useState } from "react";
 import api from "../../services/api";
 import { toast } from "react-toastify";
 import EditImageMenu from "../../components/EditImageMenu/EditImageMenu";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { type User } from "../../types";
 
 function Perfil() {
 
     const { auth, getUser } = useAuth();
     const { userName } = useParams();
+    const navigate = useNavigate();
     const banner = 'https://www.womantowomanmentoring.org/wp-content/uploads/placeholder.jpg';
     const foto = 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png';
     const [configIsOpen, setConfigIsOpen] = useState(false);
@@ -61,12 +62,14 @@ function Perfil() {
             const req = await api.get(`usuarios/info/${userName}`);
 
             if (!req.data.ok) {
+                navigate('/404', {replace: true});
                 throw new Error("Falha ao buscar usuario")
             }
 
             setProfile(req.data.user);
         } catch (error) {
-            console.log(error)
+            console.log(error);
+            navigate('/404', {replace: true});
         }
     }
 
