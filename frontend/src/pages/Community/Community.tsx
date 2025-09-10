@@ -1,79 +1,17 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
-    HeartIcon,
-    ChatBubbleOvalLeftIcon,
-    ArrowPathIcon,
-    ShareIcon,
     PhotoIcon,
     FaceSmileIcon,
-    EllipsisHorizontalIcon,
     NewspaperIcon,
     ChevronRightIcon
 } from '@heroicons/react/24/outline';
-import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
 import ContentCard from '../../components/ContentCard/ContentCard';
+import Post from '../../components/Post/Post';
+import type { BackendPost } from '../../components/Post/Post';
 
-interface Post {
-    id: number;
-    user: {
-        name: string;
-        username: string;
-        avatar: string;
-    };
-    content: string;
-    timestamp: string;
-    likes: number;
-    comments: number;
-    reposts: number;
-    isLiked: boolean;
-    image?: string;
-}
-
-const mockPosts: Post[] = [
-    {
-        id: 1,
-        user: {
-            name: "João Silva",
-            username: "joaosilva_tech",
-            avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face"
-        },
-        content: "Acabei de montar meu primeiro PC gamer! RTX 4070 + Ryzen 7 7700X. O desempenho está incrível! 🚀 #PCGamer #TechBuild",
-        timestamp: "2h",
-        likes: 24,
-        comments: 8,
-        reposts: 3,
-        isLiked: false,
-        image: "https://images.unsplash.com/photo-1587831990711-23ca6441447b?w=400&h=300&fit=crop"
-    },
-    {
-        id: 2,
-        user: {
-            name: "Maria Santos",
-            username: "maria_hardwares",
-            avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face"
-        },
-        content: "Dica para quem está montando PC: sempre verifiquem a compatibilidade da RAM com a motherboard antes de comprar. Aprendi isso da forma difícil 😅",
-        timestamp: "4h",
-        likes: 42,
-        comments: 15,
-        reposts: 8,
-        isLiked: true
-    },
-    {
-        id: 3,
-        user: {
-            name: "Carlos Tech",
-            username: "carlos_reviews",
-            avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=40&h=40&fit=crop&crop=face"
-        },
-        content: "Review completo da RTX 4080 saindo amanhã no canal! Spoiler: vale muito a pena para quem joga em 4K. O que vocês querem ver testado?",
-        timestamp: "6h",
-        likes: 67,
-        comments: 23,
-        reposts: 12,
-        isLiked: false
-    }
-];
+import { useAuth } from '../../contexts/AuthContext';
+import api from '../../services/api';
+import { toast } from 'react-toastify';
 
 const techNews = [
     {
@@ -112,35 +50,186 @@ const educationalContent = [
 ];
 
 export default function Community() {
-    const [posts, setPosts] = useState<Post[]>(mockPosts);
+    const [posts, setPosts] = useState<BackendPost[]>([]);
     const [newPost, setNewPost] = useState('');
+    const [loading, setLoading] = useState(true);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [likedPosts, setLikedPosts] = useState<Set<number>>(new Set());
+    const { auth } = useAuth();
 
-    const handleLike = (postId: number) => {
-        setPosts(posts.map(post =>
-            post.id === postId
-                ? { ...post, isLiked: !post.isLiked, likes: post.isLiked ? post.likes - 1 : post.likes + 1 }
-                : post
-        ));
+    // Fetch posts from backend
+    const fetchPosts = async () => {
+        try {
+            setLoading(true);
+            const response = await api.get('/list-posts/active');
+            
+            if (response.data.ok) {
+                setPosts(response.data.posts);
+            }
+        } catch (error) {
+            console.error('Error fetching posts:', error);
+            toast.error('Erro ao carregar posts', {
+                position: "bottom-right",
+                autoClose: 3000,
+                theme: 'dark'
+            });
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const handleSubmitPost = () => {
-        if (newPost.trim()) {
-            const post: Post = {
-                id: Date.now(),
-                user: {
-                    name: "Você",
-                    username: "your_username",
-                    avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=40&h=40&fit=crop&crop=face"
-                },
-                content: newPost,
-                timestamp: "agora",
-                likes: 0,
-                comments: 0,
-                reposts: 0,
-                isLiked: false
-            };
-            setPosts([post, ...posts]);
-            setNewPost('');
+    // Handle like/unlike
+    const handleLike = async (postId: number) => {
+        if (!auth) {
+            toast.warning('Faça login para curtir posts', {
+                position: "bottom-right",
+                autoClose: 3000,
+                theme: 'dark'
+            });
+            return;
+        }
+
+        const isCurrentlyLiked = likedPosts.has(postId);
+        const endpoint = isCurrentlyLiked ? `/remove-like/${postId}` : `/add-like/${postId}`;
+
+        try {
+            // Optimistic update
+            const newLikedPosts = new Set(likedPosts);
+            if (isCurrentlyLiked) {
+                newLikedPosts.delete(postId);
+            } else {
+                newLikedPosts.add(postId);
+            }
+            setLikedPosts(newLikedPosts);
+
+            // Update posts state
+            setPosts(posts.map(post =>
+                post.id_post === postId
+                    ? { 
+                        ...post, 
+                        curtidas: isCurrentlyLiked ? post.curtidas - 1 : post.curtidas + 1 
+                    }
+                    : post
+            ));
+
+            const response = await api.patch(endpoint, {}, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            
+            if (!response.data.ok) {
+                throw new Error('Failed to update like');
+            }
+
+        } catch (error) {
+            console.error('Error updating like:', error);
+            
+            // Revert optimistic update
+            const revertedLikedPosts = new Set(likedPosts);
+            if (!isCurrentlyLiked) {
+                revertedLikedPosts.delete(postId);
+            } else {
+                revertedLikedPosts.add(postId);
+            }
+            setLikedPosts(revertedLikedPosts);
+
+            // Revert posts state
+            setPosts(posts.map(post =>
+                post.id_post === postId
+                    ? { 
+                        ...post, 
+                        curtidas: isCurrentlyLiked ? post.curtidas + 1 : post.curtidas - 1 
+                    }
+                    : post
+            ));
+
+            toast.error('Erro ao curtir post', {
+                position: "bottom-right",
+                autoClose: 3000,
+                theme: 'dark'
+            });
+        }
+    };
+
+    // Handle post submission
+    const handleSubmitPost = async () => {
+        if (!auth) {
+            toast.warning('Faça login para fazer posts', {
+                position: "bottom-right",
+                autoClose: 3000,
+                theme: 'dark'
+            });
+            return;
+        }
+
+        if (!newPost.trim()) {
+            toast.error('Post não pode estar vazio', {
+                position: "bottom-right",
+                autoClose: 3000,
+                theme: 'dark'
+            });
+            return;
+        }
+
+        try {
+            setIsSubmitting(true);
+            
+            const response = await api.post('/create-post', {
+                texto: newPost.trim().replace(/(\r?\n){3,}/g, '\n\n\n')
+            }, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+
+            if (response.data.ok) {
+                toast.success('Post criado com sucesso!', {
+                    position: "bottom-right",
+                    autoClose: 3000,
+                    theme: 'dark'
+                });
+
+                // Create new post object in backend format
+                const newPostData: BackendPost = {
+                    id_post: response.data.id,
+                    texto: newPost.trim(),
+                    imagem_post: undefined,
+                    id_usuario: auth.id_usuario,
+                    curtidas: 0,
+                    status: 1,
+                    criado_em: new Date().toISOString(),
+                    atualizado_em: new Date().toISOString(),
+                    tb_usuarios: {
+                        nome_usuario: response.data.nome_usuario,
+                        endereco_imagem: response.data.endereco_imagem
+                    }
+                };
+
+                setPosts([newPostData, ...posts]);
+                setNewPost('');
+            }
+        } catch (error) {
+            console.error('Error creating post:', error);
+            toast.error('Erro ao criar post', {
+                position: "bottom-right",
+                autoClose: 3000,
+                theme: 'dark'
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    // Load posts on component mount
+    useEffect(() => {
+        fetchPosts();
+    }, []);
+
+    // Handle key press in textarea
+    const handleKeyPress = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+            handleSubmitPost();
         }
     };
 
@@ -154,10 +243,14 @@ export default function Community() {
                             <p className="text-gray-400 mt-1">Conecte-se com outros entusiastas de tecnologia</p>
                         </div>
 
+                        {/* Post creation form */}
                         <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl p-6 mb-6">
                             <div className="flex gap-4">
                                 <img
-                                    src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=40&h=40&fit=crop&crop=face"
+                                    src={auth?.endereco_imagem 
+                                        ? auth.endereco_imagem
+                                        : 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png'
+                                    }
                                     alt="Your avatar"
                                     className="w-10 h-10 rounded-full"
                                 />
@@ -165,110 +258,78 @@ export default function Community() {
                                     <textarea
                                         value={newPost}
                                         onChange={(e) => setNewPost(e.target.value)}
-                                        placeholder="O que você está construindo hoje?"
-                                        className="w-full bg-transparent text-white placeholder-gray-400 text-lg resize-none border-none outline-none"
+                                        onKeyDown={handleKeyPress}
+                                        placeholder={auth 
+                                            ? "O que você está construindo hoje?" 
+                                            : "Faça login para fazer posts..."
+                                        }
+                                        disabled={!auth || isSubmitting}
+                                        className="w-full bg-transparent text-white placeholder-gray-400 text-lg resize-none border-none outline-none disabled:opacity-50"
                                         rows={3}
+                                        maxLength={500}
                                     />
 
                                     <div className="flex items-center justify-between mt-4 pt-4 border-t border-white/10">
                                         <div className="flex gap-4">
-                                            <button className="text-blue-400 hover:text-blue-300 transition-colors">
+                                            <button 
+                                                className="text-blue-400 hover:text-blue-300 transition-colors disabled:opacity-50"
+                                                disabled={!auth}
+                                            >
                                                 <PhotoIcon className="w-5 h-5" />
                                             </button>
-                                            <button className="text-blue-400 hover:text-blue-300 transition-colors">
+                                            <button 
+                                                className="text-blue-400 hover:text-blue-300 transition-colors disabled:opacity-50"
+                                                disabled={!auth}
+                                            >
                                                 <FaceSmileIcon className="w-5 h-5" />
                                             </button>
                                         </div>
 
-                                        <button
-                                            onClick={handleSubmitPost}
-                                            disabled={!newPost.trim()}
-                                            className="px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-700 rounded-full text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:from-blue-700 hover:to-blue-800 transition-all duration-200"
-                                        >
-                                            Postar
-                                        </button>
+                                        <div className="flex items-center gap-3">
+                                            <span className="text-sm text-gray-400">
+                                                {newPost.length}/500
+                                            </span>
+                                            <button
+                                                onClick={handleSubmitPost}
+                                                disabled={!auth || !newPost.trim() || isSubmitting || newPost.length > 500}
+                                                className="px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-700 rounded-full text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:from-blue-700 hover:to-blue-800 transition-all duration-200"
+                                            >
+                                                {isSubmitting ? 'Postando...' : 'Postar'}
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="space-y-4">
-                            {posts.map((post) => (
-                                <div
-                                    key={post.id}
-                                    className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl p-6 hover:bg-gray-900/70 transition-all duration-200"
-                                >
-                                    <div className="flex gap-3">
-                                        <img
-                                            src={post.user.avatar}
-                                            alt={post.user.name}
-                                            className="w-10 h-10 rounded-full"
+                        {/* Posts feed */}
+                        {loading ? (
+                            <div className="flex justify-center items-center py-8">
+                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400"></div>
+                                <span className="ml-3 text-gray-400">Carregando posts...</span>
+                            </div>
+                        ) : (
+                            <div className="space-y-4">
+                                {posts.length > 0 ? (
+                                    posts.map((post) => (
+                                        <Post
+                                            key={post.id_post}
+                                            {...post}
+                                            isLiked={likedPosts.has(post.id_post)}
+                                            onLike={handleLike}
                                         />
-
-                                        <div className="flex-1">
-                                            <div className="flex items-center gap-2 mb-2">
-                                                <h3 className="font-semibold text-white">{post.user.name}</h3>
-                                                <span className="text-gray-400">@{post.user.username}</span>
-                                                <span className="text-gray-500">·</span>
-                                                <span className="text-gray-500">{post.timestamp}</span>
-                                                <button className="ml-auto text-gray-400 hover:text-white transition-colors">
-                                                    <EllipsisHorizontalIcon className="w-5 h-5" />
-                                                </button>
-                                            </div>
-
-                                            <p className="text-white mb-3 leading-relaxed">{post.content}</p>
-
-                                            {post.image && (
-                                                <img
-                                                    src={post.image}
-                                                    alt="Post image"
-                                                    className="rounded-xl mb-3 max-w-full h-auto"
-                                                />
-                                            )}
-
-                                            <div className="flex items-center gap-8 text-gray-400">
-                                                <button className="flex items-center gap-2 hover:text-blue-400 transition-colors group">
-                                                    <div className="p-2 rounded-full group-hover:bg-blue-400/10 transition-colors">
-                                                        <ChatBubbleOvalLeftIcon className="w-4 h-4" />
-                                                    </div>
-                                                    <span className="text-sm">{post.comments}</span>
-                                                </button>
-
-                                                <button className="flex items-center gap-2 hover:text-green-400 transition-colors group">
-                                                    <div className="p-2 rounded-full group-hover:bg-green-400/10 transition-colors">
-                                                        <ArrowPathIcon className="w-4 h-4" />
-                                                    </div>
-                                                    <span className="text-sm">{post.reposts}</span>
-                                                </button>
-
-                                                <button
-                                                    onClick={() => handleLike(post.id)}
-                                                    className={`flex items-center gap-2 transition-colors group ${post.isLiked ? 'text-red-500' : 'hover:text-red-400'
-                                                        }`}
-                                                >
-                                                    <div className="p-2 rounded-full group-hover:bg-red-400/10 transition-colors">
-                                                        {post.isLiked ? (
-                                                            <HeartSolidIcon className="w-4 h-4" />
-                                                        ) : (
-                                                            <HeartIcon className="w-4 h-4" />
-                                                        )}
-                                                    </div>
-                                                    <span className="text-sm">{post.likes}</span>
-                                                </button>
-
-                                                <button className="flex items-center gap-2 hover:text-blue-400 transition-colors group">
-                                                    <div className="p-2 rounded-full group-hover:bg-blue-400/10 transition-colors">
-                                                        <ShareIcon className="w-4 h-4" />
-                                                    </div>
-                                                </button>
-                                            </div>
-                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="text-center py-8">
+                                        <p className="text-gray-400 text-lg">Nenhum post encontrado</p>
+                                        <p className="text-gray-500 mt-2">Seja o primeiro a compartilhar algo!</p>
                                     </div>
-                                </div>
-                            ))}
-                        </div>
+                                )}
+                            </div>
+                        )}
                     </div>
 
+                    {/* Sidebar */}
                     <div className="w-full lg:w-80 space-y-6">
                         <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl p-6">
                             <div className="flex items-center gap-2 mb-4">

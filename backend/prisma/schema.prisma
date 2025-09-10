@@ -22,9 +22,26 @@ model tb_usuarios {
   cargo             Cargo?   @default(user)
   status            Int?     @default(1) @db.TinyInt
   criado_em         DateTime @default(now()) @db.Timestamp(0)
-  atualizado_em     DateTime @updatedAt @db.Timestamp(0)
+  atualizado_em     DateTime @updatedAt
+
+  tb_posts          tb_posts[]
 
   @@map("tb_usuarios")
+}
+
+model tb_posts {
+  id_post           Int       @id @default(autoincrement())
+  texto             String    @db.Text
+  imagem_post       String?   @db.VarChar(255)
+  id_usuario        Int
+  curtidas          Int       @default(0)
+  status            Int       @default(1) @db.TinyInt
+  criado_em         DateTime  @default(now()) @db.Timestamp(0)
+  atualizado_em     DateTime  @updatedAt
+
+  tb_usuarios       tb_usuarios @relation(fields: [id_usuario], references: [id_usuario], onDelete: Cascade)
+
+  @@map("tb_posts")
 }
 
 // Enums
@@ -32,5 +49,3 @@ enum Cargo {
   user
   admin
 }
-
-
