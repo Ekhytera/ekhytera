@@ -13,7 +13,7 @@ const PostController = {
         });
 
         try {
-            const userLogged = await usersRepository.findUserByID(user.id);
+            const userLogged = await usersRepository.findUserById(user.id);
 
 
             const postData = {
