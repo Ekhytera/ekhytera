@@ -18,7 +18,7 @@ const navigation = [
 
 export default function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const { signed } = useAuth();
+    const { signed, auth } = useAuth();
 
     return (
         <>
@@ -71,7 +71,7 @@ export default function Header() {
                             </Link>
                             :
                             <Link
-                                to={"/perfil"}
+                                to={`/perfil/${auth?.nome_usuario}`}
                                 className="relative px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-[#79A7DD] to-[#415A77]
                                 rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25 hover:scale-105 whitespace-nowrap flex items-center justify-center"
                             >
@@ -131,7 +131,7 @@ export default function Header() {
                                             </Link>
                                             :
                                             <Link
-                                                to={"/perfil"}
+                                                to={`/perfil/${auth?.nome_usuario}`}
                                                 onClick={() => setMobileMenuOpen(false)}
                                                 className="relative px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-[#79A7DD] to-[#415A77]
                                                 rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25 hover:scale-105 whitespace-nowrap flex items-center justify-center"

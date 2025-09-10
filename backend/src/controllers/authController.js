@@ -208,6 +208,42 @@ const UserController = {
             });
         }
     },
+    getUserInfoByUserNAme: async (req, res) => {
+        const { userName } = req.params;
+
+        if (!userName) {
+            return res.status(200).json({
+                message: 'O campo nome é obrigatório'
+            });
+        }
+
+        const user = await UserRepository.findUserByUserName(userName);
+
+        try {
+            if (user) {
+                return res.status(200).json({
+                    ok: true,
+                    status: 200,
+                    message: 'Usuario encontrado com sucesso',
+                    user: user
+                });
+            }
+
+            return res.status(404).json({
+                ok: false,
+                status: 404,
+                message: 'Usuario não encontrado'
+            });
+
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                ok: false,
+                status: 500,
+                message: 'Erro no servidor'
+            });
+        }
+    },
     updateUser: async (req, res) => {
         const id = req.user.id;
         let data = req.body;
@@ -216,21 +252,16 @@ const UserController = {
 
         if (req.file) {
             imagePath = req.file.filename;
-        } 
+        }
 
-        if(image == 'perfil'){
-            if(imagePath){
-                data = { endereco_imagem: `http://localhost:3000/files/${imagePath}` }
-            } else {
-                data = { endereco_imagem: null }
-            }
-        } else if(image == 'banner') {
-            data = { endereco_banner: `http://localhost:3000/files/${imagePath}` }
-            if(imagePath){
-                data = { endereco_banner: `http://localhost:3000/files/${imagePath}` }
-            } else {
-                data = { endereco_banner: null }
-            }
+        if (image == 'perfil') {
+            data = imagePath
+                ? { endereco_imagem: `http://localhost:3000/files/${imagePath}` }
+                : { endereco_imagem: null };
+        } else if (image == 'banner') {
+            data = imagePath
+                ? { endereco_banner: `http://localhost:3000/files/${imagePath}` }
+                : { endereco_banner: null };
         }
 
         if ('nome_usuario' in data && !data.nome_usuario) {
@@ -250,8 +281,6 @@ const UserController = {
 
         try {
             const updated = await UserRepository.updateInfo(id, data);
-
-            console.log(updated)
 
             if (updated) {
                 return res.status(200).json({

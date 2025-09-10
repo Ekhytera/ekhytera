@@ -112,7 +112,7 @@ export const Noticias = () => {
 
             <section className="pb-40">
                 <div className="bg-black dark:bg-black py-6 sm:py-8 lg:py-20">
-                    <div className="mx-auto max-w-screen-2xl px-4 md:px-8">
+                    <div className="mx-auto max-w-7xl px-4 md:px-8">
                         <div className="mb-4 flex items-center justify-between gap-8 sm:mb-8 md:mb-12">
                             <div className="flex items-center gap-12">
                                 <h2 className="text-2xl font-semibold text-gray-800 lg:text-3xl dark:text-white">Destaques da Semana</h2>
