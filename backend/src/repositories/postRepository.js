@@ -67,7 +67,8 @@ const postsRepository = {
                     tb_usuarios: {
                         select: {
                             nome_usuario: true,
-                            endereco_imagem: true
+                            endereco_imagem: true,
+                            id_usuario: true
                         }
                     }
                 },
@@ -139,17 +140,14 @@ const postsRepository = {
         }
     },
 
-    async logicalDelete(id) {
+    async deletePost(id) {
         try {
-            const result = await prisma.tb_posts.update({
+            const result = await prisma.tb_posts.delete({
                 where: {
-                    id_post: parseInt(id)
+                    id_post: id
                 },
-                data: {
-                    status: 0
-                }
             });
-            return { affectedRows: 1 };
+            return result;
         } catch (error) {
             throw new Error(`Falha ao apagar post: ${error.message}`);
         }

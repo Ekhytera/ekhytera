@@ -302,6 +302,7 @@ export default function Community() {
                                             {...post}
                                             isLiked={likedPosts.has(post.id_post)}
                                             onLike={handleLike}
+                                            fetchPosts={fetchPosts}
                                         />
                                     ))
                                 ) : (

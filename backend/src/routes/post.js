@@ -8,7 +8,7 @@ routes.post('/create-post', auth.verifyToken, PostController.createPost);
 routes.get('/list-posts', PostController.getAllPosts);
 routes.get('/list-posts/active', PostController.getAllPostsByStatus);
 routes.get('/list-posts/id/:id', PostController.getPostById);
-routes.patch('/delete-post/:id', auth.verifyToken, auth.authorizePostOwner, PostController.logicalDeletePost);
+routes.delete('/delete-post/:id', auth.verifyToken, auth.authorizePostOwner, PostController.deletePost);
 routes.patch('/add-like/:id', auth.verifyToken, PostController.addLike);
 routes.patch('/remove-like/:id', auth.verifyToken, PostController.removeLike);
 routes.patch('/edit-post/:id', auth.verifyToken, auth.authorizePostOwner, PostController.editPost);

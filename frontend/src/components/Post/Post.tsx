@@ -6,7 +6,9 @@ import {
 } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
 import PostMenu from '../PostMenu/PostMenu';
-
+import api from '../../services/api';
+import { toast } from 'react-toastify';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface PostProps {
     id_post: number;
@@ -20,9 +22,11 @@ interface PostProps {
     tb_usuarios: {
         nome_usuario: string;
         endereco_imagem?: string;
+        id_usuario: number;
     };
     isLiked: boolean;
     onLike: (postId: number) => void;
+    fetchPosts: () => void;
 }
 
 export default function Post({
@@ -33,7 +37,8 @@ export default function Post({
     criado_em,
     tb_usuarios,
     isLiked,
-    onLike
+    onLike,
+    fetchPosts
 }: PostProps) {
     // Calculate time ago
     const getTimeAgo = (dateString: string): string => {
@@ -47,12 +52,41 @@ export default function Post({
         return `${Math.floor(diffInMinutes / 1440)}d`;
     };
 
+    const { auth } = useAuth();
+
     const avatarUrl = tb_usuarios.endereco_imagem
         ? tb_usuarios.endereco_imagem
         : 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png';
 
-    function handleDelete() {
-        console.log('delete');
+    async function handleDelete() {
+        try {
+            const req = await api.delete(`delete-post/${id_post}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+
+            if(!req.data.ok){
+                throw new Error("Falha ao deletar post");
+            }
+
+            fetchPosts();
+            toast.success("Post deletado com sucesso",{
+                position: "bottom-right",
+                autoClose: 4000,
+                pauseOnHover: false,
+                theme: 'dark'
+            });
+
+        } catch (error) {
+            console.log(error);
+            toast.error("Falha ao deletar o post",{
+                position: "bottom-right",
+                autoClose: 4000,
+                pauseOnHover: false,
+                theme: 'dark'
+            });
+        }
     }
 
     function handleEdit() {
@@ -76,7 +110,9 @@ export default function Post({
                             <span className="text-gray-500">{getTimeAgo(criado_em)}</span>
                         </div>
                         <div>
-                            <PostMenu onDelete={handleDelete} onEdit={handleEdit} />
+                            {tb_usuarios.id_usuario === auth?.id_usuario &&
+                                <PostMenu onDelete={handleDelete} onEdit={handleEdit} />
+                                }
                         </div>
                     </div>
 

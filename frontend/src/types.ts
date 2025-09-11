@@ -30,5 +30,6 @@ export interface BackendPost {
     tb_usuarios: {
         nome_usuario: string;
         endereco_imagem?: string;
+        id_usuario: number;
     };
 }

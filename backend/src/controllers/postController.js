@@ -134,12 +134,12 @@ const PostController = {
             });
         }
     },
-    logicalDeletePost: async (req, res) => {
-        const id = req.params.id;
-        console.log(id)
+    deletePost: async (req, res) => {
+        const id = +req.params.id;
+
 
         try {
-            const deleted = !!(await postsRepository.logicalDelete(id));
+            const deleted = !!(await postsRepository.deletePost(id));
 
             if (deleted) return res.status(200).json({
                 ok: true,

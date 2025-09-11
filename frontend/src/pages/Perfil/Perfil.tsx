@@ -13,7 +13,7 @@ import { type User } from "../../types";
 
 function Perfil() {
 
-    const { auth, getUser } = useAuth();
+    const { auth, getUser, authLoader } = useAuth();
     const { userName } = useParams();
     const navigate = useNavigate();
     const banner = 'https://www.womantowomanmentoring.org/wp-content/uploads/placeholder.jpg';
@@ -28,7 +28,12 @@ function Perfil() {
     }, [auth?.descricao]);
 
     useEffect(() => {
-        if (userName === auth?.nome_usuario) {
+        if (authLoader) return;
+
+        console.log(userName)
+        console.log(auth?.nome_usuario)
+
+        if (auth && userName == auth?.nome_usuario) {
             console.log("Meu perfil");
             setvisitor(false);
             setProfile(undefined);
@@ -37,7 +42,7 @@ function Perfil() {
             setvisitor(true);
             getUserProfile();
         }
-    }, [userName]);
+    }, [userName, authLoader, auth?.nome_usuario]);
 
     const educationalContent = [
         {
@@ -62,14 +67,14 @@ function Perfil() {
             const req = await api.get(`usuarios/info/${userName}`);
 
             if (!req.data.ok) {
-                navigate('/404', {replace: true});
+                navigate('/404', { replace: true });
                 throw new Error("Falha ao buscar usuario")
             }
 
             setProfile(req.data.user);
         } catch (error) {
             console.log(error);
-            navigate('/404', {replace: true});
+            navigate('/404', { replace: true });
         }
     }
 
@@ -272,6 +277,14 @@ function Perfil() {
         }
     };
 
+    if (authLoader) {
+        return (
+            <div className="z-50 h-screen w-full bg-gray-950 flex justify-center items-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400"></div>
+            </div>
+        )
+    }
+
     return (
         <div className="min-h-screen bg-gray-950 pt-25 pb-12">
             {configIsOpen && <Config setConfigIsOpen={setConfigIsOpen} />}
@@ -303,7 +316,7 @@ function Perfil() {
                                         profile?.nome_usuario
                                     }
                                 </h1>
-                                <p className="text-gray-300">Entrou em: 
+                                <p className="text-gray-300">Entrou em:
                                     {!visitor ?
                                         formatarData(auth?.criado_em)
                                         :
@@ -314,19 +327,22 @@ function Perfil() {
                         </div>
 
                         <div className="mt-5 flex flex-col gap-2">
-                            <label className="text-white">Descrição </label>
-                            {!visitor ? 
-                            <textarea
-                                placeholder="Adicione uma descrição para o seu perfil..."
-                                className="block w-full h-30 rounded-md bg-white/5 px-3 py-2 text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 resize-none scroll-profile"
-                                value={descricao}
-                                onChange={(e) => setDescricao(e.target.value)}
-                                onBlur={(e) => handleUpdateDescription(e.target.value)}
-                                maxLength={300}
-                            ></textarea>
-                            :
-                            <p className="break-words whitespace-pre-line w-full text-gray-300 border-l-2 pl-2 py-2 scroll-profile text-justify">{profile?.descricao || "Sem descrição"}</p>
-                        }
+                            <div className="flex items-center justify-between">
+                                <label className="text-white">Descrição </label>
+                                {!visitor && <span className="text-gray-300">{descricao.length}/300</span>}
+                            </div>
+                            {!visitor ?
+                                <textarea
+                                    placeholder="Adicione uma descrição para o seu perfil..."
+                                    className="block w-full h-30 rounded-md bg-white/5 px-3 py-2 text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 resize-none scroll-profile"
+                                    value={descricao}
+                                    onChange={(e) => setDescricao(e.target.value)}
+                                    onBlur={(e) => handleUpdateDescription(e.target.value)}
+                                    maxLength={300}
+                                ></textarea>
+                                :
+                                <p className="break-words whitespace-pre-line w-full text-gray-300 border-l-2 pl-2 py-2 scroll-profile text-justify">{profile?.descricao || "Sem descrição"}</p>
+                            }
                         </div>
 
                         {!visitor && <div className="mt-5 md:mt-auto flex justify-between">
