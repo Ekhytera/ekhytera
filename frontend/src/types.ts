@@ -17,3 +17,18 @@ export interface User {
     criado_em: Date;
     atualizado_em: Date;
 }
+
+export interface BackendPost {
+    id_post: number;
+    texto: string;
+    imagem_post?: string;
+    id_usuario: number;
+    curtidas: number;
+    status: number;
+    criado_em: string;
+    atualizado_em: string;
+    tb_usuarios: {
+        nome_usuario: string;
+        endereco_imagem?: string;
+    };
+}

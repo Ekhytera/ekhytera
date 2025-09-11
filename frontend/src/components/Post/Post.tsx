@@ -1,11 +1,12 @@
 import {
     HeartIcon,
     ChatBubbleOvalLeftIcon,
-    ArrowPathIcon,
     ShareIcon,
-    EllipsisHorizontalIcon,
+    BookmarkIcon,
 } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
+import PostMenu from '../PostMenu/PostMenu';
+
 
 interface PostProps {
     id_post: number;
@@ -46,9 +47,17 @@ export default function Post({
         return `${Math.floor(diffInMinutes / 1440)}d`;
     };
 
-    const avatarUrl = tb_usuarios.endereco_imagem 
+    const avatarUrl = tb_usuarios.endereco_imagem
         ? tb_usuarios.endereco_imagem
         : 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png';
+
+    function handleDelete() {
+        console.log('delete');
+    }
+
+    function handleEdit() {
+        console.log('edit')
+    }
 
     return (
         <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl p-6 hover:bg-gray-900/70 transition-all duration-200">
@@ -60,14 +69,15 @@ export default function Post({
                 />
 
                 <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                        <h3 className="font-semibold text-white">{tb_usuarios.nome_usuario}</h3>
-                        <span className="text-gray-400">@{tb_usuarios.nome_usuario}</span>
-                        <span className="text-gray-500">·</span>
-                        <span className="text-gray-500">{getTimeAgo(criado_em)}</span>
-                        <button className="ml-auto text-gray-400 hover:text-white transition-colors">
-                            <EllipsisHorizontalIcon className="w-5 h-5" />
-                        </button>
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                        <div className='flex items-center space-x-2'>
+                            <h3 className="font-semibold text-white">{tb_usuarios.nome_usuario}</h3>
+                            <span className="text-gray-500">·</span>
+                            <span className="text-gray-500">{getTimeAgo(criado_em)}</span>
+                        </div>
+                        <div>
+                            <PostMenu onDelete={handleDelete} onEdit={handleEdit} />
+                        </div>
                     </div>
 
                     <p className="text-white mb-3 leading-relaxed whitespace-pre-line wrap-anywhere text-justify">{texto}</p>
@@ -88,18 +98,18 @@ export default function Post({
                             <span className="text-sm">0</span>
                         </button>
 
-                        <button className="flex items-center gap-2 hover:text-green-400 transition-colors group">
-                            <div className="p-2 rounded-full group-hover:bg-green-400/10 transition-colors">
-                                <ArrowPathIcon className="w-4 h-4" />
+                        {/* Troque o ArrowPathIcon pelo BookmarkIcon */}
+                        <button className="flex items-center gap-2 hover:text-yellow-400 transition-colors group">
+                            <div className="p-2 rounded-full group-hover:bg-yellow-400/10 transition-colors">
+                                <BookmarkIcon className="w-4 h-4" />
                             </div>
                             <span className="text-sm">0</span>
                         </button>
 
                         <button
                             onClick={() => onLike(id_post)}
-                            className={`flex items-center gap-2 transition-colors group ${
-                                isLiked ? 'text-red-500' : 'hover:text-red-400'
-                            }`}
+                            className={`flex items-center gap-2 transition-colors group ${isLiked ? 'text-red-500' : 'hover:text-red-400'
+                                }`}
                         >
                             <div className="p-2 rounded-full group-hover:bg-red-400/10 transition-colors">
                                 {isLiked ? (
@@ -121,20 +131,4 @@ export default function Post({
             </div>
         </div>
     );
-}
-
-// Backend post interface for type exports
-export interface BackendPost {
-    id_post: number;
-    texto: string;
-    imagem_post?: string;
-    id_usuario: number;
-    curtidas: number;
-    status: number;
-    criado_em: string;
-    atualizado_em: string;
-    tb_usuarios: {
-        nome_usuario: string;
-        endereco_imagem?: string;
-    };
 }

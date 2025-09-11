@@ -7,7 +7,7 @@ import {
 } from '@heroicons/react/24/outline';
 import ContentCard from '../../components/ContentCard/ContentCard';
 import Post from '../../components/Post/Post';
-import type { BackendPost } from '../../components/Post/Post';
+import type { BackendPost } from '../../types';
 
 import { useAuth } from '../../contexts/AuthContext';
 import api from '../../services/api';
@@ -190,24 +190,9 @@ export default function Community() {
                     theme: 'dark'
                 });
 
-                // Create new post object in backend format
-                const newPostData: BackendPost = {
-                    id_post: response.data.id,
-                    texto: newPost.trim(),
-                    imagem_post: undefined,
-                    id_usuario: auth.id_usuario,
-                    curtidas: 0,
-                    status: 1,
-                    criado_em: new Date().toISOString(),
-                    atualizado_em: new Date().toISOString(),
-                    tb_usuarios: {
-                        nome_usuario: response.data.nome_usuario,
-                        endereco_imagem: response.data.endereco_imagem
-                    }
-                };
-
-                setPosts([newPostData, ...posts]);
+                fetchPosts();
                 setNewPost('');
+                
             }
         } catch (error) {
             console.error('Error creating post:', error);
@@ -264,7 +249,7 @@ export default function Community() {
                                             : "Faça login para fazer posts..."
                                         }
                                         disabled={!auth || isSubmitting}
-                                        className="w-full bg-transparent text-white placeholder-gray-400 text-lg resize-none border-none outline-none disabled:opacity-50"
+                                        className="w-full bg-transparent text-white placeholder-gray-400 text-lg resize-none border-none outline-none disabled:opacity-50 scroll-profile"
                                         rows={3}
                                         maxLength={500}
                                     />
