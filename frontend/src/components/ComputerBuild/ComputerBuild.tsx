@@ -1030,7 +1030,7 @@ export default function PCBuild() {
           )}
         </div>
 
-        <div className="p-6 space-y-6 flex-1 overflow-y-auto">
+        <div className="p-6 space-y-6 flex-1 overflow-y-auto scroll-profile">
           {/* Build Mode Options */}
           <div className="space-y-2">
             <button
@@ -1291,7 +1291,7 @@ export default function PCBuild() {
 
                     {/* Dropdown Results */}
                     {showGameDropdown && filteredGames.length > 0 && (
-                      <div className="absolute z-50 w-full mt-1 bg-zinc-900 border border-zinc-800 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                      <div className="absolute z-50 w-full mt-1 bg-zinc-900 border border-zinc-800 rounded-lg shadow-lg max-h-60 overflow-y-auto scroll-profile">
                         {filteredGames.slice(0, 5).map(game => (
                           <button
                             key={game.id}
@@ -1465,7 +1465,7 @@ export default function PCBuild() {
 
                     {/* Dropdown Results */}
                     {showSoftwareDropdown && filteredSoftware.length > 0 && (
-                      <div className="absolute z-50 w-full mt-1 bg-zinc-900 border border-zinc-800 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                      <div className="absolute z-50 w-full mt-1 bg-zinc-900 border border-zinc-800 rounded-lg shadow-lg max-h-60 overflow-y-auto scroll-profile">
                         {filteredSoftware.slice(0, 5).map(software => (
                           <button
                             key={software.id}
@@ -1731,7 +1731,7 @@ export default function PCBuild() {
 
                       {/* Dropdown Results */}
                       {showComponentDropdowns[type] && (
-                        <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-zinc-950 border border-zinc-800 rounded-lg shadow-xl max-h-64 overflow-y-auto">
+                        <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-zinc-950 border border-zinc-800 rounded-lg shadow-xl max-h-64 overflow-y-auto scroll-profile">
                           {getFilteredComponents(type).length > 0 ? (
                             getFilteredComponents(type).map(part => (
                               <button
@@ -1990,7 +1990,7 @@ export default function PCBuild() {
           </div>
 
           {/* Conteúdo scrollable */}
-          <div className="flex-1 p-4 lg:p-6 space-y-4 lg:space-y-6 overflow-y-auto min-h-0">
+          <div className="flex-1 p-4 lg:p-6 space-y-4 lg:space-y-6 overflow-y-auto min-h-0 scroll-profile">
             {filteredPrices.length === 0 ? (
               <div className="text-center py-8">
                 <p className="text-zinc-400">Nenhum componente encontrado com os filtros aplicados.</p>
@@ -2074,7 +2074,7 @@ export default function PCBuild() {
             </div>
           </div>
 
-          <div className="p-6 overflow-y-auto h-full pb-24">
+          <div className="p-6 overflow-y-auto scroll-profile h-full pb-24">
             {savedConfigurations.length > 0 ? (
               <div className="space-y-4">
                 {savedConfigurations.map((config) => (
@@ -2236,7 +2236,7 @@ export default function PCBuild() {
             </div>
           </div>
 
-          <div className="p-6 overflow-y-auto h-full pb-24">
+          <div className="p-6 overflow-y-auto scroll-profile h-full pb-24">
             {Object.keys(selectedParts).length > 0 ? (
               <div className="space-y-4">
                 {Object.entries(selectedParts).map(([type, part]) => (
@@ -2381,7 +2381,7 @@ export default function PCBuild() {
             </div>
           </div>
           
-          <div className="flex-1 overflow-y-auto p-6">
+          <div className="flex-1 overflow-y-auto scroll-profile p-6">
             {/* Algorithm Recommendations */}
             {recommendationTab === 'algorithm' && (
               <div className="space-y-4">
