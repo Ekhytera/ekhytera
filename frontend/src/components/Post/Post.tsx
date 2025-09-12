@@ -9,6 +9,7 @@ import PostMenu from '../PostMenu/PostMenu';
 import api from '../../services/api';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../contexts/AuthContext';
+import { Link } from 'react-router-dom';
 
 interface PostProps {
     id_post: number;
@@ -66,12 +67,12 @@ export default function Post({
                 }
             });
 
-            if(!req.data.ok){
+            if (!req.data.ok) {
                 throw new Error("Falha ao deletar post");
             }
 
             fetchPosts();
-            toast.success("Post deletado com sucesso",{
+            toast.success("Post deletado com sucesso", {
                 position: "bottom-right",
                 autoClose: 4000,
                 pauseOnHover: false,
@@ -80,7 +81,7 @@ export default function Post({
 
         } catch (error) {
             console.log(error);
-            toast.error("Falha ao deletar o post",{
+            toast.error("Falha ao deletar o post", {
                 position: "bottom-right",
                 autoClose: 4000,
                 pauseOnHover: false,
@@ -96,23 +97,27 @@ export default function Post({
     return (
         <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl p-6 hover:bg-gray-900/70 transition-all duration-200">
             <div className="flex gap-3">
-                <img
+                <Link to={`/perfil/${tb_usuarios.nome_usuario}`}>
+                    <img
                     src={avatarUrl}
                     alt={tb_usuarios.nome_usuario}
                     className="w-10 h-10 rounded-full"
-                />
+                    />
+                </Link>
 
                 <div className="flex-1">
                     <div className="flex items-center justify-between gap-2 mb-2">
                         <div className='flex items-center space-x-2'>
-                            <h3 className="font-semibold text-white">{tb_usuarios.nome_usuario}</h3>
+                            <Link to={`/perfil/${tb_usuarios.nome_usuario}`}>
+                                <h3 className="font-semibold text-white hover:text-gray-300 hover:underline duration-150">{tb_usuarios.nome_usuario}</h3>
+                            </Link>
                             <span className="text-gray-500">·</span>
                             <span className="text-gray-500">{getTimeAgo(criado_em)}</span>
                         </div>
                         <div>
                             {tb_usuarios.id_usuario === auth?.id_usuario &&
                                 <PostMenu onDelete={handleDelete} onEdit={handleEdit} />
-                                }
+                            }
                         </div>
                     </div>
 
