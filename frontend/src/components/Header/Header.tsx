@@ -22,7 +22,7 @@ export default function Header() {
 
     return (
         <>
-            <header className="fixed inset-x-0 top-0 z-50 backdrop-blur-md bg-gray-950/55 border-b border-white/10 shadow-lg">
+            <header className="fixed z-1 inset-x-0 top-0 z-50 backdrop-blur-md bg-gray-950/55 border-b border-white/10 shadow-lg">
                 <nav aria-label="Global" className="flex items-center justify-between p-4 sm:p-6 lg:px-8">
                     <div className="flex lg:flex-1">
                         <Link to={"/"} className="-m-1.5 p-1.5 transition-transform hover:scale-105">
