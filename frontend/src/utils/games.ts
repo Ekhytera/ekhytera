@@ -1,4 +1,4 @@
-interface Game {
+export interface Game {
     id: number;
     name: string;
     image: string;
@@ -10,6 +10,11 @@ interface Game {
     featured: boolean;
 }
 
+export interface Category {
+    id: string;
+    name: string;
+    count: number;
+}
 export const games: Game[] = [
     {
         id: 1,
