@@ -22,6 +22,7 @@ function Perfil() {
     const [descricao, setDescricao] = useState('');
     const [profile, setProfile] = useState<User>();
     const [visitor, setvisitor] = useState(false);
+    const [visiterLoader, setVisitorLoader] = useState(false);
 
     useEffect(() => {
         setDescricao(auth?.descricao || "");
@@ -30,16 +31,15 @@ function Perfil() {
     useEffect(() => {
         if (authLoader) return;
 
-        console.log(userName)
-        console.log(auth?.nome_usuario)
-
         if (auth && userName == auth?.nome_usuario) {
             console.log("Meu perfil");
             setvisitor(false);
+            setVisitorLoader(false);
             setProfile(undefined);
         } else {
             console.log("Perfil de outro usuario");
             setvisitor(true);
+            setVisitorLoader(true)
             getUserProfile();
         }
     }, [userName, authLoader, auth?.nome_usuario]);
@@ -72,9 +72,11 @@ function Perfil() {
             }
 
             setProfile(req.data.user);
+            setVisitorLoader(false);
         } catch (error) {
             console.log(error);
             navigate('/404', { replace: true });
+            setVisitorLoader(false);
         }
     }
 
@@ -277,7 +279,7 @@ function Perfil() {
         }
     };
 
-    if (authLoader) {
+    if (authLoader || visiterLoader) {
         return (
             <div className="z-50 h-screen w-full bg-gray-950 flex justify-center items-center">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400"></div>
@@ -316,7 +318,7 @@ function Perfil() {
                                         profile?.nome_usuario
                                     }
                                 </h1>
-                                <p className="text-gray-300">Entrou em:
+                                <p className="text-gray-300">Entrou em: {' '}
                                     {!visitor ?
                                         formatarData(auth?.criado_em)
                                         :
