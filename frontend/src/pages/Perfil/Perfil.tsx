@@ -9,8 +9,8 @@ import api from "../../services/api";
 import { toast } from "react-toastify";
 import EditImageMenu from "../../components/EditImageMenu/EditImageMenu";
 import { useParams, useNavigate } from "react-router-dom";
-import { type User } from "../../types";
-// import Post from "../../components/Post/Post";
+import { type User, type BackendPost } from "../../types";
+import Post from "../../components/Post/Post";
 
 function Perfil() {
 
@@ -24,6 +24,11 @@ function Perfil() {
     const [profile, setProfile] = useState<User>();
     const [visitor, setvisitor] = useState(false);
     const [visiterLoader, setVisitorLoader] = useState(false);
+
+    const [activeTab, setActiveTab] = useState<'builds' | 'posts'>('builds');
+    const [userPosts, setUserPosts] = useState<BackendPost[]>([]);
+    const [postsLoading, setPostsLoading] = useState(false);
+    const [likedPosts, setLikedPosts] = useState<Set<number>>(new Set());
 
     useEffect(() => {
         setDescricao(auth?.descricao || "");
@@ -45,6 +50,15 @@ function Perfil() {
         }
     }, [userName, authLoader, auth?.nome_usuario]);
 
+    useEffect(() => {
+    if (!authLoader && !visiterLoader) {
+        const userId = visitor ? profile?.id_usuario : auth?.id_usuario;
+        if (userId) {
+            fetchUserPosts();
+        }
+    }
+}, [visitor, profile?.id_usuario, auth?.id_usuario, authLoader, visiterLoader]);
+
     const educationalContent = [
         {
             title: "Como escolher fonte de alimentação",
@@ -62,6 +76,107 @@ function Perfil() {
             difficulty: "Avançado"
         }
     ];
+
+    async function fetchUserPosts() {
+        try {
+            setPostsLoading(true);
+
+            const userId = visitor ? profile?.id_usuario : auth?.id_usuario;
+
+            if (!userId) {
+                console.warn('No user ID available for fetching posts');
+                return;
+            }
+
+            const response = await api.get(`/list-posts/userId/${userId}`);
+
+            if (response.data.ok) {
+                setUserPosts(response.data.posts);
+            } else {
+                console.warn('Failed to fetch user posts:', response.data.message);
+                setUserPosts([]);
+            }
+        } catch (error) {
+            console.error('Error fetching user posts:', error);
+            toast.error('Erro ao carregar posts do usuário', {
+                position: "bottom-right",
+                autoClose: 3000,
+                theme: 'dark'
+            });
+            setUserPosts([]);
+        } finally {
+            setPostsLoading(false);
+        }
+    }
+
+    const handleLike = async (postId: number) => {
+        if (!auth) {
+            toast.warning('Faça login para curtir posts', {
+                position: "bottom-right",
+                autoClose: 3000,
+                theme: 'dark'
+            });
+            return;
+        }
+
+        const isCurrentlyLiked = likedPosts.has(postId);
+        const endpoint = isCurrentlyLiked ? `/remove-like/${postId}` : `/add-like/${postId}`;
+
+        try {
+            const newLikedPosts = new Set(likedPosts);
+            if (isCurrentlyLiked) {
+                newLikedPosts.delete(postId);
+            } else {
+                newLikedPosts.add(postId);
+            }
+            setLikedPosts(newLikedPosts);
+
+            setUserPosts(userPosts.map(post =>
+                post.id_post === postId
+                    ? {
+                        ...post,
+                        curtidas: isCurrentlyLiked ? post.curtidas - 1 : post.curtidas + 1
+                    }
+                    : post
+            ));
+
+            const response = await api.patch(endpoint, {}, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+
+            if (!response.data.ok) {
+                throw new Error('Failed to update like');
+            }
+
+        } catch (error) {
+            console.error('Error updating like:', error);
+
+            const revertedLikedPosts = new Set(likedPosts);
+            if (!isCurrentlyLiked) {
+                revertedLikedPosts.delete(postId);
+            } else {
+                revertedLikedPosts.add(postId);
+            }
+            setLikedPosts(revertedLikedPosts);
+
+            setUserPosts(userPosts.map(post =>
+                post.id_post === postId
+                    ? {
+                        ...post,
+                        curtidas: isCurrentlyLiked ? post.curtidas + 1 : post.curtidas - 1
+                    }
+                    : post
+            ));
+
+            toast.error('Erro ao curtir post', {
+                position: "bottom-right",
+                autoClose: 3000,
+                theme: 'dark'
+            });
+        }
+    };
 
     async function getUserProfile() {
         try {
@@ -347,11 +462,6 @@ function Perfil() {
                                 <p className="break-words whitespace-pre-line w-full text-gray-300 border-l-2 pl-2 py-2 scroll-profile text-justify">{profile?.descricao || "Sem descrição"}</p>
                             }
                         </div>
-                    </section>
-
-                    {!visitor && <hr className="block md:hidden text-gray-500" />}
-
-                    {!visitor && <section className="flex h-full max-h-80 overflow-y-auto flex-col flex-1 w-full gap-4 scroll-profile">
                         {!visitor && <div className="mt-5 md:mt-auto flex justify-between">
                             <button
                                 onClick={() => setConfigIsOpen(true)}
@@ -361,6 +471,11 @@ function Perfil() {
                                 Configurações
                             </button>
                         </div>}
+                    </section>
+
+                    {!visitor && <hr className="block md:hidden text-gray-500" />}
+
+                    {!visitor && <section className="flex h-full max-h-80 overflow-y-auto flex-col flex-1 w-full gap-4 scroll-profile">
                         <div className="bg-white/5 border border-white/10 rounded-xl p-6">
                             {<ContentCard title="Conteúdos Salvos" nameButton="Ver Todos" contentList={educationalContent} />}
                         </div>
@@ -369,18 +484,87 @@ function Perfil() {
 
                 <hr className="m-5 text-gray-500" />
 
+                <section className="px-5">
+                    <div className="flex gap-4 mb-6">
+                        <button
+                            onClick={() => setActiveTab('builds')}
+                            className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${activeTab === 'builds'
+                                    ? 'bg-gradient-to-r from-[#79A7DD] to-[#415A77] text-white shadow-lg'
+                                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                }`}
+                        >
+                            Histórico de montagem
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('posts')}
+                            className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${activeTab === 'posts'
+                                    ? 'bg-gradient-to-r from-[#79A7DD] to-[#415A77] text-white shadow-lg'
+                                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                }`}
+                        >
+                            Posts ({userPosts.length})
+                        </button>
+                    </div>
+                </section>
+
                 <section className="px-5 pb-5">
-                    <h1 className="text-2xl text-white font-semibold">Histórico de montagem</h1>
+                    {activeTab === 'builds' ? (
+                        <>
+                            <h1 className="text-2xl text-white font-semibold mb-5">Histórico de montagem</h1>
+                            <p className="text-gray-300 mt-5">Nenhuma montagem foi realizada</p>
+                            {!visitor && <Link
+                                to={'/montagem'}
+                                className="text-[#79A7DD] hover:text-[#E0E1DD] transition-colors duration-200 underline underline-offset-4 flex items-center"
+                            >
+                                Faça sua primeira montagem
+                                <ChevronRightIcon className="w-4 h-4" />
+                            </Link>}
+                        </>
+                    ) : (
+                        <>
+                            <h1 className="text-2xl text-white font-semibold mb-5">
+                                Posts de {visitor ? profile?.nome_usuario : auth?.nome_usuario}
+                            </h1>
 
-                    <p className="text-gray-300 mt-5">Nenhuma montagem foi realizada</p>
-
-                    {!visitor && <Link
-                        to={'/montagem'}
-                        className="text-[#79A7DD] hover:text-[#E0E1DD] transition-colors duration-200 underline underline-offset-4 flex items-center"
-                    >
-                        Faça sua primeira montagem
-                        <ChevronRightIcon className="w-4 h-4" />
-                    </Link>}
+                            {postsLoading ? (
+                                <div className="flex justify-center items-center py-8">
+                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400"></div>
+                                    <span className="ml-3 text-gray-400">Carregando posts...</span>
+                                </div>
+                            ) : userPosts.length > 0 ? (
+                                <div className="space-y-6">
+                                    {userPosts.map((post) => (
+                                        <Post
+                                            key={post.id_post}
+                                            {...post}
+                                            isLiked={likedPosts.has(post.id_post)}
+                                            onLike={handleLike}
+                                            fetchPosts={fetchUserPosts}
+                                        />
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="text-center py-8">
+                                    <p className="text-gray-400 text-lg">
+                                        {visitor
+                                            ? `${profile?.nome_usuario} ainda não fez nenhum post`
+                                            : 'Você ainda não fez nenhum post'
+                                        }
+                                    </p>
+                                    <p className="text-gray-500 mt-2">
+                                        {!visitor && (
+                                            <Link
+                                                to="/community"
+                                                className="text-[#79A7DD] hover:text-[#E0E1DD] transition-colors duration-200 underline underline-offset-4"
+                                            >
+                                                Comece a compartilhar na comunidade!
+                                            </Link>
+                                        )}
+                                    </p>
+                                </div>
+                            )}
+                        </>
+                    )}
                 </section>
 
             </main>
