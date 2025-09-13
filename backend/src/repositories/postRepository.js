@@ -36,9 +36,14 @@ const postsRepository = {
         }
     },
 
-    async findAllPosts() {
+    async findAllPosts(page, pageSize) {
+        const skip = (page - 1) * pageSize;
+        const take = pageSize;
+
         try {
             const posts = await prisma.tb_posts.findMany({
+                skip: skip,
+                take: take,
                 include: {
                     tb_usuarios: {
                         select: {
@@ -62,6 +67,31 @@ const postsRepository = {
             const posts = await prisma.tb_posts.findMany({
                 where: {
                     status: 1
+                },
+                include: {
+                    tb_usuarios: {
+                        select: {
+                            nome_usuario: true,
+                            endereco_imagem: true,
+                            id_usuario: true
+                        }
+                    }
+                },
+                orderBy: {
+                    criado_em: 'desc'
+                }
+            });
+            return posts;
+        } catch (error) {
+            throw new Error(`Falha ao listar post: ${error.message}`);
+        }
+    },
+
+    async findAllPostsFromUserId(id_usuario) {
+        try {
+            const posts = await prisma.tb_posts.findMany({
+                where: {
+                    id_usuario: parseInt(id_usuario)
                 },
                 include: {
                     tb_usuarios: {

@@ -228,7 +228,6 @@ export default function Community() {
                             <p className="text-gray-400 mt-1">Conecte-se com outros entusiastas de tecnologia</p>
                         </div>
 
-                        {/* Post creation form */}
                         <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl p-6 mb-6">
                             <div className="flex gap-4">
                                 <img

@@ -41,7 +41,6 @@ export default function Post({
     onLike,
     fetchPosts
 }: PostProps) {
-    // Calculate time ago
     const getTimeAgo = (dateString: string): string => {
         const now = new Date();
         const postDate = new Date(dateString);

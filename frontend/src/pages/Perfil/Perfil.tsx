@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import EditImageMenu from "../../components/EditImageMenu/EditImageMenu";
 import { useParams, useNavigate } from "react-router-dom";
 import { type User } from "../../types";
+// import Post from "../../components/Post/Post";
 
 function Perfil() {
 
@@ -346,7 +347,11 @@ function Perfil() {
                                 <p className="break-words whitespace-pre-line w-full text-gray-300 border-l-2 pl-2 py-2 scroll-profile text-justify">{profile?.descricao || "Sem descrição"}</p>
                             }
                         </div>
+                    </section>
 
+                    {!visitor && <hr className="block md:hidden text-gray-500" />}
+
+                    {!visitor && <section className="flex h-full max-h-80 overflow-y-auto flex-col flex-1 w-full gap-4 scroll-profile">
                         {!visitor && <div className="mt-5 md:mt-auto flex justify-between">
                             <button
                                 onClick={() => setConfigIsOpen(true)}
@@ -356,11 +361,6 @@ function Perfil() {
                                 Configurações
                             </button>
                         </div>}
-                    </section>
-
-                    {!visitor && <hr className="block md:hidden text-gray-500" />}
-
-                    {!visitor && <section className="flex h-full max-h-80 overflow-y-auto flex-col flex-1 w-full gap-4 scroll-profile">
                         <div className="bg-white/5 border border-white/10 rounded-xl p-6">
                             {<ContentCard title="Conteúdos Salvos" nameButton="Ver Todos" contentList={educationalContent} />}
                         </div>
