@@ -1,6 +1,7 @@
 import UserRepository from "../repositories/userRepository.js";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { uploadToSupabase, deleteFromSupabase } from "../middlewares/uplaodImage.js";
 
 const SECRET = process.env.JWT_SECRET;
 
@@ -247,47 +248,74 @@ const UserController = {
     updateUser: async (req, res) => {
         const id = req.user.id;
         let data = req.body;
-        const image = req.query.typeImage;
-        let imagePath;
-
-        if (req.file) {
-            imagePath = req.file.filename;
-        }
-
-        if (image == 'perfil') {
-            data = imagePath
-                ? { endereco_imagem: `http://localhost:3001/files/${imagePath}` }
-                : { endereco_imagem: null };
-        } else if (image == 'banner') {
-            data = imagePath
-                ? { endereco_banner: `http://localhost:3001/files/${imagePath}` }
-                : { endereco_banner: null };
-        }
-
-        if ('nome_usuario' in data && !data.nome_usuario) {
-            return res.status(400).json({
-                ok: false,
-                status: 400,
-                message: 'O campo nome é obrigatório'
-            });
-        }
-        if ('email' in data && !data.email) {
-            return res.status(400).json({
-                ok: false,
-                status: 400,
-                message: 'O campo email é obrigatório'
-            });
-        }
+        const imageType = req.query.typeImage;
 
         try {
-            const updated = await UserRepository.updateInfo(id, data);
+            if (req.file && (imageType === 'perfil' || imageType === 'banner')) {
+                const uploadResult = await uploadToSupabase(req.file, imageType);
 
-            if (updated) {
+                if (!uploadResult.success) {
+                    return res.status(500).json({
+                        ok: false,
+                        status: 500,
+                        message: 'Erro ao fazer upload da imagem: ' + uploadResult.error
+                    });
+                }
+
+                const currentUser = await UserRepository.findUserById(id);
+
+                if (imageType === 'perfil') {
+                    if (currentUser.endereco_imagem) {
+                        const oldImagePath = currentUser.endereco_imagem.split('/').pop();
+                        await deleteFromSupabase(`perfil/${oldImagePath}`);
+                    }
+                    data = { endereco_imagem: uploadResult.publicUrl };
+                } else if (imageType === 'banner') {
+                    if (currentUser.endereco_banner) {
+                        const oldImagePath = currentUser.endereco_banner.split('/').pop();
+                        await deleteFromSupabase(`banner/${oldImagePath}`);
+                    }
+                    data = { endereco_banner: uploadResult.publicUrl };
+                }
+            } else if (imageType === 'perfil' && data.endereco_imagem === null) {
+                const currentUser = await UserRepository.findUserById(id);
+                if (currentUser.endereco_imagem) {
+                    const oldImagePath = currentUser.endereco_imagem.split('/').pop();
+                    await deleteFromSupabase(`perfil/${oldImagePath}`);
+                }
+                data = { endereco_imagem: null };
+            } else if (imageType === 'banner' && data.endereco_banner === null) {
+                const currentUser = await UserRepository.findUserById(id);
+                if (currentUser.endereco_banner) {
+                    const oldImagePath = currentUser.endereco_banner.split('/').pop();
+                    await deleteFromSupabase(`banner/${oldImagePath}`);
+                }
+                data = { endereco_banner: null };
+            }
+
+            if ('nome_usuario' in data && !data.nome_usuario) {
+                return res.status(400).json({
+                    ok: false,
+                    status: 400,
+                    message: 'O campo nome é obrigatório'
+                });
+            }
+            if ('email' in data && !data.email) {
+                return res.status(400).json({
+                    ok: false,
+                    status: 400,
+                    message: 'O campo email é obrigatório'
+                });
+            }
+
+            const result = await UserRepository.updateInfo(id, data);
+
+            if (result) {
                 return res.status(200).json({
                     ok: true,
                     status: 200,
                     message: 'Informações atualizadas com sucesso'
-                })
+                });
             }
 
             return res.status(400).json({
@@ -295,8 +323,6 @@ const UserController = {
                 status: 400,
                 message: 'Erro ao atualizar informações'
             });
-
-
 
         } catch (error) {
             console.error(error);
