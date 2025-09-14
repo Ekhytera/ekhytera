@@ -1,11 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import api from "../services/api";
-import type { User } from "../types";
-
+import type { UserWithPosts } from "../types";
 
 interface AuthProps {
-    auth: User | null;
-    setAuth: React.Dispatch<User | null>;
+    auth: UserWithPosts | null;
+    setAuth: React.Dispatch<UserWithPosts | null>;
     signed: boolean;
     authLoader: boolean;
     getUser: () => void;
@@ -15,7 +14,7 @@ const AuthContext = createContext({} as AuthProps);
 
 export function AuthProvider({ children }: { children: React.ReactElement }) {
 
-    const [auth, setAuth] = useState<User | null>(null);
+    const [auth, setAuth] = useState<UserWithPosts | null>(null);
     const [authLoader, setAuthLoader] = useState(true);
 
     async function getUser() {
@@ -28,7 +27,6 @@ export function AuthProvider({ children }: { children: React.ReactElement }) {
                     Authorization: `Bearer ${token}`
                 }
             });
-            console.log(req.data.user)
             setAuth(req.data.user);
             setAuthLoader(false);
 

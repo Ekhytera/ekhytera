@@ -18,6 +18,10 @@ export interface User {
     atualizado_em: Date;
 }
 
+export interface UserWithPosts extends User {
+    tb_posts: BackendPost[];
+}
+
 export interface BackendPost {
     id_post: number;
     texto: string;

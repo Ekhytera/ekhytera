@@ -24,14 +24,18 @@ const UserRepository = {
     async findUserByUserName(name) {
         const user = await prisma.tb_usuarios.findUnique({
             where: { nome_usuario: name },
-            omit: { senha: true }
+            omit: { senha: true },
+            include: {
+                tb_posts: true,
+            }
         });
         return user;
     },
     async findUserById(id) {
         const user = await prisma.tb_usuarios.findUnique({
             where: { id_usuario: id },
-            omit: { senha: true }
+            omit: { senha: true },
+            include: { tb_posts: true }
         });
         return user;
     },

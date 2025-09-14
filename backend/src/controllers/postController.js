@@ -277,7 +277,7 @@ const PostController = {
             const editPost = await postsRepository.editTextPost(id, texto);
             console.log(editPost)
 
-            if (editPost.affectedRows == 1) {
+            if (editPost) {
                 return res.status(200).json({
                     ok: true,
                     status: 200,

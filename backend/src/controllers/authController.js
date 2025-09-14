@@ -220,6 +220,8 @@ const UserController = {
 
         const user = await UserRepository.findUserByUserName(userName);
 
+        console.log(user)
+
         try {
             if (user) {
                 return res.status(200).json({

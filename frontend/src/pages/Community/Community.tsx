@@ -55,7 +55,7 @@ export default function Community() {
     const [loading, setLoading] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [likedPosts, setLikedPosts] = useState<Set<number>>(new Set());
-    const { auth } = useAuth();
+    const { auth, getUser } = useAuth();
 
     // Fetch posts from backend
     const fetchPosts = async () => {
@@ -65,6 +65,7 @@ export default function Community() {
             
             if (response.data.ok) {
                 setPosts(response.data.posts);
+                getUser()
             }
         } catch (error) {
             console.error('Error fetching posts:', error);

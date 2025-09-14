@@ -193,7 +193,7 @@ const postsRepository = {
                     texto: text
                 }
             });
-            return { affectedRows: 1 };
+            return result;
         } catch (error) {
             throw new Error(`Falha ao editar post: ${error.message}`);
         }

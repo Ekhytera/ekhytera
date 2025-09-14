@@ -10,6 +10,7 @@ import api from '../../services/api';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../contexts/AuthContext';
 import { Link } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
 
 interface PostProps {
     id_post: number;
@@ -53,6 +54,10 @@ export default function Post({
     };
 
     const { auth } = useAuth();
+    const [edit, setEdit] = useState('');
+    const [isEdit, setIsEdit] = useState(false);
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+
 
     const avatarUrl = tb_usuarios.endereco_imagem
         ? tb_usuarios.endereco_imagem
@@ -77,9 +82,8 @@ export default function Post({
                 pauseOnHover: false,
                 theme: 'dark'
             });
-
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
-            console.log(error);
             toast.error("Falha ao deletar o post", {
                 position: "bottom-right",
                 autoClose: 4000,
@@ -89,18 +93,78 @@ export default function Post({
         }
     }
 
-    function handleEdit() {
-        console.log('edit')
+    async function handleEdit() {
+        setEdit(texto);
+        setIsEdit(true)
     }
+
+    async function handleSaveEdit() {
+        if (!edit.trim()) {
+            toast.error("O post não pode estar vazio", {
+                position: "bottom-right",
+                autoClose: 4000,
+                pauseOnHover: false,
+                theme: 'dark'
+            });
+            if (textareaRef.current) {
+                textareaRef.current.focus();
+                textareaRef.current.setSelectionRange(textareaRef.current.value.length, textareaRef.current.value.length);
+            }
+            return;
+        }
+
+        if (texto === edit) {
+            setIsEdit(false);
+            return;
+        }
+
+        try {
+            const req = await api.patch(`/edit-post/${id_post}`, { texto: edit }, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+
+            if (!req.data.ok) {
+                throw new Error("Falha ao editar post");
+            }
+
+            setEdit('');
+            setIsEdit(false)
+            fetchPosts();
+            toast.success("Post editado com sucesso", {
+                position: "bottom-right",
+                autoClose: 4000,
+                pauseOnHover: false,
+                theme: 'dark'
+            });
+
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (error) {
+            toast.error("Falha ao editar post", {
+                position: "bottom-right",
+                autoClose: 4000,
+                pauseOnHover: false,
+                theme: 'dark'
+            });
+        }
+    }
+
+    useEffect(() => {
+        if (isEdit && textareaRef.current) {
+            textareaRef.current.focus();
+            textareaRef.current.setSelectionRange(textareaRef.current.value.length, textareaRef.current.value.length);
+        }
+    }, [isEdit]);
 
     return (
         <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl p-6 hover:bg-gray-900/70 transition-all duration-200">
             <div className="flex gap-3">
                 <Link to={`/perfil/${tb_usuarios.nome_usuario}`}>
                     <img
-                    src={avatarUrl}
-                    alt={tb_usuarios.nome_usuario}
-                    className="w-10 h-10 rounded-full"
+                        src={avatarUrl}
+                        alt={tb_usuarios.nome_usuario}
+                        className="w-10 h-10 rounded-full"
                     />
                 </Link>
 
@@ -120,7 +184,29 @@ export default function Post({
                         </div>
                     </div>
 
-                    <p className="text-white mb-3 leading-relaxed whitespace-pre-line wrap-anywhere text-justify">{texto}</p>
+                    {!isEdit ?
+                        <p className="text-white mb-3 leading-relaxed whitespace-pre-line wrap-anywhere text-justify">{texto}</p>
+                        :
+                        <div className="mb-3">
+                            <textarea
+                                className="block w-full h-30 rounded-md bg-white/5 px-3 py-2 text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 resize-none scroll-profile"
+                                value={edit}
+                                onChange={(e) => setEdit(e.target.value)}
+                                ref={textareaRef}
+                                onBlur={(e) => {
+                                    const relatedTarget = e.relatedTarget as HTMLElement;
+                                    if (!relatedTarget || !textareaRef.current?.contains(relatedTarget)) {
+                                        handleSaveEdit();
+                                    }
+                                }}
+                                placeholder="Digite seu post..."
+                                maxLength={500}
+                            />
+
+                            <span className='text-gray-300 text-sm
+                            '>{edit.length}/500</span>
+                        </div>
+                    }
 
                     {imagem_post && (
                         <img
@@ -138,7 +224,7 @@ export default function Post({
                             <span className="text-sm">0</span>
                         </button>
 
-                        
+
                         <button className="flex items-center gap-2 hover:text-yellow-400 transition-colors group">
                             <div className="p-2 rounded-full group-hover:bg-yellow-400/10 transition-colors">
                                 <BookmarkIcon className="w-4 h-4" />

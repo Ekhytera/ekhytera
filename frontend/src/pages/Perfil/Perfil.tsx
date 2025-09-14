@@ -42,22 +42,37 @@ function Perfil() {
             setvisitor(false);
             setVisitorLoader(false);
             setProfile(undefined);
+
+            if (auth.tb_posts) {
+                // Adapta os posts do usuário logado para o formato BackendPost
+                const adaptedPosts: BackendPost[] = auth.tb_posts.map(post => ({
+                    ...post,
+                    tb_usuarios: {
+                        nome_usuario: auth.nome_usuario || '',
+                        endereco_imagem: auth.endereco_imagem || undefined,
+                        id_usuario: auth.id_usuario
+                    }
+                }));
+                setUserPosts(adaptedPosts);
+            } else {
+                setUserPosts([]);
+            }
         } else {
             console.log("Perfil de outro usuario");
             setvisitor(true);
-            setVisitorLoader(true)
+            setVisitorLoader(true);
             getUserProfile();
         }
-    }, [userName, authLoader, auth?.nome_usuario]);
+    }, [userName, authLoader, auth?.nome_usuario, auth?.tb_posts]);
 
-    useEffect(() => {
-        if (!authLoader && !visiterLoader) {
-            const userId = visitor ? profile?.id_usuario : auth?.id_usuario;
-            if (userId) {
-                fetchUserPosts();
-            }
-        }
-    }, [visitor, profile?.id_usuario, auth?.id_usuario, authLoader, visiterLoader]);
+    // useEffect(() => {
+    //     if (!authLoader && !visiterLoader) {
+    //         const userId = visitor ? profile?.id_usuario : auth?.id_usuario;
+    //         if (userId) {
+    //             fetchUserPosts();
+    //         }
+    //     }
+    // }, [visitor, profile?.id_usuario, auth?.id_usuario, authLoader, visiterLoader]);
 
     const educationalContent = [
         {
@@ -77,37 +92,7 @@ function Perfil() {
         }
     ];
 
-    async function fetchUserPosts() {
-        try {
-            setPostsLoading(true);
-
-            const userId = visitor ? profile?.id_usuario : auth?.id_usuario;
-
-            if (!userId) {
-                console.warn('No user ID available for fetching posts');
-                return;
-            }
-
-            const response = await api.get(`/list-posts/userId/${userId}`);
-
-            if (response.data.ok) {
-                setUserPosts(response.data.posts);
-            } else {
-                console.warn('Failed to fetch user posts:', response.data.message);
-                setUserPosts([]);
-            }
-        } catch (error) {
-            console.error('Error fetching user posts:', error);
-            toast.error('Erro ao carregar posts do usuário', {
-                position: "bottom-right",
-                autoClose: 3000,
-                theme: 'dark'
-            });
-            setUserPosts([]);
-        } finally {
-            setPostsLoading(false);
-        }
-    }
+    
 
     const handleLike = async (postId: number) => {
         if (!auth) {
@@ -180,7 +165,8 @@ function Perfil() {
 
     async function getUserProfile() {
         try {
-            const req = await api.get(`usuarios/info/${userName}`);
+            setPostsLoading(true);
+            const req = await api.get(`/usuarios/info/${userName}`);
 
             if (!req.data.ok) {
                 navigate('/404', { replace: true });
@@ -188,7 +174,23 @@ function Perfil() {
             }
 
             setProfile(req.data.user);
+            
+            if (req.data.user.tb_posts) {
+                const adaptedPosts: BackendPost[] = req.data.user.tb_posts.map((post: BackendPost) => ({
+                    ...post,
+                    tb_usuarios: {
+                        nome_usuario: req.data.user.nome_usuario || '',
+                        endereco_imagem: req.data.user.endereco_imagem || undefined,
+                        id_usuario: req.data.user.id_usuario
+                    }
+                }));
+                setUserPosts(adaptedPosts);
+            } else {
+                setUserPosts([]);
+            }
+            
             setVisitorLoader(false);
+            setPostsLoading(false);
         } catch (error) {
             console.log(error);
             navigate('/404', { replace: true });
@@ -208,7 +210,7 @@ function Perfil() {
         descricao = descricao.trim().replace(/(\r?\n){3,}/g, '\n\n\n');
 
         try {
-            const req = await api.patch('update-user', { descricao }, {
+            const req = await api.patch('/update-user', { descricao }, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
@@ -257,7 +259,7 @@ function Perfil() {
         const data = formatedImage(file);
 
         try {
-            const req = await api.patch('update-user?typeImage=banner', data, {
+            const req = await api.patch('/update-user?typeImage=banner', data, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                     "Content-Type": 'multipart/form-data'
@@ -292,7 +294,7 @@ function Perfil() {
         const data = formatedImage(file);
 
         try {
-            const req = await api.patch('update-user?typeImage=perfil', data, {
+            const req = await api.patch('/update-user?typeImage=perfil', data, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                     "Content-Type": 'multipart/form-data'
@@ -330,7 +332,7 @@ function Perfil() {
         try {
             const formData = new FormData();
             formData.append('endereco_banner', "");
-            const req = await api.patch('update-user?typeImage=banner', formData, {
+            const req = await api.patch('/update-user?typeImage=banner', formData, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                     "Content-Type": 'multipart/form-data'
@@ -367,7 +369,7 @@ function Perfil() {
             const formData = new FormData();
             formData.append('endereco_imagem', "");
 
-            const req = await api.patch('update-user?typeImage=perfil', formData, {
+            const req = await api.patch('/update-user?typeImage=perfil', formData, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                     "Content-Type": 'multipart/form-data'
@@ -396,6 +398,16 @@ function Perfil() {
             });
         }
     }
+
+    
+    const fetchUserPosts = () => {
+        if (visitor) {
+            getUserProfile(); 
+        } else {
+            getUser();
+            console.log("Executou")
+        }
+    };
 
     if (authLoader || visiterLoader) {
         return (
