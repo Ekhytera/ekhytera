@@ -51,13 +51,13 @@ function Perfil() {
     }, [userName, authLoader, auth?.nome_usuario]);
 
     useEffect(() => {
-    if (!authLoader && !visiterLoader) {
-        const userId = visitor ? profile?.id_usuario : auth?.id_usuario;
-        if (userId) {
-            fetchUserPosts();
+        if (!authLoader && !visiterLoader) {
+            const userId = visitor ? profile?.id_usuario : auth?.id_usuario;
+            if (userId) {
+                fetchUserPosts();
+            }
         }
-    }
-}, [visitor, profile?.id_usuario, auth?.id_usuario, authLoader, visiterLoader]);
+    }, [visitor, profile?.id_usuario, auth?.id_usuario, authLoader, visiterLoader]);
 
     const educationalContent = [
         {
@@ -328,7 +328,9 @@ function Perfil() {
         if (!auth?.endereco_banner) return;
 
         try {
-            const req = await api.patch('update-user?typeImage=banner', { endereco_banner: null }, {
+            const formData = new FormData();
+            formData.append('endereco_banner', "");
+            const req = await api.patch('update-user?typeImage=banner', formData, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                     "Content-Type": 'multipart/form-data'
@@ -360,11 +362,12 @@ function Perfil() {
     };
 
     async function handleRemoveProfile() {
-
         if (!auth?.endereco_imagem) return;
-
         try {
-            const req = await api.patch('update-user?typeImage=perfil', { endereco_imagem: null }, {
+            const formData = new FormData();
+            formData.append('endereco_imagem', "");
+
+            const req = await api.patch('update-user?typeImage=perfil', formData, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                     "Content-Type": 'multipart/form-data'
@@ -383,7 +386,6 @@ function Perfil() {
             });
 
             getUser();
-
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
             toast.error(`Falha ao remover imagem`, {
@@ -393,7 +395,7 @@ function Perfil() {
                 theme: 'dark'
             });
         }
-    };
+    }
 
     if (authLoader || visiterLoader) {
         return (
@@ -489,8 +491,8 @@ function Perfil() {
                         <button
                             onClick={() => setActiveTab('builds')}
                             className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${activeTab === 'builds'
-                                    ? 'bg-gradient-to-r from-[#79A7DD] to-[#415A77] text-white shadow-lg'
-                                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                ? 'bg-gradient-to-r from-[#79A7DD] to-[#415A77] text-white shadow-lg'
+                                : 'text-gray-400 hover:text-white hover:bg-white/5'
                                 }`}
                         >
                             Histórico de montagem
@@ -498,8 +500,8 @@ function Perfil() {
                         <button
                             onClick={() => setActiveTab('posts')}
                             className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${activeTab === 'posts'
-                                    ? 'bg-gradient-to-r from-[#79A7DD] to-[#415A77] text-white shadow-lg'
-                                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                ? 'bg-gradient-to-r from-[#79A7DD] to-[#415A77] text-white shadow-lg'
+                                : 'text-gray-400 hover:text-white hover:bg-white/5'
                                 }`}
                         >
                             Posts ({userPosts.length})

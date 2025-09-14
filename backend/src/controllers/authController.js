@@ -277,20 +277,20 @@ const UserController = {
                     }
                     data = { endereco_banner: uploadResult.publicUrl };
                 }
-            } else if (imageType === 'perfil' && data.endereco_imagem === null) {
+            } else if (imageType === 'perfil' && data.endereco_imagem === "") {
                 const currentUser = await UserRepository.findUserById(id);
                 if (currentUser.endereco_imagem) {
                     const oldImagePath = currentUser.endereco_imagem.split('/').pop();
                     await deleteFromSupabase(`perfil/${oldImagePath}`);
                 }
-                data = { endereco_imagem: null };
-            } else if (imageType === 'banner' && data.endereco_banner === null) {
+                data = { endereco_imagem: "" };
+            } else if (imageType === 'banner' && data.endereco_banner === "") {
                 const currentUser = await UserRepository.findUserById(id);
                 if (currentUser.endereco_banner) {
                     const oldImagePath = currentUser.endereco_banner.split('/').pop();
                     await deleteFromSupabase(`banner/${oldImagePath}`);
                 }
-                data = { endereco_banner: null };
+                data = { endereco_banner: "" };
             }
 
             if ('nome_usuario' in data && !data.nome_usuario) {
