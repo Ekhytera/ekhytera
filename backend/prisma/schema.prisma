@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model tb_usuarios {
@@ -20,7 +21,7 @@ model tb_usuarios {
   localizacao       String?  @db.VarChar(45)
   dt_nascimento     DateTime? @db.Date
   cargo             Cargo?   @default(user)
-  status            Int?     @default(1) @db.TinyInt
+  status            Int?     @default(1) @db.SmallInt
   criado_em         DateTime @default(now()) @db.Timestamp(0)
   atualizado_em     DateTime @updatedAt
 
@@ -35,7 +36,7 @@ model tb_posts {
   imagem_post       String?   @db.VarChar(255)
   id_usuario        Int
   curtidas          Int       @default(0)
-  status            Int       @default(1) @db.TinyInt
+  status            Int       @default(1) @db.SmallInt
   criado_em         DateTime  @default(now()) @db.Timestamp(0)
   atualizado_em     DateTime  @updatedAt
 

@@ -46,7 +46,7 @@ const UserController = {
                     status: 201,
                     message: 'usuario criado com sucesso',
                     user: {
-                        id: newUser.insertId,
+                        id: newUser.id_usuario,
                         nome_usuario: nome_usuario,
                         email: email,
                     }
@@ -90,7 +90,7 @@ const UserController = {
                 message: 'Usuario não encontrado'
             });
 
-            const checarSenha = await bcrypt.compare(senha, user.senha);
+            const checarSenha = bcrypt.compare(senha, user.senha);
 
             if (!checarSenha) return res.status(400).json({
                 status: 400,
@@ -113,7 +113,7 @@ const UserController = {
                 status: 200,
                 ok: true,
                 token: token,
-                id: user.id
+                id: user.id_usuario
             });
 
         } catch (error) {
@@ -256,11 +256,11 @@ const UserController = {
 
         if (image == 'perfil') {
             data = imagePath
-                ? { endereco_imagem: `http://localhost:3000/files/${imagePath}` }
+                ? { endereco_imagem: `http://localhost:3001/files/${imagePath}` }
                 : { endereco_imagem: null };
         } else if (image == 'banner') {
             data = imagePath
-                ? { endereco_banner: `http://localhost:3000/files/${imagePath}` }
+                ? { endereco_banner: `http://localhost:3001/files/${imagePath}` }
                 : { endereco_banner: null };
         }
 
