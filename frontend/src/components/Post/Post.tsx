@@ -130,7 +130,7 @@ export default function Post({
                         />
                     )}
 
-                    <div className="flex items-center gap-8 text-gray-400">
+                    <div className="flex items-center gap-4 sm:gap-8 text-gray-400">
                         <button className="flex items-center gap-2 hover:text-blue-400 transition-colors group">
                             <div className="p-2 rounded-full group-hover:bg-blue-400/10 transition-colors">
                                 <ChatBubbleOvalLeftIcon className="w-4 h-4" />
@@ -138,7 +138,7 @@ export default function Post({
                             <span className="text-sm">0</span>
                         </button>
 
-                        {/* Troque o ArrowPathIcon pelo BookmarkIcon */}
+                        
                         <button className="flex items-center gap-2 hover:text-yellow-400 transition-colors group">
                             <div className="p-2 rounded-full group-hover:bg-yellow-400/10 transition-colors">
                                 <BookmarkIcon className="w-4 h-4" />
