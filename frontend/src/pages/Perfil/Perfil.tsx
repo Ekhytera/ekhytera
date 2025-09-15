@@ -24,7 +24,7 @@ function Perfil() {
     const [profile, setProfile] = useState<User>();
     const [visitor, setvisitor] = useState(false);
     const [visiterLoader, setVisitorLoader] = useState(false);
-
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [activeTab, setActiveTab] = useState<'builds' | 'posts'>('builds');
     const [userPosts, setUserPosts] = useState<BackendPost[]>([]);
     const [postsLoading, setPostsLoading] = useState(false);
@@ -38,13 +38,11 @@ function Perfil() {
         if (authLoader) return;
 
         if (auth && userName == auth?.nome_usuario) {
-            console.log("Meu perfil");
             setvisitor(false);
             setVisitorLoader(false);
             setProfile(undefined);
 
             if (auth.tb_posts) {
-                // Adapta os posts do usuário logado para o formato BackendPost
                 const adaptedPosts: BackendPost[] = auth.tb_posts.map(post => ({
                     ...post,
                     tb_usuarios: {
@@ -58,21 +56,11 @@ function Perfil() {
                 setUserPosts([]);
             }
         } else {
-            console.log("Perfil de outro usuario");
             setvisitor(true);
             setVisitorLoader(true);
             getUserProfile();
         }
     }, [userName, authLoader, auth?.nome_usuario, auth?.tb_posts]);
-
-    // useEffect(() => {
-    //     if (!authLoader && !visiterLoader) {
-    //         const userId = visitor ? profile?.id_usuario : auth?.id_usuario;
-    //         if (userId) {
-    //             fetchUserPosts();
-    //         }
-    //     }
-    // }, [visitor, profile?.id_usuario, auth?.id_usuario, authLoader, visiterLoader]);
 
     const educationalContent = [
         {
@@ -91,8 +79,6 @@ function Perfil() {
             difficulty: "Avançado"
         }
     ];
-
-    
 
     const handleLike = async (postId: number) => {
         if (!auth) {
@@ -174,7 +160,7 @@ function Perfil() {
             }
 
             setProfile(req.data.user);
-            
+
             if (req.data.user.tb_posts) {
                 const adaptedPosts: BackendPost[] = req.data.user.tb_posts.map((post: BackendPost) => ({
                     ...post,
@@ -188,7 +174,7 @@ function Perfil() {
             } else {
                 setUserPosts([]);
             }
-            
+
             setVisitorLoader(false);
             setPostsLoading(false);
         } catch (error) {
@@ -259,6 +245,7 @@ function Perfil() {
         const data = formatedImage(file);
 
         try {
+            setIsSubmitting(true);
             const req = await api.patch('/update-user?typeImage=banner', data, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -270,14 +257,15 @@ function Perfil() {
                 throw new Error("Falha ao adicionar imagem")
             }
 
+            getUser();
+            setIsSubmitting(false);
+
             toast.success(`Imagem adicionada com sucesso`, {
                 position: "bottom-right",
                 autoClose: 4000,
                 pauseOnHover: false,
                 theme: 'dark'
             });
-
-            getUser();
 
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
@@ -294,6 +282,7 @@ function Perfil() {
         const data = formatedImage(file);
 
         try {
+            setIsSubmitting(true);
             const req = await api.patch('/update-user?typeImage=perfil', data, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -305,14 +294,15 @@ function Perfil() {
                 throw new Error("Falha ao adicionar imagem")
             }
 
+            getUser();
+            setIsSubmitting(false);
+
             toast.success(`Imagem adicionada com sucesso`, {
                 position: "bottom-right",
                 autoClose: 4000,
                 pauseOnHover: false,
                 theme: 'dark'
             });
-
-            getUser();
 
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
@@ -330,6 +320,7 @@ function Perfil() {
         if (!auth?.endereco_banner) return;
 
         try {
+            setIsSubmitting(true);
             const formData = new FormData();
             formData.append('endereco_banner', "");
             const req = await api.patch('/update-user?typeImage=banner', formData, {
@@ -343,14 +334,15 @@ function Perfil() {
                 throw new Error("Falha ao remover imagem")
             }
 
+            getUser();
+            setIsSubmitting(false);
+
             toast.success(`Imagem removida com sucesso`, {
                 position: "bottom-right",
                 autoClose: 4000,
                 pauseOnHover: false,
                 theme: 'dark'
             });
-
-            getUser();
 
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
@@ -365,7 +357,9 @@ function Perfil() {
 
     async function handleRemoveProfile() {
         if (!auth?.endereco_imagem) return;
+
         try {
+            setIsSubmitting(true);
             const formData = new FormData();
             formData.append('endereco_imagem', "");
 
@@ -380,6 +374,10 @@ function Perfil() {
                 throw new Error("Falha ao remover imagem")
             }
 
+            getUser();
+
+            setIsSubmitting(false);
+
             toast.success(`Imagem removida com sucesso`, {
                 position: "bottom-right",
                 autoClose: 4000,
@@ -387,7 +385,6 @@ function Perfil() {
                 theme: 'dark'
             });
 
-            getUser();
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
             toast.error(`Falha ao remover imagem`, {
@@ -399,13 +396,11 @@ function Perfil() {
         }
     }
 
-    
     const fetchUserPosts = () => {
         if (visitor) {
-            getUserProfile(); 
+            getUserProfile();
         } else {
             getUser();
-            console.log("Executou")
         }
     };
 
@@ -416,6 +411,8 @@ function Perfil() {
             </div>
         )
     }
+
+
 
     return (
         <div className="min-h-screen bg-gray-950 pt-25 pb-12">
@@ -432,9 +429,17 @@ function Perfil() {
                         />
                     </div>}
 
-                    <img src={!visitor ? auth?.endereco_banner || banner : profile?.endereco_banner || banner} alt="banner" className="w-full h-45 object-cover rounded-t-lg" />
+                    {isSubmitting ?
+                        <div className="h-45 w-full rrounded-t-lg flex items-center justify-center">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400"></div>
+                        </div>
+                        :
+                        <>
+                            <img src={!visitor ? auth?.endereco_banner || banner : profile?.endereco_banner || banner} alt="banner" className="w-full h-45 object-cover rounded-t-lg" />
 
-                    <img src={!visitor ? auth?.endereco_imagem || foto : profile?.endereco_imagem || foto} alt="foto de perfil do usuario" className="w-30 h-30 xl:w-40 xl:h-40 rounded-full absolute left-10 -bottom-10 border-gray-900 border-2" />
+                            <img src={!visitor ? auth?.endereco_imagem || foto : profile?.endereco_imagem || foto} alt="foto de perfil do usuario" className="w-30 h-30 xl:w-40 xl:h-40 rounded-full absolute left-10 -bottom-10 border-gray-900 border-2" />
+                        </>
+                    }
                 </section>
 
                 <div className="flex flex-col md:flex-row w-full mt-15 px-5 gap-8">

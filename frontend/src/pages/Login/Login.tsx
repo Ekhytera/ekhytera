@@ -27,11 +27,13 @@ function Login() {
     });
     const [viewPassword, setViewPassword] = useState(false);
     const [msgErro, setMsgErro] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const { getUser } = useAuth();
     const navigate = useNavigate();
 
     async function onSubmit(data: FormData) {
         try {
+            setIsSubmitting(true);
             const req = await api.post('/login', data);
             const token = req.data.token;
 
@@ -39,6 +41,7 @@ function Login() {
             console.log(localStorage.getItem('token'))
             getUser();
             navigate('/', { replace: true });
+            setIsSubmitting(false);
 
         } catch (error) {
             if (error instanceof AxiosError && error.response) {
@@ -121,7 +124,7 @@ function Login() {
                                     bg-gradient-to-r from-blue-600 via-blue-400 to-blue-900
                                     rounded-md font-semibold text-white cursor-pointer gradient-animate"
                                 >
-                                    Entrar
+                                    {isSubmitting ? 'Carregando...' : 'Entrar'}
                                 </button>
                             </div>
                         </form>

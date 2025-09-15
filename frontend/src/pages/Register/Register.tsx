@@ -56,6 +56,7 @@ function Register() {
     const [viewPassword, setViewPassword] = useState(false);
     const [msgErro, setMsgErro] = useState('');
     const [errorInputName, setErrorInputName] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const navigate = useNavigate();
 
     const watchedUsername = watch('nome_usuario');
@@ -98,9 +99,11 @@ function Register() {
 
     async function onSubmit(data: FormData) {
         try {
+            setIsSubmitting(true);
             await api.post('/cadastrar', data);
 
             navigate('/login', { replace: true });
+            setIsSubmitting(false);
         } catch (error) {
             if (error instanceof AxiosError && error.response) {
                 setMsgErro(error.response.data.message || 'Erro no servidor');
@@ -193,7 +196,7 @@ function Register() {
                                     bg-gradient-to-r from-blue-600 via-blue-400 to-blue-900
                                     rounded-md font-semibold text-white cursor-pointer gradient-animate"
                                 >
-                                    Cadastrar
+                                    {isSubmitting ? 'Carregando...' : 'Cadastrar'}
                                 </button>
                             </div>
                         </form>
