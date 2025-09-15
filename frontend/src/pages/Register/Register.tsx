@@ -82,7 +82,9 @@ function Register() {
     }
 
     useEffect(() => {
-        // TODO: caso o usuario entre na pagina, efetuar o logout
+        if(localStorage.getItem('token')){
+            localStorage.removeItem('token')
+        }
     }, []);
 
     useEffect(() => {
@@ -110,6 +112,7 @@ function Register() {
             } else {
                 setMsgErro('Erro de conexão. Tente novamente.');
             }
+            setIsSubmitting(false);
         }
     }
 
@@ -192,6 +195,7 @@ function Register() {
                             <div>
                                 <button
                                     type="submit"
+                                    disabled={isSubmitting}
                                     className="w-full py-2 
                                     bg-gradient-to-r from-blue-600 via-blue-400 to-blue-900
                                     rounded-md font-semibold text-white cursor-pointer gradient-animate"

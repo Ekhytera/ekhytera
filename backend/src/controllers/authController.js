@@ -91,7 +91,7 @@ const UserController = {
                 message: 'Usuario não encontrado'
             });
 
-            const checarSenha = bcrypt.compare(senha, user.senha);
+            const checarSenha = await bcrypt.compare(senha, user.senha);
 
             if (!checarSenha) return res.status(400).json({
                 status: 400,
@@ -219,8 +219,6 @@ const UserController = {
         }
 
         const user = await UserRepository.findUserByUserName(userName);
-
-        console.log(user)
 
         try {
             if (user) {
