@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Dialog, DialogPanel } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Link } from 'react-router-dom'
@@ -18,12 +18,36 @@ const navigation = [
 
 export default function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
     const { signed, auth } = useAuth();
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const scrollPosition = window.scrollY;
+            setIsScrolled(scrollPosition > 10);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        
+        // Cleanup
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
 
     return (
         <>
-            <header className="fixed z-1 inset-x-0 top-0 z-50 backdrop-blur-md bg-gray-950/55 border-b border-white/10 shadow-lg">
-                <nav aria-label="Global" className="flex items-center justify-between p-4 sm:p-6 lg:px-8">
+            <header className="fixed z-1 inset-x-0 top-0 z-50">
+                {/* Background animado com transformY */}
+                <div 
+                    className={`absolute inset-0 backdrop-blur-md bg-gray-950/55 border-b border-white/10 shadow-lg transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+                        isScrolled 
+                            ? 'transform translate-y-0 opacity-100' 
+                            : 'transform -translate-y-full opacity-0'
+                    }`}
+                />
+                
+                <nav aria-label="Global" className="relative flex items-center justify-between p-4 sm:p-6 lg:px-8">
                     <div className="flex lg:flex-1">
                         <Link to={"/"} className="-m-1.5 p-1.5 transition-transform hover:scale-105">
                             <span className="sr-only">Ekhytera</span>

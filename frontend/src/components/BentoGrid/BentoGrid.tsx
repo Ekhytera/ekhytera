@@ -1,16 +1,13 @@
-import computerImage from '../../assets/image.png'
-
-
 export default function Bento() {
   return (
-    <div className="bg-black py-24 sm:py-32">
-      <div aria-hidden="true" className="blur-3xl absolute overflow-hidden flex items-start justify-center -mt-40 ml-90">
+    <div className="bg-black py-24 sm:py-32 relative overflow-hidden">
+      <div aria-hidden="true" className="blur-3xl absolute inset-0 flex items-center justify-center pointer-events-none">
         <div
           style={{
             clipPath:
               'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
           }}
-          className="relative  aspect-1155/678 w-144.5 -translate-x-1/2 rotate-30 bg-linear-to-tr from-[#79A7DD] to-[#415A77] opacity-30 sm:w-288.75 z-0 blur-3xl justify-center overflow-x-hidden sm:w-10 md:w-144.5 lg:w-144.5"
+          className="w-full max-w-4xl aspect-square bg-gradient-to-tr from-[#79A7DD] to-[#415A77] opacity-20 blur-3xl transform rotate-12 scale-120"
         />
       </div>
 
