@@ -14,7 +14,7 @@ import Post from "../../components/Post/Post";
 
 function Perfil() {
 
-    const { auth, getUser, authLoader } = useAuth();
+    const { auth, getUser, authLoader, setAuth } = useAuth();
     const { userName } = useParams();
     const navigate = useNavigate();
     const banner = 'https://www.womantowomanmentoring.org/wp-content/uploads/placeholder.jpg';
@@ -24,7 +24,6 @@ function Perfil() {
     const [profile, setProfile] = useState<User>();
     const [visitor, setvisitor] = useState(false);
     const [visiterLoader, setVisitorLoader] = useState(false);
-    const [isSubmitting, setIsSubmitting] = useState(false);
     const [activeTab, setActiveTab] = useState<'builds' | 'posts'>('builds');
     const [userPosts, setUserPosts] = useState<BackendPost[]>([]);
     const [postsLoading, setPostsLoading] = useState(false);
@@ -244,8 +243,15 @@ function Perfil() {
     async function handleEditBanner(file: File) {
         const data = formatedImage(file);
 
+        if (auth) {
+            setAuth({
+                ...auth,
+                endereco_banner: URL.createObjectURL(file),
+                tb_posts: auth?.tb_posts ?? []
+            });
+        }
+
         try {
-            setIsSubmitting(true);
             const req = await api.patch('/update-user?typeImage=banner', data, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -258,15 +264,6 @@ function Perfil() {
             }
 
             getUser();
-            setIsSubmitting(false);
-
-            toast.success(`Imagem adicionada com sucesso`, {
-                position: "bottom-right",
-                autoClose: 4000,
-                pauseOnHover: false,
-                theme: 'dark'
-            });
-
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
             toast.error(`Falha ao adicionar imagem`, {
@@ -281,8 +278,15 @@ function Perfil() {
     async function handleEditProfile(file: File) {
         const data = formatedImage(file);
 
+        if (auth) {
+            setAuth({
+                ...auth,
+                endereco_imagem: URL.createObjectURL(file),
+                tb_posts: auth?.tb_posts ?? []
+            });
+        }
+
         try {
-            setIsSubmitting(true);
             const req = await api.patch('/update-user?typeImage=perfil', data, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -295,14 +299,6 @@ function Perfil() {
             }
 
             getUser();
-            setIsSubmitting(false);
-
-            toast.success(`Imagem adicionada com sucesso`, {
-                position: "bottom-right",
-                autoClose: 4000,
-                pauseOnHover: false,
-                theme: 'dark'
-            });
 
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
@@ -319,8 +315,13 @@ function Perfil() {
 
         if (!auth?.endereco_banner) return;
 
+        setAuth({
+            ...auth,
+            endereco_banner: null,
+            tb_posts: auth?.tb_posts ?? []
+        });
+
         try {
-            setIsSubmitting(true);
             const formData = new FormData();
             formData.append('endereco_banner', "");
             const req = await api.patch('/update-user?typeImage=banner', formData, {
@@ -335,14 +336,6 @@ function Perfil() {
             }
 
             getUser();
-            setIsSubmitting(false);
-
-            toast.success(`Imagem removida com sucesso`, {
-                position: "bottom-right",
-                autoClose: 4000,
-                pauseOnHover: false,
-                theme: 'dark'
-            });
 
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
@@ -358,8 +351,13 @@ function Perfil() {
     async function handleRemoveProfile() {
         if (!auth?.endereco_imagem) return;
 
+        setAuth({
+            ...auth,
+            endereco_imagem: null,
+            tb_posts: auth?.tb_posts ?? []
+        });
+
         try {
-            setIsSubmitting(true);
             const formData = new FormData();
             formData.append('endereco_imagem', "");
 
@@ -375,15 +373,6 @@ function Perfil() {
             }
 
             getUser();
-
-            setIsSubmitting(false);
-
-            toast.success(`Imagem removida com sucesso`, {
-                position: "bottom-right",
-                autoClose: 4000,
-                pauseOnHover: false,
-                theme: 'dark'
-            });
 
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
@@ -429,17 +418,9 @@ function Perfil() {
                         />
                     </div>}
 
-                    {isSubmitting ?
-                        <div className="h-45 w-full rrounded-t-lg flex items-center justify-center">
-                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400"></div>
-                        </div>
-                        :
-                        <>
-                            <img src={!visitor ? auth?.endereco_banner || banner : profile?.endereco_banner || banner} alt="banner" className="w-full h-45 object-cover rounded-t-lg" />
+                    <img src={!visitor ? auth?.endereco_banner || banner : profile?.endereco_banner || banner} alt="banner" className="w-full h-45 object-cover rounded-t-lg" />
 
-                            <img src={!visitor ? auth?.endereco_imagem || foto : profile?.endereco_imagem || foto} alt="foto de perfil do usuario" className="w-30 h-30 xl:w-40 xl:h-40 rounded-full absolute left-10 -bottom-10 border-gray-900 border-2" />
-                        </>
-                    }
+                    <img src={!visitor ? auth?.endereco_imagem || foto : profile?.endereco_imagem || foto} alt="foto de perfil do usuario" className="w-30 h-30 xl:w-40 xl:h-40 rounded-full absolute left-10 -bottom-10 border-gray-900 border-2" />
                 </section>
 
                 <div className="flex flex-col md:flex-row w-full mt-15 px-5 gap-8">
