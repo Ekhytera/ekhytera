@@ -56,12 +56,15 @@ const PostController = {
     },
     getAllPosts: async (req, res) => {
         try {
-            const posts = await postsRepository.findAllPosts();
+            const pageNumber = parseInt(req.query.page);
+            const posts = await postsRepository.findAllPosts(pageNumber, 10);
 
             if (posts) return res.status(200).json({
                 ok: true,
                 status: 200,
                 message: 'Posts encontrados com sucesso',
+                page: pageNumber,
+                post_amout: posts.length,
                 posts: posts
             });
 
@@ -95,6 +98,34 @@ const PostController = {
                 ok: false,
                 status: 404,
                 message: 'Falha ao encontrar posts'
+            });
+
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                ok: false,
+                status: 500,
+                message: 'Erro no servidor'
+            });
+        }
+    },
+    getAllPostsByUserId: async (req, res) => {
+        const { userId } = req.params;
+
+        try {
+            const posts = await postsRepository.findAllPostsFromUserId(userId);
+
+            if (posts) return res.status(200).json({
+                ok: true,
+                status: 200,
+                message: 'Posts encontrados com sucesso',
+                posts: posts
+            });
+
+            return res.status(404).json({
+                ok: false,
+                status: 404,
+                message: 'Nenhum post encontrado'
             });
 
         } catch (error) {
@@ -246,7 +277,7 @@ const PostController = {
             const editPost = await postsRepository.editTextPost(id, texto);
             console.log(editPost)
 
-            if (editPost.affectedRows == 1) {
+            if (editPost) {
                 return res.status(200).json({
                     ok: true,
                     status: 200,

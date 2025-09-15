@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 export default function NotFound() {
     return (
-        <div className="min-h-screen bg-[#0D1B2A] text-[#E0E1DD] flex flex-col items-center justify-center px-4 relative overflow-hidden">
+        <div className="min-h-screen bg-[#0D1B2A] text-[#E0E1DD] flex flex-col items-center justify-center px-4 relative overflow-hidden pt-20">
             <div
                 className="absolute inset-0 opacity-50"
                 style={{

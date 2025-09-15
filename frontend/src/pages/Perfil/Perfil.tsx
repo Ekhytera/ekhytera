@@ -9,11 +9,12 @@ import api from "../../services/api";
 import { toast } from "react-toastify";
 import EditImageMenu from "../../components/EditImageMenu/EditImageMenu";
 import { useParams, useNavigate } from "react-router-dom";
-import { type User } from "../../types";
+import { type User, type BackendPost } from "../../types";
+import Post from "../../components/Post/Post";
 
 function Perfil() {
 
-    const { auth, getUser, authLoader } = useAuth();
+    const { auth, getUser, authLoader, setAuth } = useAuth();
     const { userName } = useParams();
     const navigate = useNavigate();
     const banner = 'https://www.womantowomanmentoring.org/wp-content/uploads/placeholder.jpg';
@@ -23,6 +24,10 @@ function Perfil() {
     const [profile, setProfile] = useState<User>();
     const [visitor, setvisitor] = useState(false);
     const [visiterLoader, setVisitorLoader] = useState(false);
+    const [activeTab, setActiveTab] = useState<'builds' | 'posts'>('builds');
+    const [userPosts, setUserPosts] = useState<BackendPost[]>([]);
+    const [postsLoading, setPostsLoading] = useState(false);
+    const [likedPosts, setLikedPosts] = useState<Set<number>>(new Set());
 
     useEffect(() => {
         setDescricao(auth?.descricao || "");
@@ -32,17 +37,29 @@ function Perfil() {
         if (authLoader) return;
 
         if (auth && userName == auth?.nome_usuario) {
-            console.log("Meu perfil");
             setvisitor(false);
             setVisitorLoader(false);
             setProfile(undefined);
+
+            if (auth.tb_posts) {
+                const adaptedPosts: BackendPost[] = auth.tb_posts.map(post => ({
+                    ...post,
+                    tb_usuarios: {
+                        nome_usuario: auth.nome_usuario || '',
+                        endereco_imagem: auth.endereco_imagem || undefined,
+                        id_usuario: auth.id_usuario
+                    }
+                }));
+                setUserPosts(adaptedPosts);
+            } else {
+                setUserPosts([]);
+            }
         } else {
-            console.log("Perfil de outro usuario");
             setvisitor(true);
-            setVisitorLoader(true)
+            setVisitorLoader(true);
             getUserProfile();
         }
-    }, [userName, authLoader, auth?.nome_usuario]);
+    }, [userName, authLoader, auth?.nome_usuario, auth?.tb_posts]);
 
     const educationalContent = [
         {
@@ -62,9 +79,79 @@ function Perfil() {
         }
     ];
 
+    const handleLike = async (postId: number) => {
+        if (!auth) {
+            toast.warning('Faça login para curtir posts', {
+                position: "bottom-right",
+                autoClose: 3000,
+                theme: 'dark'
+            });
+            return;
+        }
+
+        const isCurrentlyLiked = likedPosts.has(postId);
+        const endpoint = isCurrentlyLiked ? `/remove-like/${postId}` : `/add-like/${postId}`;
+
+        try {
+            const newLikedPosts = new Set(likedPosts);
+            if (isCurrentlyLiked) {
+                newLikedPosts.delete(postId);
+            } else {
+                newLikedPosts.add(postId);
+            }
+            setLikedPosts(newLikedPosts);
+
+            setUserPosts(userPosts.map(post =>
+                post.id_post === postId
+                    ? {
+                        ...post,
+                        curtidas: isCurrentlyLiked ? post.curtidas - 1 : post.curtidas + 1
+                    }
+                    : post
+            ));
+
+            const response = await api.patch(endpoint, {}, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+
+            if (!response.data.ok) {
+                throw new Error('Failed to update like');
+            }
+
+        } catch (error) {
+            console.error('Error updating like:', error);
+
+            const revertedLikedPosts = new Set(likedPosts);
+            if (!isCurrentlyLiked) {
+                revertedLikedPosts.delete(postId);
+            } else {
+                revertedLikedPosts.add(postId);
+            }
+            setLikedPosts(revertedLikedPosts);
+
+            setUserPosts(userPosts.map(post =>
+                post.id_post === postId
+                    ? {
+                        ...post,
+                        curtidas: isCurrentlyLiked ? post.curtidas + 1 : post.curtidas - 1
+                    }
+                    : post
+            ));
+
+            toast.error('Erro ao curtir post', {
+                position: "bottom-right",
+                autoClose: 3000,
+                theme: 'dark'
+            });
+        }
+    };
+
     async function getUserProfile() {
         try {
-            const req = await api.get(`usuarios/info/${userName}`);
+            setPostsLoading(true);
+            const req = await api.get(`/usuarios/info/${userName}`);
 
             if (!req.data.ok) {
                 navigate('/404', { replace: true });
@@ -72,7 +159,23 @@ function Perfil() {
             }
 
             setProfile(req.data.user);
+
+            if (req.data.user.tb_posts) {
+                const adaptedPosts: BackendPost[] = req.data.user.tb_posts.map((post: BackendPost) => ({
+                    ...post,
+                    tb_usuarios: {
+                        nome_usuario: req.data.user.nome_usuario || '',
+                        endereco_imagem: req.data.user.endereco_imagem || undefined,
+                        id_usuario: req.data.user.id_usuario
+                    }
+                }));
+                setUserPosts(adaptedPosts);
+            } else {
+                setUserPosts([]);
+            }
+
             setVisitorLoader(false);
+            setPostsLoading(false);
         } catch (error) {
             console.log(error);
             navigate('/404', { replace: true });
@@ -92,7 +195,7 @@ function Perfil() {
         descricao = descricao.trim().replace(/(\r?\n){3,}/g, '\n\n\n');
 
         try {
-            const req = await api.patch('update-user', { descricao }, {
+            const req = await api.patch('/update-user', { descricao }, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
@@ -140,8 +243,16 @@ function Perfil() {
     async function handleEditBanner(file: File) {
         const data = formatedImage(file);
 
+        if (auth) {
+            setAuth({
+                ...auth,
+                endereco_banner: URL.createObjectURL(file),
+                tb_posts: auth?.tb_posts ?? []
+            });
+        }
+
         try {
-            const req = await api.patch('update-user?typeImage=banner', data, {
+            const req = await api.patch('/update-user?typeImage=banner', data, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                     "Content-Type": 'multipart/form-data'
@@ -152,15 +263,7 @@ function Perfil() {
                 throw new Error("Falha ao adicionar imagem")
             }
 
-            toast.success(`Imagem adicionada com sucesso`, {
-                position: "bottom-right",
-                autoClose: 4000,
-                pauseOnHover: false,
-                theme: 'dark'
-            });
-
             getUser();
-
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
             toast.error(`Falha ao adicionar imagem`, {
@@ -175,8 +278,16 @@ function Perfil() {
     async function handleEditProfile(file: File) {
         const data = formatedImage(file);
 
+        if (auth) {
+            setAuth({
+                ...auth,
+                endereco_imagem: URL.createObjectURL(file),
+                tb_posts: auth?.tb_posts ?? []
+            });
+        }
+
         try {
-            const req = await api.patch('update-user?typeImage=perfil', data, {
+            const req = await api.patch('/update-user?typeImage=perfil', data, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                     "Content-Type": 'multipart/form-data'
@@ -186,13 +297,6 @@ function Perfil() {
             if (!req.data.ok) {
                 throw new Error("Falha ao adicionar imagem")
             }
-
-            toast.success(`Imagem adicionada com sucesso`, {
-                position: "bottom-right",
-                autoClose: 4000,
-                pauseOnHover: false,
-                theme: 'dark'
-            });
 
             getUser();
 
@@ -211,8 +315,16 @@ function Perfil() {
 
         if (!auth?.endereco_banner) return;
 
+        setAuth({
+            ...auth,
+            endereco_banner: null,
+            tb_posts: auth?.tb_posts ?? []
+        });
+
         try {
-            const req = await api.patch('update-user?typeImage=banner', { endereco_banner: null }, {
+            const formData = new FormData();
+            formData.append('endereco_banner', "");
+            const req = await api.patch('/update-user?typeImage=banner', formData, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                     "Content-Type": 'multipart/form-data'
@@ -222,13 +334,6 @@ function Perfil() {
             if (!req.data.ok) {
                 throw new Error("Falha ao remover imagem")
             }
-
-            toast.success(`Imagem removida com sucesso`, {
-                position: "bottom-right",
-                autoClose: 4000,
-                pauseOnHover: false,
-                theme: 'dark'
-            });
 
             getUser();
 
@@ -244,11 +349,19 @@ function Perfil() {
     };
 
     async function handleRemoveProfile() {
-
         if (!auth?.endereco_imagem) return;
 
+        setAuth({
+            ...auth,
+            endereco_imagem: null,
+            tb_posts: auth?.tb_posts ?? []
+        });
+
         try {
-            const req = await api.patch('update-user?typeImage=perfil', { endereco_imagem: null }, {
+            const formData = new FormData();
+            formData.append('endereco_imagem', "");
+
+            const req = await api.patch('/update-user?typeImage=perfil', formData, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                     "Content-Type": 'multipart/form-data'
@@ -258,13 +371,6 @@ function Perfil() {
             if (!req.data.ok) {
                 throw new Error("Falha ao remover imagem")
             }
-
-            toast.success(`Imagem removida com sucesso`, {
-                position: "bottom-right",
-                autoClose: 4000,
-                pauseOnHover: false,
-                theme: 'dark'
-            });
 
             getUser();
 
@@ -277,6 +383,14 @@ function Perfil() {
                 theme: 'dark'
             });
         }
+    }
+
+    const fetchUserPosts = () => {
+        if (visitor) {
+            getUserProfile();
+        } else {
+            getUser();
+        }
     };
 
     if (authLoader || visiterLoader) {
@@ -286,6 +400,8 @@ function Perfil() {
             </div>
         )
     }
+
+
 
     return (
         <div className="min-h-screen bg-gray-950 pt-25 pb-12">
@@ -346,7 +462,6 @@ function Perfil() {
                                 <p className="break-words whitespace-pre-line w-full text-gray-300 border-l-2 pl-2 py-2 scroll-profile text-justify">{profile?.descricao || "Sem descrição"}</p>
                             }
                         </div>
-
                         {!visitor && <div className="mt-5 md:mt-auto flex justify-between">
                             <button
                                 onClick={() => setConfigIsOpen(true)}
@@ -369,18 +484,87 @@ function Perfil() {
 
                 <hr className="m-5 text-gray-500" />
 
+                <section className="px-5">
+                    <div className="flex gap-4 mb-6">
+                        <button
+                            onClick={() => setActiveTab('builds')}
+                            className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${activeTab === 'builds'
+                                ? 'bg-gradient-to-r from-[#79A7DD] to-[#415A77] text-white shadow-lg'
+                                : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                }`}
+                        >
+                            Histórico de montagem
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('posts')}
+                            className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${activeTab === 'posts'
+                                ? 'bg-gradient-to-r from-[#79A7DD] to-[#415A77] text-white shadow-lg'
+                                : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                }`}
+                        >
+                            Posts ({userPosts.length})
+                        </button>
+                    </div>
+                </section>
+
                 <section className="px-5 pb-5">
-                    <h1 className="text-2xl text-white font-semibold">Histórico de montagem</h1>
+                    {activeTab === 'builds' ? (
+                        <>
+                            <h1 className="text-2xl text-white font-semibold mb-5">Histórico de montagem</h1>
+                            <p className="text-gray-300 mt-5">Nenhuma montagem foi realizada</p>
+                            {!visitor && <Link
+                                to={'/montagem'}
+                                className="text-[#79A7DD] hover:text-[#E0E1DD] transition-colors duration-200 underline underline-offset-4 flex items-center"
+                            >
+                                Faça sua primeira montagem
+                                <ChevronRightIcon className="w-4 h-4" />
+                            </Link>}
+                        </>
+                    ) : (
+                        <>
+                            <h1 className="text-2xl text-white font-semibold mb-5">
+                                Posts de {visitor ? profile?.nome_usuario : auth?.nome_usuario}
+                            </h1>
 
-                    <p className="text-gray-300 mt-5">Nenhuma montagem foi realizada</p>
-
-                    {!visitor && <Link
-                        to={'/montagem'}
-                        className="text-[#79A7DD] hover:text-[#E0E1DD] transition-colors duration-200 underline underline-offset-4 flex items-center"
-                    >
-                        Faça sua primeira montagem
-                        <ChevronRightIcon className="w-4 h-4" />
-                    </Link>}
+                            {postsLoading ? (
+                                <div className="flex justify-center items-center py-8">
+                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400"></div>
+                                    <span className="ml-3 text-gray-400">Carregando posts...</span>
+                                </div>
+                            ) : userPosts.length > 0 ? (
+                                <div className="space-y-6">
+                                    {userPosts.map((post) => (
+                                        <Post
+                                            key={post.id_post}
+                                            {...post}
+                                            isLiked={likedPosts.has(post.id_post)}
+                                            onLike={handleLike}
+                                            fetchPosts={fetchUserPosts}
+                                        />
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="text-center py-8">
+                                    <p className="text-gray-400 text-lg">
+                                        {visitor
+                                            ? `${profile?.nome_usuario} ainda não fez nenhum post`
+                                            : 'Você ainda não fez nenhum post'
+                                        }
+                                    </p>
+                                    <p className="text-gray-500 mt-2">
+                                        {!visitor && (
+                                            <Link
+                                                to="/community"
+                                                className="text-[#79A7DD] hover:text-[#E0E1DD] transition-colors duration-200 underline underline-offset-4"
+                                            >
+                                                Comece a compartilhar na comunidade!
+                                            </Link>
+                                        )}
+                                    </p>
+                                </div>
+                            )}
+                        </>
+                    )}
                 </section>
 
             </main>

@@ -3,43 +3,41 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model tb_usuarios {
-  id_usuario        Int      @id @default(autoincrement())
-  nome_usuario      String?  @unique @db.Char(45)
-  email             String?  @unique  @db.VarChar(100)
-  senha             String?  @db.Char(120)
-  endereco_imagem   String?  @db.VarChar(100)
-  endereco_banner   String?  @db.VarChar(100)
-  descricao         String?  @db.VarChar(300)
-  num_telefone      String?  @db.VarChar(17)
-  genero            String?  @db.Char(4)
-  localizacao       String?  @db.VarChar(45)
-  dt_nascimento     DateTime? @db.Date
-  cargo             Cargo?   @default(user)
-  status            Int?     @default(1) @db.TinyInt
-  criado_em         DateTime @default(now()) @db.Timestamp(0)
-  atualizado_em     DateTime @updatedAt
+  id_usuario      Int       @id @default(autoincrement())
+  nome_usuario    String?   @unique @db.VarChar(45)
+  email           String?   @unique @db.VarChar(100)
+  senha           String?   @db.VarChar(120)
+  endereco_imagem String?   @db.VarChar(255)
+  endereco_banner String?   @db.VarChar(255)
+  descricao       String?   @db.VarChar(300)
+  dt_nascimento   DateTime? @db.Date
+  cargo           Cargo?    @default(user)
+  status          Int?      @default(1) @db.SmallInt
+  criado_em       DateTime  @default(now()) @db.Timestamp(0)
+  atualizado_em   DateTime  @updatedAt
 
-  tb_posts          tb_posts[]
+  tb_posts tb_posts[]
 
   @@map("tb_usuarios")
 }
 
 model tb_posts {
-  id_post           Int       @id @default(autoincrement())
-  texto             String    @db.Text
-  imagem_post       String?   @db.VarChar(255)
-  id_usuario        Int
-  curtidas          Int       @default(0)
-  status            Int       @default(1) @db.TinyInt
-  criado_em         DateTime  @default(now()) @db.Timestamp(0)
-  atualizado_em     DateTime  @updatedAt
+  id_post       Int      @id @default(autoincrement())
+  texto         String   @db.Text
+  imagem_post   String?  @db.VarChar(255)
+  id_usuario    Int
+  curtidas      Int      @default(0)
+  status        Int      @default(1) @db.SmallInt
+  criado_em     DateTime @default(now()) @db.Timestamp(0)
+  atualizado_em DateTime @updatedAt
 
-  tb_usuarios       tb_usuarios @relation(fields: [id_usuario], references: [id_usuario], onDelete: Cascade)
+  tb_usuarios tb_usuarios @relation(fields: [id_usuario], references: [id_usuario], onDelete: Cascade)
 
   @@map("tb_posts")
 }

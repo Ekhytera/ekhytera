@@ -27,11 +27,13 @@ function Login() {
     });
     const [viewPassword, setViewPassword] = useState(false);
     const [msgErro, setMsgErro] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const { getUser } = useAuth();
     const navigate = useNavigate();
 
     async function onSubmit(data: FormData) {
         try {
+            setIsSubmitting(true);
             const req = await api.post('/login', data);
             const token = req.data.token;
 
@@ -39,6 +41,7 @@ function Login() {
             console.log(localStorage.getItem('token'))
             getUser();
             navigate('/', { replace: true });
+            setIsSubmitting(false);
 
         } catch (error) {
             if (error instanceof AxiosError && error.response) {
@@ -46,12 +49,15 @@ function Login() {
             } else {
                 setMsgErro('Erro de conexão. Tente novamente.');
             }
+            setIsSubmitting(false);
         }
     }
 
     useEffect(() => {
-            // TODO: caso o usuario entre na pagina, efetuar o logout
-        }, []);
+        if(localStorage.getItem('token')){
+            localStorage.removeItem('token')
+        }
+    }, []);
 
     return (
         <>
@@ -117,11 +123,12 @@ function Login() {
                             <div>
                                 <button
                                     type="submit"
+                                    disabled={isSubmitting}
                                     className="w-full py-2 
                                     bg-gradient-to-r from-blue-600 via-blue-400 to-blue-900
                                     rounded-md font-semibold text-white cursor-pointer gradient-animate"
                                 >
-                                    Entrar
+                                    {isSubmitting ? 'Carregando...' : 'Entrar'}
                                 </button>
                             </div>
                         </form>

@@ -1,26 +1,78 @@
 import multer from 'multer';
-import path from 'path';
+import { supabase } from '../config/supabase.js';
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, './src/uploads')
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname))
-    }
-});
+const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, cb) => {
-    const ext = ['image/png', 'image/jpeg', 'image/jpg'];
-
-    if (ext.includes(file.mimetype)) {
-        cb(null, true)
+    const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
+    
+    if (allowedTypes.includes(file.mimetype)) {
+        cb(null, true);
     } else {
-        cb(new Error('Apenas arquivos PNG, JPEG e JPG são permitidos'), false)
+        cb(new Error('Apenas arquivos PNG, JPEG, JPG e WebP são permitidos'), false);
     }
 };
 
+const upload = multer({ 
+    storage, 
+    fileFilter,
+    limits: {
+        fileSize: 5 * 1024 * 1024
+    }
+});
 
+export async function uploadToSupabase(file, folder = 'uploads') {
+    try {
+        const fileExt = file.originalname.split('.').pop();
+        const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
+        const filePath = `${folder}/${fileName}`;
 
-const upload = multer({ storage, fileFilter });
+        const { data, error } = await supabase.storage
+            .from('pictures') // Your bucket name
+            .upload(filePath, file.buffer, {
+                contentType: file.mimetype,
+                upsert: false
+            });
+
+        if (error) {
+            throw error;
+        }
+
+        const { data: publicUrlData } = supabase.storage
+            .from('pictures')
+            .getPublicUrl(filePath);
+
+        return {
+            success: true,
+            fileName: fileName,
+            filePath: filePath,
+            publicUrl: publicUrlData.publicUrl
+        };
+
+    } catch (error) {
+        console.error('Supabase upload error:', error);
+        return {
+            success: false,
+            error: error.message
+        };
+    }
+}
+
+export async function deleteFromSupabase(filePath) {
+    try {
+        const { error } = await supabase.storage
+            .from('pictures')
+            .remove([filePath]);
+
+        if (error) {
+            throw error;
+        }
+
+        return { success: true };
+    } catch (error) {
+        console.error('Supabase delete error:', error);
+        return { success: false, error: error.message };
+    }
+}
+
 export default upload;

@@ -55,7 +55,7 @@ export default function Community() {
     const [loading, setLoading] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [likedPosts, setLikedPosts] = useState<Set<number>>(new Set());
-    const { auth } = useAuth();
+    const { auth, getUser } = useAuth();
 
     // Fetch posts from backend
     const fetchPosts = async () => {
@@ -65,6 +65,7 @@ export default function Community() {
             
             if (response.data.ok) {
                 setPosts(response.data.posts);
+                getUser()
             }
         } catch (error) {
             console.error('Error fetching posts:', error);
@@ -228,7 +229,6 @@ export default function Community() {
                             <p className="text-gray-400 mt-1">Conecte-se com outros entusiastas de tecnologia</p>
                         </div>
 
-                        {/* Post creation form */}
                         <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl p-6 mb-6">
                             <div className="flex gap-4">
                                 <img
