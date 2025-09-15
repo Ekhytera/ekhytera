@@ -3,7 +3,7 @@
 import { animate, motion, useMotionValue, useTransform } from "motion/react"
 import { useEffect } from "react"
 
-export default function HTMLContent() {
+export default function NumberCount() {
     const count = useMotionValue(0)
     const rounded = useTransform(() => Math.round(count.get()))
 
@@ -12,7 +12,7 @@ export default function HTMLContent() {
         return () => controls.stop()
     }, [])
 
-    return <motion.pre style={text}>{rounded}</motion.pre>
+    return <motion.span style={text}>{rounded}</motion.span>
 }
 
 /**
@@ -20,6 +20,8 @@ export default function HTMLContent() {
  */
 
 const text = {
-    fontSize: 64,
-    color: "#415A77",
+    fontSize: "inherit",
+    color: "#79A7DD",
+    fontWeight: "bold",
+    display: "inline",
 }
