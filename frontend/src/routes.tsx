@@ -8,6 +8,7 @@ import Montagem from './pages/Montagem/Montagem';
 import NotFound from './pages/NotFound/NotFound';
 import Perfil from './pages/Perfil/Perfil';
 import Catalog from './pages/Catalog/Catalog';
+import Promotions from './pages/Promotions/Promotions';
 
 export const router = createBrowserRouter([
     {
@@ -30,8 +31,8 @@ export const router = createBrowserRouter([
                 element: <Catalog />
             },
             {
-                path: '/Promoções',
-                element: <NotFound />
+                path: '/promocoes',
+                element: <Promotions />
             },
             {
                 path: '/Sobre',

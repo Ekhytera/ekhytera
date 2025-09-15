@@ -3,57 +3,6 @@ import newsBg from '../../assets/news-bg.png'
 
 const apiKey = 'pub_578735429f4fc6aeda0faf6e4e3fd66085b40';
 
-/*  
- 
-<div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:gap-6 xl:gap-8" id='destaques>
- 
-                            <a href=${newsList[i].link} target="_blank"
-                                className="group relative flex h-48 items-end overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-80">
-                                <img id="news-img" src=${newsList[i].image_url} loading="lazy" alt=${newsList[i].title} className="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110" />
- 
-                                <div
-                                    className="pointer-events-none absolute inset-0 bg-gradient-to-t from-gray-800 via-transparent to-transparent opacity-50">
-                                </div>
- 
-                                <span className="relative ml-4 mb-3 inline-block text-sm text-white md:ml-5 md:text-lg">${newsList[i].title}</span>
-                            </a>
- 
-                            <a href=${newsList[i].link} target="_blank"
-                                className="group relative flex h-48 items-end overflow-hidden rounded-lg bg-gray-100 shadow-lg md:col-span-2 md:h-80">
-                                <img src=${newsList[i].image_url} loading="lazy" alt=${newsList[i].title} className="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110" />
- 
-                                <div
-                                    className="pointer-events-none absolute inset-0 bg-gradient-to-t from-gray-800 via-transparent to-transparent opacity-50">
-                                </div>
- 
-                                <span className="relative ml-4 mb-3 inline-block text-sm text-white md:ml-5 md:text-lg">${newsList[i].title}</span>
-                            </a>
- 
-                            <a href="#"
-                                className="group relative flex h-48 items-end overflow-hidden rounded-lg bg-gray-100 shadow-lg md:col-span-2 md:h-80">
-                                <img src=${newsList[i].image_url} loading="lazy" alt=${newsList[i].title} className="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110" />
- 
-                                <div
-                                    className="pointer-events-none absolute inset-0 bg-gradient-to-t from-gray-800 via-transparent to-transparent opacity-50">
-                                </div>
- 
-                                <span className="relative ml-4 mb-3 inline-block text-sm text-white md:ml-5 md:text-lg">${newsList[i].title}</span>
-                            </a>
- 
-                            <a href="#"
-                                className="group relative flex h-48 items-end overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-80">
-                                <img src=${newsList[i].image_url} loading="lazy" alt=${newsList[i].title} className="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110" />
- 
-                                <div
-                                    className="pointer-events-none absolute inset-0 bg-gradient-to-t from-gray-800 via-transparent to-transparent opacity-50">
-                                </div>
- 
-                                <span className="relative ml-4 mb-3 inline-block text-sm text-white md:ml-5 md:text-lg">${newsList[i].title}</span>
-                            </a>
-                        </div>
- 
-*/
-
 
 interface NewsItem {
     title: string;
@@ -78,12 +27,17 @@ export const Noticias = () => {
                 }
 
                 
-                const url = `https://newsdata.io/api/1/latest?country=br&category=technology&apikey=${apiKey}`;
+                const url = `https://newsdata.io/api/1/latest?country=br&category=technology&language=pt&apikey=${apiKey}`;
                 const resp = await fetch(url);
                 const dados = await resp.json();
 
                 if (dados.results) {
-                    const listaDeNoticias = dados.results.slice(0, 4).map((noticia: { title: any; link: any; image_url: any; }) => ({
+                    // Filtra apenas artigos que realmente são de tecnologia
+                    const techNews = dados.results.filter((noticia: any) => 
+                        noticia.category && noticia.category.includes('technology')
+                    );
+                    
+                    const listaDeNoticias = techNews.slice(0, 4).map((noticia: { title: any; link: any; image_url: any; }) => ({
                         title: noticia.title,
                         link: noticia.link,
                         image_url: noticia.image_url || newsBg, 
@@ -140,7 +94,7 @@ export const Noticias = () => {
                                         href={noticia.link}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className={`group relative flex h-48 items-end overflow-hidden rounded-lg bg-gray-100 shadow-lg ${gridClasses}`}
+                                        className={`group relative flex h-48 items-end overflow-hidden rounded-lg bg-zinc-900 shadow-lg border border-zinc-800 backdrop-filter backdrop-blur-sm transition-all duration-500 hover:border-gray-700 hover:shadow-[0px_0px_45px_-22px_#969fff] ${gridClasses}`}
                                     >
                                         <img src={noticia.image_url} loading="lazy" alt={noticia.title} className="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110 brightness-40 " />
                                         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-gray-800 via-transparent to-transparent opacity-50"></div>
