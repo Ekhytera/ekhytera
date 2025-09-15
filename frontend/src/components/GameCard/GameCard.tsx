@@ -20,8 +20,8 @@ export default function GameCard({ game, viewMode, onClick }: GameCardProps) {
             className={`
                 group cursor-pointer transition-all duration-300 hover:scale-105
                 ${viewMode === 'grid'
-                    ? 'bg-gray-900/50 rounded-xl overflow-hidden border border-gray-800 hover:border-[#79A7DD]/50 hover:shadow-lg hover:shadow-[#79A7DD]/10'
-                    : 'bg-gray-900/50 rounded-xl p-4 border border-gray-800 hover:border-[#79A7DD]/50 flex gap-4'
+                    ? 'bg-zinc-900/50 rounded-xl overflow-hidden border border-zinc-800 hover:border-[#79A7DD]/50 hover:shadow-lg hover:shadow-[#79A7DD]/10'
+                    : 'bg-zinc-900/50 rounded-xl p-4 border border-zinc-800 hover:border-[#79A7DD]/50 flex gap-4'
                 }
             `}
         >
@@ -66,7 +66,7 @@ export default function GameCard({ game, viewMode, onClick }: GameCardProps) {
                     {game.tags.slice(0, 2).map((tag) => (
                         <span
                             key={tag}
-                            className="px-2 py-1 text-xs bg-gray-800 text-gray-300 rounded"
+                            className="px-2 py-1 text-xs bg-zinc-800 text-gray-300 rounded"
                         >
                             {tag}
                         </span>
