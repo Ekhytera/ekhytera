@@ -2,6 +2,7 @@ import { Router } from "express";
 import UserController from "../controllers/authController.js";
 import auth from '../middlewares/auth.js';
 import upload from "../middlewares/uplaodImage.js";
+import { validateText } from "../middlewares/validateText.js";
 
 const routes = Router();
 
@@ -17,7 +18,7 @@ routes.post('/login', UserController.login);
 // ROTAS PRIVADAS --------------------------------------------
 
 routes.get('/usuarios/id', auth.verifyToken, UserController.getUserById);
-routes.patch('/update-user', auth.verifyToken, upload.single('imagem'), UserController.updateUser);
+routes.patch('/update-user', auth.verifyToken, upload.single('imagem'), validateText, UserController.updateUser);
 routes.delete('/delete-user', auth.verifyToken, UserController.deleteUser);
 
 

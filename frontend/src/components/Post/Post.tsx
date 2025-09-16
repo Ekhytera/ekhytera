@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 import { useAuth } from '../../contexts/AuthContext';
 import { Link } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
+import { AxiosError } from 'axios';
 
 interface PostProps {
     id_post: number;
@@ -139,14 +140,24 @@ export default function Post({
                 theme: 'dark'
             });
 
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
-            toast.error("Falha ao editar post", {
-                position: "bottom-right",
-                autoClose: 4000,
-                pauseOnHover: false,
-                theme: 'dark'
-            });
+            if (error instanceof AxiosError && error.response) {
+                toast.error(error.response.data.message, {
+                    position: "bottom-right",
+                    autoClose: 4000,
+                    pauseOnHover: false,
+                    theme: 'dark'
+                });
+            } else {
+                toast.error("Erro! Tente novamente", {
+                    position: "bottom-right",
+                    autoClose: 4000,
+                    pauseOnHover: false,
+                    theme: 'dark'
+                });
+            }
+
+            setIsEdit(false);
         }
     }
 

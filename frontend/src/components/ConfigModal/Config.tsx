@@ -82,7 +82,7 @@ function Config({ setConfigIsOpen }: ConfigProps) {
 
     async function onSubmit(data: FormData) {
         try {
-            const req = await api.patch('update-user', data, {
+            const req = await api.patch('/update-user', data, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
@@ -100,14 +100,26 @@ function Config({ setConfigIsOpen }: ConfigProps) {
                 theme: 'dark'
             });
 
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
-            toast.error(`Erro ao salvar, tente novamente.`, {
-                position: "bottom-right",
-                autoClose: 4000,
-                pauseOnHover: false,
-                theme: 'dark'
+            reset({
+                nome_usuario: auth?.nome_usuario || "",
+                email: auth?.email || ""
             });
+            if (error instanceof AxiosError && error.response) {
+                toast.error(error.response.data.message, {
+                    position: "bottom-right",
+                    autoClose: 4000,
+                    pauseOnHover: false,
+                    theme: 'dark'
+                });
+            } else {
+                toast.error("Erro! Tente novamente", {
+                    position: "bottom-right",
+                    autoClose: 4000,
+                    pauseOnHover: false,
+                    theme: 'dark'
+                });
+            }
         }
     }
 
@@ -284,13 +296,13 @@ function Config({ setConfigIsOpen }: ConfigProps) {
                                         className="mt-2 block w-full rounded-md bg-white/5 px-3 py-2 text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600"
                                         onChange={(e) => setInputSenha(e.target.value)}
                                     />
-                                    
-                                        <button 
-                                            type="submit" 
-                                            className="flex items-center rounded-md text-white mx-1 mt-2 px-2 bg-red-600 h-10 cursor-pointer hover:scale-105 hover:bg-red-700">
-                                            < FaCheck />
-                                        </button>
-                                    
+
+                                    <button
+                                        type="submit"
+                                        className="flex items-center rounded-md text-white mx-1 mt-2 px-2 bg-red-600 h-10 cursor-pointer hover:scale-105 hover:bg-red-700">
+                                        < FaCheck />
+                                    </button>
+
                                 </div>
                                 {inputSenhaError && <span className="text-red-600">* {inputSenhaError}</span>}
 

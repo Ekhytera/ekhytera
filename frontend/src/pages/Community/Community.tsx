@@ -12,6 +12,7 @@ import type { BackendPost } from '../../types';
 import { useAuth } from '../../contexts/AuthContext';
 import api from '../../services/api';
 import { toast } from 'react-toastify';
+import { AxiosError } from 'axios';
 
 const techNews = [
     {
@@ -62,7 +63,7 @@ export default function Community() {
         try {
             setLoading(true);
             const response = await api.get('/list-posts/active');
-            
+
             if (response.data.ok) {
                 setPosts(response.data.posts);
                 getUser()
@@ -106,9 +107,9 @@ export default function Community() {
             // Update posts state
             setPosts(posts.map(post =>
                 post.id_post === postId
-                    ? { 
-                        ...post, 
-                        curtidas: isCurrentlyLiked ? post.curtidas - 1 : post.curtidas + 1 
+                    ? {
+                        ...post,
+                        curtidas: isCurrentlyLiked ? post.curtidas - 1 : post.curtidas + 1
                     }
                     : post
             ));
@@ -118,14 +119,14 @@ export default function Community() {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
             });
-            
+
             if (!response.data.ok) {
                 throw new Error('Failed to update like');
             }
 
         } catch (error) {
             console.error('Error updating like:', error);
-            
+
             // Revert optimistic update
             const revertedLikedPosts = new Set(likedPosts);
             if (!isCurrentlyLiked) {
@@ -138,9 +139,9 @@ export default function Community() {
             // Revert posts state
             setPosts(posts.map(post =>
                 post.id_post === postId
-                    ? { 
-                        ...post, 
-                        curtidas: isCurrentlyLiked ? post.curtidas + 1 : post.curtidas - 1 
+                    ? {
+                        ...post,
+                        curtidas: isCurrentlyLiked ? post.curtidas + 1 : post.curtidas - 1
                     }
                     : post
             ));
@@ -175,7 +176,7 @@ export default function Community() {
 
         try {
             setIsSubmitting(true);
-            
+
             const response = await api.post('/create-post', {
                 texto: newPost.trim().replace(/(\r?\n){3,}/g, '\n\n\n')
             }, {
@@ -193,15 +194,24 @@ export default function Community() {
 
                 fetchPosts();
                 setNewPost('');
-                
+
             }
         } catch (error) {
-            console.error('Error creating post:', error);
-            toast.error('Erro ao criar post', {
-                position: "bottom-right",
-                autoClose: 3000,
-                theme: 'dark'
-            });
+            if (error instanceof AxiosError && error.response) {
+                toast.error(error.response.data.message, {
+                    position: "bottom-right",
+                    autoClose: 4000,
+                    pauseOnHover: false,
+                    theme: 'dark'
+                });
+            } else {
+                toast.error("Erro! Tente novamente", {
+                    position: "bottom-right",
+                    autoClose: 4000,
+                    pauseOnHover: false,
+                    theme: 'dark'
+                });
+            }
         } finally {
             setIsSubmitting(false);
         }
@@ -232,7 +242,7 @@ export default function Community() {
                         <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl p-6 mb-6">
                             <div className="flex gap-4">
                                 <img
-                                    src={auth?.endereco_imagem 
+                                    src={auth?.endereco_imagem
                                         ? auth.endereco_imagem
                                         : 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png'
                                     }
@@ -244,8 +254,8 @@ export default function Community() {
                                         value={newPost}
                                         onChange={(e) => setNewPost(e.target.value)}
                                         onKeyDown={handleKeyPress}
-                                        placeholder={auth 
-                                            ? "O que você está construindo hoje?" 
+                                        placeholder={auth
+                                            ? "O que você está construindo hoje?"
                                             : "Faça login para fazer posts..."
                                         }
                                         disabled={!auth || isSubmitting}
@@ -256,13 +266,13 @@ export default function Community() {
 
                                     <div className="flex items-center justify-between mt-4 pt-4 border-t border-white/10">
                                         <div className="flex gap-4">
-                                            <button 
+                                            <button
                                                 className="text-blue-400 hover:text-blue-300 transition-colors disabled:opacity-50"
                                                 disabled={!auth}
                                             >
                                                 <PhotoIcon className="w-5 h-5" />
                                             </button>
-                                            <button 
+                                            <button
                                                 className="text-blue-400 hover:text-blue-300 transition-colors disabled:opacity-50"
                                                 disabled={!auth}
                                             >

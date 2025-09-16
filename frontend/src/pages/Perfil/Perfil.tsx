@@ -11,6 +11,7 @@ import EditImageMenu from "../../components/EditImageMenu/EditImageMenu";
 import { useParams, useNavigate } from "react-router-dom";
 import { type User, type BackendPost } from "../../types";
 import Post from "../../components/Post/Post";
+import { AxiosError } from "axios";
 
 function Perfil() {
 
@@ -214,15 +215,24 @@ function Perfil() {
                 theme: 'dark'
             })
 
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
             setDescricao(auth?.descricao || '');
-            toast.error(`Erro ao salvar, tente novamente.`, {
-                position: "bottom-right",
-                autoClose: 4000,
-                pauseOnHover: false,
-                theme: 'dark'
-            });
+
+            if (error instanceof AxiosError && error.response) {
+                toast.error(error.response.data.message, {
+                    position: "bottom-right",
+                    autoClose: 4000,
+                    pauseOnHover: false,
+                    theme: 'dark'
+                });
+            } else {
+                toast.error("Erro ao salvar! Tente novamente", {
+                    position: "bottom-right",
+                    autoClose: 4000,
+                    pauseOnHover: false,
+                    theme: 'dark'
+                });
+            }
         }
     }
 
@@ -400,8 +410,6 @@ function Perfil() {
             </div>
         )
     }
-
-
 
     return (
         <div className="min-h-screen bg-gray-950 pt-25 pb-12">
