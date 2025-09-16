@@ -4,6 +4,7 @@ import { Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import NumberCount from "../NumberCount";
+import { useEffect, useRef, useState } from 'react';
 
 interface Testimonial {
     id: number;
@@ -13,6 +14,38 @@ interface Testimonial {
     rating: number;
     quote: string;
 }
+
+// Hook para detectar quando o componente está visível
+const useIntersectionObserver = () => {
+    const [isVisible, setIsVisible] = useState(false);
+    const ref = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting && !isVisible) {
+                    setIsVisible(true);
+                }
+            },
+            {
+                threshold: 0.3, // Ativa quando 30% do componente está visível
+                rootMargin: '0px'
+            }
+        );
+
+        if (ref.current) {
+            observer.observe(ref.current);
+        }
+
+        return () => {
+            if (ref.current) {
+                observer.unobserve(ref.current);
+            }
+        };
+    }, [isVisible]);
+
+    return [ref, isVisible] as const;
+};
 
 const testimonialData: Testimonial[] = [
     {
@@ -59,13 +92,15 @@ const testimonialData: Testimonial[] = [
 
 
 export default function Testimonials() {
+    const [sectionRef, isVisible] = useIntersectionObserver();
+
     return (
-        <section className="py-24 bg-black">
+        <section ref={sectionRef} className="py-24 bg-black">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="mb-16">
                     <span className="text-sm text-zinc-400 font-medium text-center block mb-2">DEPOIMENTOS</span>
                     <h2 className="text-4xl text-center font-bold text-white">
-                        <NumberCount /> + Usuários aprovam e recomendam a{' '}
+                        <NumberCount startCounting={isVisible} /> + Usuários aprovam e recomendam a{' '}
                         <span className="text-transparent bg-clip-text bg-gradient-to-tr from-[#79A7DD] to-[#415A77]">
                             Ekhytera
                         </span>

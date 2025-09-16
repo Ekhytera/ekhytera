@@ -9,6 +9,8 @@ import NotFound from './pages/NotFound/NotFound';
 import Perfil from './pages/Perfil/Perfil';
 import Catalog from './pages/Catalog/Catalog';
 import Promotions from './pages/Promotions/Promotions';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsConditions from './pages/TermsConditions';
 
 export const router = createBrowserRouter([
     {
@@ -46,6 +48,14 @@ export const router = createBrowserRouter([
             {
                 path: '/Perfil/:userName',
                 element: <Perfil />
+            },
+            {
+                path: '/privacy-policy',
+                element: <PrivacyPolicy />
+            },
+            {
+                path: '/terms-conditions',
+                element: <TermsConditions />
             },
             {
                 path: '*',

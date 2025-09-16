@@ -13,19 +13,128 @@ const Testimonials = lazy(() => {
     });
 });
 
+// Hook para animação de lazy loading
+const useIntersectionObserver = (options = {}) => {
+  const [isIntersecting, setIsIntersecting] = useState(false);
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !hasAnimated) {
+        setIsIntersecting(true);
+        setHasAnimated(true);
+      }
+    }, {
+      threshold: 0.1,
+      rootMargin: '50px',
+      ...options
+    });
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => {
+      if (ref.current) {
+        observer.unobserve(ref.current);
+      }
+    };
+  }, [hasAnimated]);
+
+  return [ref, isIntersecting] as const;
+};
+
 
 
 export default function Home() {
+    // Refs para animações de cada seção
+    const [heroRef, heroVisible] = useIntersectionObserver();
+    const [cardRef, cardVisible] = useIntersectionObserver();
+    const [bentoRef, bentoVisible] = useIntersectionObserver();
+    const [testimonialsRef, testimonialsVisible] = useIntersectionObserver();
+    const [noticiasRef, noticiasVisible] = useIntersectionObserver();
+    const [materiaisRef, materiaisVisible] = useIntersectionObserver();
+
     return (
         <>
-            <Hero />
-            <Card />
-            <Bento />
-            <Suspense fallback={<h1 className="text-white font-xl">Carregando...</h1>}>
-                <Testimonials />
-            </Suspense>
-            <Noticias />
-            <Materiais />
+            {/* Hero Section */}
+            <div 
+                ref={heroRef}
+                className={`transition-all duration-1000 ease-out ${
+                    heroVisible 
+                        ? 'opacity-100 translate-y-0' 
+                        : 'opacity-0 translate-y-8'
+                }`}
+            >
+                <Hero />
+            </div>
+
+            {/* Card Section */}
+            <div 
+                ref={cardRef}
+                className={`transition-all duration-1000 ease-out delay-200 ${
+                    cardVisible 
+                        ? 'opacity-100 translate-y-0' 
+                        : 'opacity-0 translate-y-8'
+                }`}
+            >
+                <Card />
+            </div>
+
+            {/* Bento Grid Section */}
+            <div 
+                ref={bentoRef}
+                className={`transition-all duration-1000 ease-out delay-300 ${
+                    bentoVisible 
+                        ? 'opacity-100 translate-y-0' 
+                        : 'opacity-0 translate-y-8'
+                }`}
+            >
+                <Bento />
+            </div>
+
+            {/* Testimonials Section */}
+            <div 
+                ref={testimonialsRef}
+                className={`transition-all duration-1000 ease-out delay-400 ${
+                    testimonialsVisible 
+                        ? 'opacity-100 translate-y-0' 
+                        : 'opacity-0 translate-y-8'
+                }`}
+            >
+                <Suspense fallback={
+                    <div className="flex justify-center items-center py-20">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#79A7DD]"></div>
+                    </div>
+                }>
+                    <Testimonials />
+                </Suspense>
+            </div>
+
+            {/* Notícias Section */}
+            <div 
+                ref={noticiasRef}
+                className={`transition-all duration-1000 ease-out delay-500 ${
+                    noticiasVisible 
+                        ? 'opacity-100 translate-y-0' 
+                        : 'opacity-0 translate-y-8'
+                }`}
+            >
+                <Noticias />
+            </div>
+
+            {/* Materiais Section */}
+            <div 
+                ref={materiaisRef}
+                className={`transition-all duration-1000 ease-out delay-600 ${
+                    materiaisVisible 
+                        ? 'opacity-100 translate-y-0' 
+                        : 'opacity-0 translate-y-8'
+                }`}
+            >
+                <Materiais />
+            </div>
         </>
     )
 }

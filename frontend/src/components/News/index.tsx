@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import newsBg from '../../assets/news-bg.png'
 
 const apiKey = 'pub_578735429f4fc6aeda0faf6e4e3fd66085b40';
@@ -74,9 +75,12 @@ export const Noticias = () => {
                                     As melhores notícias selecionadas a dedo para você.
                                 </p>
                             </div>
-                            <a href="#" className="inline-block rounded-lg border bg-white dark:bg-zinc-900 dark:border-none px-4 py-2 text-center text-sm  font-semibold text-gray-500 dark:text-gray-200 outline-none ring-indigo-300 transition duration-100 hover:bg-zinc-800 focus-visible:ring active:bg-gray-200 md:px-8 md:py-3 md:text-base">
+                            <Link 
+                                to="/community" 
+                                className="inline-block rounded-lg border bg-white dark:bg-zinc-900 dark:border-none px-4 py-2 text-center text-sm font-semibold text-gray-500 dark:text-gray-200 outline-none ring-indigo-300 transition duration-100 hover:bg-zinc-800 focus-visible:ring active:bg-gray-200 md:px-8 md:py-3 md:text-base"
+                            >
                                 Ver Mais
-                            </a>
+                            </Link>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:gap-6 xl:gap-8">

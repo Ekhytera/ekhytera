@@ -6,7 +6,7 @@ const featuredProducts: Product[] = [
   {
     id: 1,
     name: "RTX 4080 Super Gaming X Trio",
-    image: "/imgs/placadevideo.png",
+    image: "https://images.unsplash.com/photo-1591799265444-d66432b91588?w=1200&h=800&fit=crop&auto=format&q=80",
     originalPrice: 4999.99,
     salePrice: 3799.99,
     discount: 24,
@@ -21,7 +21,7 @@ const featuredProducts: Product[] = [
   {
     id: 2,
     name: "Notebook Gamer Legion 5 Pro",
-    image: "https://p3-ofp.static.pub//fes/cms/2024/09/12/elsxf6rwrtxudesy107rsj88cg0qhx499173.png",
+    image: "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=1200&h=800&fit=crop&auto=format&q=80",
     originalPrice: 6999.99,
     salePrice: 5299.99,
     discount: 24,
@@ -36,7 +36,7 @@ const featuredProducts: Product[] = [
   {
     id: 3,
     name: "Intel Core i7-13700K",
-    image: "/imgs/processador.png",
+    image: "https://images.unsplash.com/photo-1591488320449-011701bb6704?w=1200&h=800&fit=crop&auto=format&q=80",
     originalPrice: 2199.99,
     salePrice: 1649.99,
     discount: 25,
@@ -54,7 +54,7 @@ const promotionProducts: Product[] = [
   {
     id: 4,
     name: "ASUS TUF Gaming B550M-Plus",
-    image: "/imgs/placamae.png",
+    image: "https://images.unsplash.com/photo-1591488320449-011701bb6704?w=1200&h=800&fit=crop&auto=format&q=80",
     originalPrice: 899.99,
     salePrice: 679.99,
     discount: 24,
@@ -68,7 +68,7 @@ const promotionProducts: Product[] = [
   {
     id: 5,
     name: "Corsair Vengeance LPX 32GB",
-    image: "/imgs/image.png",
+    image: "https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=1200&h=800&fit=crop&auto=format&q=80",
     originalPrice: 799.99,
     salePrice: 599.99,
     discount: 25,
@@ -82,7 +82,7 @@ const promotionProducts: Product[] = [
   {
     id: 6,
     name: "Samsung 980 PRO 1TB NVMe",
-    image: "/imgs/print_nvme_kingston.png",
+    image: "https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=1200&h=800&fit=crop&auto=format&q=80",
     originalPrice: 649.99,
     salePrice: 449.99,
     discount: 31,
@@ -96,7 +96,7 @@ const promotionProducts: Product[] = [
   {
     id: 7,
     name: "Monitor Gamer ASUS 27'' 144Hz",
-    image: "/imgs/monitor.png",
+    image: "https://images.unsplash.com/photo-1591488320449-011701bb6704?w=1200&h=800&fit=crop&auto=format&q=80",
     originalPrice: 1299.99,
     salePrice: 999.99,
     discount: 23,
@@ -110,7 +110,7 @@ const promotionProducts: Product[] = [
   {
     id: 8,
     name: "Noctua NH-D15 CPU Cooler",
-    image: "/imgs/cooler.png",
+    image: "https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=1200&h=800&fit=crop&auto=format&q=80",
     originalPrice: 399.99,
     salePrice: 319.99,
     discount: 20,
@@ -124,7 +124,7 @@ const promotionProducts: Product[] = [
   {
     id: 9,
     name: "Corsair RM850x 850W 80+ Gold",
-    image: "/imgs/fonte.png",
+    image: "https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=1200&h=800&fit=crop&auto=format&q=80",
     originalPrice: 899.99,
     salePrice: 699.99,
     discount: 22,
@@ -138,7 +138,7 @@ const promotionProducts: Product[] = [
   {
     id: 10,
     name: "NZXT H5 Flow RGB Gaming Case",
-    image: "/imgs/gabinete.png",
+    image: "https://images.unsplash.com/photo-1591488320449-011701bb6704?w=1200&h=800&fit=crop&auto=format&q=80",
     originalPrice: 599.99,
     salePrice: 449.99,
     discount: 25,
@@ -152,7 +152,7 @@ const promotionProducts: Product[] = [
   {
     id: 11,
     name: "AMD Ryzen 5 7600X",
-    image: "/imgs/processador.png",
+    image: "https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=1200&h=800&fit=crop&auto=format&q=80",
     originalPrice: 1499.99,
     salePrice: 1199.99,
     discount: 20,
@@ -166,7 +166,7 @@ const promotionProducts: Product[] = [
   {
     id: 12,
     name: "Gigabyte B650 AORUS Elite",
-    image: "/imgs/placamae.png",
+    image: "https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=1200&h=800&fit=crop&auto=format&q=80",
     originalPrice: 1099.99,
     salePrice: 849.99,
     discount: 23,
@@ -180,7 +180,7 @@ const promotionProducts: Product[] = [
   {
     id: 13,
     name: "G.SKILL Trident Z5 RGB 32GB",
-    image: "/imgs/image.png",
+    image: "https://images.unsplash.com/photo-1591488320449-011701bb6704?w=1200&h=800&fit=crop&auto=format&q=80",
     originalPrice: 1299.99,
     salePrice: 999.99,
     discount: 23,
@@ -258,14 +258,14 @@ export default function Promotions() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-black text-white pt-20">
       {/* Hero Carousel */}
-      <section className="relative h-[50vh] overflow-hidden bg-zinc-900">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/30 to-black/60 z-10" />
+      <section className="relative h-[75vh] overflow-hidden bg-black -mt-20 pt-24">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/30 to-black/60 z-10 pointer-events-none" />
         
         {/* Carousel Container */}
         <div 
-          className="flex transition-transform duration-700 ease-out h-full pt-6"
+          className="flex transition-transform duration-700 ease-out h-full"
           style={{ transform: `translateX(-${currentSlide * 100}%)` }}
         >
           {featuredProducts.map((product) => (
@@ -278,45 +278,39 @@ export default function Promotions() {
               />
               
               {/* Product Info Overlay */}
-              <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black via-black/90 to-transparent z-20">
+              <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/95 via-black/85 to-transparent z-[100]">
                 <div className="max-w-6xl mx-auto">
                   <div className="flex items-end justify-between">
-                    <div className="flex-1 max-w-xl">
+                    <div className="flex-1 max-w-2xl relative z-[110]">
                       <div className="flex items-center gap-3 mb-2">
-                        <span className="bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg animate-pulse">
+                        <span className="bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg animate-pulse z-[120] relative">
                           -{product.discount}%
                         </span>
-                        <span className="text-sm text-gray-300 bg-black/30 px-2 py-1 rounded-full backdrop-blur-sm">{product.brand}</span>
+                        <span className="text-sm text-gray-200 bg-black/50 px-2 py-1 rounded-full backdrop-blur-sm border border-white/20 z-[120] relative">{product.brand}</span>
                       </div>
-                      <h2 className="text-2xl md:text-3xl font-bold mb-3 bg-gradient-to-r from-[#79A7DD] to-white bg-clip-text text-transparent">
+                      <h2 className="text-xl md:text-2xl font-bold mb-2 bg-gradient-to-r from-[#79A7DD] to-white bg-clip-text text-transparent drop-shadow-lg z-[120] relative">
                         {product.name}
                       </h2>
                       {product.specifications && (
-                        <div className="flex flex-wrap gap-1 mb-4">
+                        <div className="flex flex-wrap gap-1 mb-3 z-[120] relative">
                           {product.specifications.slice(0, 3).map((spec, i) => (
-                            <span key={i} className="bg-zinc-800/80 backdrop-blur-sm px-2 py-1 rounded-full text-xs border border-zinc-700/50 hover:bg-zinc-700/80 transition-colors">
+                            <span key={i} className="bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full text-xs border border-white/30 text-white hover:bg-white/30 transition-colors z-[120] relative">
                               {spec}
                             </span>
                           ))}
                         </div>
                       )}
-                      <div className="flex items-center gap-3 mb-4">
-                        <span className="text-lg text-gray-400 line-through">
+                      <div className="flex items-center gap-3 mb-3 z-[120] relative">
+                        <span className="text-base text-gray-300 line-through drop-shadow">
                           {formatPrice(product.originalPrice)}
                         </span>
-                        <span className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-[#79A7DD] to-white bg-clip-text text-transparent">
+                        <span className="text-xl md:text-2xl font-bold bg-gradient-to-r from-[#79A7DD] to-white bg-clip-text text-transparent drop-shadow-lg">
                           {formatPrice(product.salePrice)}
                         </span>
                       </div>
-                      <button className="bg-zinc-900 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl hover:bg-zinc-800">
+                      <button className="bg-white text-black px-5 py-2 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl hover:bg-gray-100 relative z-[130] cursor-pointer pointer-events-auto">
                         Comprar Agora
                       </button>
-                    </div>
-                    
-                    {/* Stock Info */}
-                    <div className="text-right bg-black/30 backdrop-blur-sm p-3 rounded-xl border border-white/10">
-                      <p className="text-xs text-gray-300">Restam apenas</p>
-                      <p className="text-xl font-bold text-red-400 animate-pulse">{product.stock} unidades</p>
                     </div>
                   </div>
                 </div>
@@ -328,28 +322,28 @@ export default function Promotions() {
         {/* Navigation Arrows */}
         <button 
           onClick={prevSlide}
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 z-30 bg-black/50 hover:bg-black/80 backdrop-blur-sm p-3 rounded-full transition-all duration-300 hover:scale-110 border border-white/20"
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 z-[70] bg-black/50 hover:bg-black/80 backdrop-blur-sm p-2 rounded-full transition-all duration-300 hover:scale-110 border border-white/20 pointer-events-auto cursor-pointer"
         >
-          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </button>
         <button 
           onClick={nextSlide}
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 z-30 bg-black/50 hover:bg-black/80 backdrop-blur-sm p-3 rounded-full transition-all duration-300 hover:scale-110 border border-white/20"
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 z-[70] bg-black/50 hover:bg-black/80 backdrop-blur-sm p-2 rounded-full transition-all duration-300 hover:scale-110 border border-white/20 pointer-events-auto cursor-pointer"
         >
-          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </button>
 
         {/* Dots Indicator */}
-        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-30 flex gap-3">
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-[70] flex gap-2">
           {featuredProducts.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentSlide(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+              className={`w-2 h-2 rounded-full transition-all duration-300 ${
                 index === currentSlide 
                   ? 'bg-[#79A7DD] scale-125 shadow-lg shadow-[#79A7DD]/50' 
                   : 'bg-white/50 hover:bg-white/70'
@@ -360,7 +354,7 @@ export default function Promotions() {
       </section>
 
       {/* Promotions Gallery */}
-      <section className="py-12 bg-gradient-to-b from-black via-gray-900 to-black">
+      <section className="py-12 bg-black">
         <div className="max-w-6xl mx-auto px-4">
           {/* Section Header */}
           <div className="text-center mb-12">
@@ -404,28 +398,28 @@ export default function Promotions() {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex justify-center items-center gap-4 mb-8">
+            <div className="flex justify-center items-center gap-3 mb-8">
               <button
                 onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                 disabled={currentPage === 1}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-300 ${
                   currentPage === 1
                     ? 'bg-zinc-800/50 text-gray-500 cursor-not-allowed'
                     : 'bg-zinc-800 text-white hover:bg-zinc-700 hover:scale-105'
                 }`}
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
                 Anterior
               </button>
 
-              <div className="flex gap-2">
+              <div className="flex gap-1.5">
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
                   <button
                     key={page}
                     onClick={() => setCurrentPage(page)}
-                    className={`w-10 h-10 rounded-lg font-semibold transition-all duration-300 ${
+                    className={`w-7 h-7 rounded-lg text-sm font-semibold transition-all duration-300 ${
                       currentPage === page
                         ? 'bg-gradient-to-r from-[#79A7DD] to-white text-black shadow-lg scale-110'
                         : 'bg-zinc-800 text-white hover:bg-zinc-700 hover:scale-105'
@@ -439,14 +433,14 @@ export default function Promotions() {
               <button
                 onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                 disabled={currentPage === totalPages}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-300 ${
                   currentPage === totalPages
                     ? 'bg-zinc-800/50 text-gray-500 cursor-not-allowed'
                     : 'bg-zinc-800 text-white hover:bg-zinc-700 hover:scale-105'
                 }`}
               >
                 Próxima
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </button>
