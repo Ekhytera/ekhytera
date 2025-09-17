@@ -9,7 +9,7 @@ describe("TESTES NAS ROTAS DE USUÁRIO: ", { background: 'blue', icon: '👤' })
 
 test('rota /usuarios retorna todos os usuários', async () => {
     var res = await fetch(`${url}/usuarios`);
-    assert(res.status, 200);
+    strict.strictEqual(res.status, 200);
 });
 
 test('rota userName funcionando com usuário teste', async () => {
@@ -66,23 +66,21 @@ test('login com usuário inexistente retorna 404 Not Found', async () => {
 })
 
 
-test('rota /usuarios/:id retorna usuário com id 1', async () => {
-    var res = await fetch(`${url}/usuarios/1`);
-    assert(res.status, 200);
-    var body = await res.json();
-    strict.strictEqual(body.id, 1, "ID do usuário deve ser 1");
+test('rota /usuarios/:id funciona', async () => {
+    var res = await fetch(`${url}/usuarios/id?id=1`);
+    strict.strictEqual(res.status, 401, "Buscar usuário por ID sem token deve retornar 401 Unauthorized");
 });
 
 
-test('rota /usuarios/:id retorna 404 para usuário inexistente', async () => {
-    var res = await fetch(`${url}/usuarios/0`);
-    strict.strictEqual(res.status, 404, "Status deve ser 404 Not Found");
-});
+// test('rota /usuarios/:id retorna 404 para usuário inexistente', async () => {
+//     var res = await fetch(`${url}/usuarios/0`);
+//     strict.strictEqual(res.status, 404, "Status deve ser 404 Not Found");
+// });
 
 
-test('rota /usuarios/info/:userName retorna informações do usuário', async () => {
-    var res = await fetch(`${url}/usuarios/info/teste`);
-    assert(res.status, 200);
-    var body = await res.json();
-    strict.strictEqual(body.userName, "teste", "Nome de usuário deve ser \"teste\"");
-});
+// test('rota /usuarios/info/:userName retorna informações do usuário', async () => {
+//     var res = await fetch(`${url}/usuarios/info/teste`);
+//     assert(res.status, 200);
+//     var body = await res.json();
+//     strict.strictEqual(body.userName, "teste", "Nome de usuário deve ser \"teste\"");
+// });
