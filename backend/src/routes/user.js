@@ -7,6 +7,7 @@ import { validateText } from "../middlewares/validateText.js";
 const routes = Router();
 
 // get
+routes.get('/', (req, res) => {res.status(200).send({})});
 routes.get('/usuarios', UserController.getAllUser);
 routes.get('/usuarios/userName/:userName', UserController.getUserByUserName);
 routes.get('/usuarios/info/:userName', auth.optionalAuth, UserController.getUserInfoByUserNAme);
