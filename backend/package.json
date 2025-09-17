@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "test": "npx poku",
-    "dev": "nodemon ./src/server.js"
+    "start": "node ./src/server.js",
+    "dev": "nodemon ./src/server.js",
+    "test:server": "start-server-and-test start http://127.0.0.1:3000 test"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +26,7 @@
   },
   "devDependencies": {
     "poku": "^3.0.2",
-    "prisma": "^6.15.0"
+    "prisma": "^6.15.0",
+    "start-server-and-test": "^2.1.1"
   }
 }
