@@ -28,6 +28,17 @@ const middlewares = {
             });
         }
     },
+    optionalAuth: (req, res, next) => {
+        const tokenHeader = req.headers.authorization;
+        const token = tokenHeader ? tokenHeader.split(' ')[1] || tokenHeader : null;
+
+        if (!token) return next();
+
+        const dados = jwt.verify(token, SECRET);
+        req.user = dados;
+
+        next();
+    },
     verifyStatus: async (req, res, next) => {
         const email = req.body.email;
 
@@ -60,7 +71,7 @@ const middlewares = {
             const id = req.params.id;
             const user = req.user
             const post = await postsRepository.findPostById(id);
-            
+
             console.log(user.cargo)
 
             if (post[0].id_usuario !== user.id && user.cargo !== 'admin') {
@@ -70,7 +81,7 @@ const middlewares = {
                     status: 403,
                     message: "Permissão negada"
                 });
-            } 
+            }
 
             next()
 

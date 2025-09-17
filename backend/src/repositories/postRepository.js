@@ -36,7 +36,7 @@ const postsRepository = {
         }
     },
 
-    async findAllPosts(page, pageSize) {
+    async findAllPosts(page, pageSize, userId) {
         const skip = (page - 1) * pageSize;
         const take = pageSize;
 
@@ -48,40 +48,30 @@ const postsRepository = {
                     tb_usuarios: {
                         select: {
                             nome_usuario: true,
-                            endereco_imagem: true
-                        }
-                    }
-                },
-                orderBy: {
-                    criado_em: 'desc'
-                }
-            });
-            return posts;
-        } catch (error) {
-            throw new Error(`Falha ao listar post: ${error.message}`);
-        }
-    },
-
-    async findAllPostByStatus() {
-        try {
-            const posts = await prisma.tb_posts.findMany({
-                where: {
-                    status: 1
-                },
-                include: {
-                    tb_usuarios: {
-                        select: {
-                            nome_usuario: true,
                             endereco_imagem: true,
                             id_usuario: true
                         }
-                    }
+                    },
+                    tb_curtidas: userId ? {
+                        where: {
+                            id_usuario: userId
+                        },
+                        select: {
+                            id_curtida: true
+                        }
+                    } : false
                 },
                 orderBy: {
                     criado_em: 'desc'
                 }
             });
-            return posts;
+            const postsWithLikeStatus = posts.map(post => ({
+                ...post,
+                isLiked: userId ? post.tb_curtidas.length > 0 : false,
+                tb_curtidas: undefined
+            }));
+
+            return postsWithLikeStatus;
         } catch (error) {
             throw new Error(`Falha ao listar post: ${error.message}`);
         }
@@ -134,9 +124,9 @@ const postsRepository = {
         }
     },
 
-    async addLikeByPost(id) {
+    async addLikeByPost(id, client = prisma) {
         try {
-            const result = await prisma.tb_posts.update({
+            const result = await client.tb_posts.update({
                 where: {
                     id_post: parseInt(id)
                 },
@@ -146,15 +136,15 @@ const postsRepository = {
                     }
                 }
             });
-            return { affectedRows: 1 };
+            return result;
         } catch (error) {
             throw new Error(`Falha ao curtir post: ${error.message}`);
         }
     },
 
-    async removeLikeByPost(id) {
+    async removeLikeByPost(id, client = prisma) {
         try {
-            const result = await prisma.tb_posts.update({
+            const result = await client.tb_posts.update({
                 where: {
                     id_post: parseInt(id)
                 },
@@ -164,7 +154,7 @@ const postsRepository = {
                     }
                 }
             });
-            return { affectedRows: 1 };
+            return result
         } catch (error) {
             throw new Error(`Falha ao remover a curtida: ${error.message}`);
         }

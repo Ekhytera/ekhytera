@@ -28,7 +28,6 @@ function Perfil() {
     const [activeTab, setActiveTab] = useState<'builds' | 'posts'>('builds');
     const [userPosts, setUserPosts] = useState<BackendPost[]>([]);
     const [postsLoading, setPostsLoading] = useState(false);
-    const [likedPosts, setLikedPosts] = useState<Set<number>>(new Set());
 
     useEffect(() => {
         setDescricao(auth?.descricao || "");
@@ -80,7 +79,7 @@ function Perfil() {
         }
     ];
 
-    const handleLike = async (postId: number) => {
+    const handleLike = async (id_post: number) => {
         if (!auth) {
             toast.warning('Faça login para curtir posts', {
                 position: "bottom-right",
@@ -90,23 +89,16 @@ function Perfil() {
             return;
         }
 
-        const isCurrentlyLiked = likedPosts.has(postId);
-        const endpoint = isCurrentlyLiked ? `/remove-like/${postId}` : `/add-like/${postId}`;
-
         try {
-            const newLikedPosts = new Set(likedPosts);
-            if (isCurrentlyLiked) {
-                newLikedPosts.delete(postId);
-            } else {
-                newLikedPosts.add(postId);
-            }
-            setLikedPosts(newLikedPosts);
+            const currentPost = userPosts.find(item => item.id_post === id_post);
+            const endpoint = !currentPost?.isLiked ? `/add-like/${id_post}` : `/remove-like/${id_post}`
 
             setUserPosts(userPosts.map(post =>
-                post.id_post === postId
+                post.id_post === id_post
                     ? {
                         ...post,
-                        curtidas: isCurrentlyLiked ? post.curtidas - 1 : post.curtidas + 1
+                        curtidas: post.isLiked ? post.curtidas - 1 : post.curtidas + 1,
+                        isLiked: post.isLiked ? false : true
                     }
                     : post
             ));
@@ -121,22 +113,15 @@ function Perfil() {
                 throw new Error('Failed to update like');
             }
 
+            console.log(response.data)
+
         } catch (error) {
             console.error('Error updating like:', error);
-
-            const revertedLikedPosts = new Set(likedPosts);
-            if (!isCurrentlyLiked) {
-                revertedLikedPosts.delete(postId);
-            } else {
-                revertedLikedPosts.add(postId);
-            }
-            setLikedPosts(revertedLikedPosts);
-
             setUserPosts(userPosts.map(post =>
-                post.id_post === postId
+                post.id_post === id_post
                     ? {
                         ...post,
-                        curtidas: isCurrentlyLiked ? post.curtidas + 1 : post.curtidas - 1
+                        curtidas: post.isLiked ? post.curtidas + 1 : post.curtidas - 1
                     }
                     : post
             ));
@@ -152,7 +137,11 @@ function Perfil() {
     async function getUserProfile() {
         try {
             setPostsLoading(true);
-            const req = await api.get(`/usuarios/info/${userName}`);
+            const req = await api.get(`/usuarios/info/${userName}`, {
+                headers: localStorage.getItem('token') ? {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                } : {}
+            });
 
             if (!req.data.ok) {
                 navigate('/404', { replace: true });
@@ -545,7 +534,7 @@ function Perfil() {
                                         <Post
                                             key={post.id_post}
                                             {...post}
-                                            isLiked={likedPosts.has(post.id_post)}
+                                            isLiked={post.isLiked}
                                             onLike={handleLike}
                                             fetchPosts={fetchUserPosts}
                                         />

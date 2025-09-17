@@ -59,11 +59,10 @@ export default function Post({
     const [isEdit, setIsEdit] = useState(false);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-
-    const avatarUrl = tb_usuarios.endereco_imagem
-        ? tb_usuarios.endereco_imagem
-        : 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png';
-
+    const avatarUrl = tb_usuarios?.endereco_imagem
+    ? tb_usuarios.endereco_imagem
+    : 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png';
+    
     async function handleDelete() {
         try {
             const req = await api.delete(`delete-post/${id_post}`, {

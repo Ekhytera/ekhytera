@@ -55,18 +55,34 @@ export default function Community() {
     const [newPost, setNewPost] = useState('');
     const [loading, setLoading] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [likedPosts, setLikedPosts] = useState<Set<number>>(new Set());
-    const { auth, getUser } = useAuth();
+    const [pagination, setPagination] = useState({
+        page: 1,
+        hasMore: false
+    });
+    const { auth } = useAuth();
 
     // Fetch posts from backend
     const fetchPosts = async () => {
         try {
             setLoading(true);
-            const response = await api.get('/list-posts/active');
+            const response = await api.get(`/list-posts?page=${pagination.page}`, {
+                headers: localStorage.getItem('token') ? {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                } : {}
+            });
 
             if (response.data.ok) {
-                setPosts(response.data.posts);
-                getUser()
+                if(pagination.page > 1){
+                    setPosts(post => [...post, ...response.data.posts]);
+                    console.log(response.data.posts)
+                } else {
+                    setPosts(response.data.posts);
+                }
+
+                setPagination({
+                    page: response.data.page + 1,
+                    hasMore: response.data.hasMore
+                });
             }
         } catch (error) {
             console.error('Error fetching posts:', error);
@@ -81,7 +97,7 @@ export default function Community() {
     };
 
     // Handle like/unlike
-    const handleLike = async (postId: number) => {
+    const handleLike = async (id_post: number) => {
         if (!auth) {
             toast.warning('Faça login para curtir posts', {
                 position: "bottom-right",
@@ -91,25 +107,16 @@ export default function Community() {
             return;
         }
 
-        const isCurrentlyLiked = likedPosts.has(postId);
-        const endpoint = isCurrentlyLiked ? `/remove-like/${postId}` : `/add-like/${postId}`;
-
         try {
-            // Optimistic update
-            const newLikedPosts = new Set(likedPosts);
-            if (isCurrentlyLiked) {
-                newLikedPosts.delete(postId);
-            } else {
-                newLikedPosts.add(postId);
-            }
-            setLikedPosts(newLikedPosts);
+            const currentPost = posts.find(item => item.id_post === id_post);
+            const endpoint = !currentPost?.isLiked ? `/add-like/${id_post}` : `/remove-like/${id_post}`
 
-            // Update posts state
             setPosts(posts.map(post =>
-                post.id_post === postId
+                post.id_post === id_post
                     ? {
                         ...post,
-                        curtidas: isCurrentlyLiked ? post.curtidas - 1 : post.curtidas + 1
+                        curtidas: post.isLiked ? post.curtidas - 1 : post.curtidas + 1,
+                        isLiked: post.isLiked ? false : true
                     }
                     : post
             ));
@@ -124,24 +131,15 @@ export default function Community() {
                 throw new Error('Failed to update like');
             }
 
+            console.log(response.data)
+
         } catch (error) {
             console.error('Error updating like:', error);
-
-            // Revert optimistic update
-            const revertedLikedPosts = new Set(likedPosts);
-            if (!isCurrentlyLiked) {
-                revertedLikedPosts.delete(postId);
-            } else {
-                revertedLikedPosts.add(postId);
-            }
-            setLikedPosts(revertedLikedPosts);
-
-            // Revert posts state
             setPosts(posts.map(post =>
-                post.id_post === postId
+                post.id_post === id_post
                     ? {
                         ...post,
-                        curtidas: isCurrentlyLiked ? post.curtidas + 1 : post.curtidas - 1
+                        curtidas: post.isLiked ? post.curtidas + 1 : post.curtidas - 1
                     }
                     : post
             ));
@@ -310,7 +308,7 @@ export default function Community() {
                                         <Post
                                             key={post.id_post}
                                             {...post}
-                                            isLiked={likedPosts.has(post.id_post)}
+                                            isLiked={post.isLiked}
                                             onLike={handleLike}
                                             fetchPosts={fetchPosts}
                                         />
@@ -321,6 +319,10 @@ export default function Community() {
                                         <p className="text-gray-500 mt-2">Seja o primeiro a compartilhar algo!</p>
                                     </div>
                                 )}
+                                {pagination.hasMore && <button
+                                className='text-gray-300 mx-auto cursor-pointer hover:text-gray-400 duration-75'
+                                    onClick={() => fetchPosts()}
+                                >Carregar mais posts</button>}
                             </div>
                         )}
                     </div>

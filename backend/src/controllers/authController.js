@@ -154,7 +154,7 @@ const UserController = {
         try {
             const id = req.user.id;
 
-            const user = await UserRepository.findUserById(id);
+            const user = await UserRepository.findUserById(id, id);
 
             if (user) {
                 return res.status(200).json({
@@ -218,7 +218,8 @@ const UserController = {
             });
         }
 
-        const user = await UserRepository.findUserByUserName(userName);
+        const currentUserId = req.user?.id || null;
+        const user = await UserRepository.findUserByUserName(userName, currentUserId);
 
         try {
             if (user) {

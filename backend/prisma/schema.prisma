@@ -9,40 +9,51 @@ datasource db {
 }
 
 model tb_usuarios {
-  id_usuario      Int       @id @default(autoincrement())
-  nome_usuario    String?   @unique @db.VarChar(45)
-  email           String?   @unique @db.VarChar(100)
-  senha           String?   @db.VarChar(120)
-  endereco_imagem String?   @db.VarChar(255)
-  endereco_banner String?   @db.VarChar(255)
-  descricao       String?   @db.VarChar(300)
-  dt_nascimento   DateTime? @db.Date
-  cargo           Cargo?    @default(user)
-  status          Int?      @default(1) @db.SmallInt
-  criado_em       DateTime  @default(now()) @db.Timestamp(0)
-  atualizado_em   DateTime  @updatedAt
-
-  tb_posts tb_posts[]
+  id_usuario      Int           @id @default(autoincrement())
+  nome_usuario    String?       @unique @db.VarChar(45)
+  email           String?       @unique @db.VarChar(100)
+  senha           String?       @db.VarChar(120)
+  endereco_imagem String?       @db.VarChar(255)
+  endereco_banner String?       @db.VarChar(255)
+  descricao       String?       @db.VarChar(300)
+  dt_nascimento   DateTime?     @db.Date
+  cargo           Cargo?        @default(user)
+  status          Int?          @default(1) @db.SmallInt
+  criado_em       DateTime      @default(now()) @db.Timestamp(0)
+  atualizado_em   DateTime      @updatedAt
+  tb_curtidas     tb_curtidas[]
+  tb_posts        tb_posts[]
 
   @@map("tb_usuarios")
 }
 
 model tb_posts {
-  id_post       Int      @id @default(autoincrement())
-  texto         String   @db.Text
-  imagem_post   String?  @db.VarChar(255)
+  id_post       Int           @id @default(autoincrement())
+  texto         String
+  imagem_post   String?       @db.VarChar(255)
   id_usuario    Int
-  curtidas      Int      @default(0)
-  status        Int      @default(1) @db.SmallInt
-  criado_em     DateTime @default(now()) @db.Timestamp(0)
-  atualizado_em DateTime @updatedAt
-
-  tb_usuarios tb_usuarios @relation(fields: [id_usuario], references: [id_usuario], onDelete: Cascade)
+  curtidas      Int           @default(0)
+  status        Int           @default(1) @db.SmallInt
+  criado_em     DateTime      @default(now()) @db.Timestamp(0)
+  atualizado_em DateTime      @updatedAt
+  tb_curtidas   tb_curtidas[]
+  tb_usuarios   tb_usuarios   @relation(fields: [id_usuario], references: [id_usuario], onDelete: Cascade)
 
   @@map("tb_posts")
 }
 
-// Enums
+model tb_curtidas {
+  id_curtida  Int         @id @default(autoincrement())
+  id_usuario  Int
+  id_post     Int?
+  criado_em   DateTime    @default(now()) @db.Timestamp(0)
+  tb_posts    tb_posts?   @relation(fields: [id_post], references: [id_post], onDelete: Cascade)
+  tb_usuarios tb_usuarios @relation(fields: [id_usuario], references: [id_usuario], onDelete: Cascade)
+
+  @@unique([id_usuario, id_post])
+  @@map("tb_curtidas")
+}
+
 enum Cargo {
   user
   admin

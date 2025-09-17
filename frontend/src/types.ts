@@ -36,4 +36,5 @@ export interface BackendPost {
         endereco_imagem?: string;
         id_usuario: number;
     };
+    isLiked: boolean;
 }

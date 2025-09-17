@@ -1,5 +1,9 @@
 import postsRepository from "../repositories/postRepository.js";
 import usersRepository from "../repositories/userRepository.js";
+import likeRepository from "../repositories/likeRepository.js";
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 const PostController = {
     createPost: async (req, res) => {
@@ -57,14 +61,18 @@ const PostController = {
     getAllPosts: async (req, res) => {
         try {
             const pageNumber = parseInt(req.query.page);
-            const posts = await postsRepository.findAllPosts(pageNumber, 10);
+            const userId = req.user ? req.user.id : null;
+            const posts = await postsRepository.findAllPosts(pageNumber, 11, userId);
+            const hasMore = posts.length === 11;
+            
+            if(hasMore) posts.pop();
 
             if (posts) return res.status(200).json({
                 ok: true,
                 status: 200,
                 message: 'Posts encontrados com sucesso',
                 page: pageNumber,
-                post_amout: posts.length,
+                hasMore: hasMore,
                 posts: posts
             });
 
@@ -194,23 +202,28 @@ const PostController = {
         }
     },
     addLike: async (req, res) => {
-        const id = req.params.id;
+        const id_post = parseInt(req.params.id);
+        const id_usuario = req.user.id;
+        console.log(req.user)
 
         try {
-            const like = !!(await postsRepository.addLikeByPost(id));
+            await prisma.$transaction(async (trx) => {
+                const createRow = await likeRepository.addLike({
+                    id_post, id_usuario
+                }, trx);
 
-            if (like) return res.status(200).json({
-                ok: true,
-                status: 200,
-                message: 'Post curtido',
-                id_post: id
-            });
+                if (!createRow) throw new Error('Erro ao adicionar o like');
 
-            return res.status(400).json({
-                ok: false,
-                status: 400,
-                message: 'Erro ao curtir post',
-                id_post: id
+                const addLike = await postsRepository.addLikeByPost(id_post, trx);
+
+                if (!addLike) throw new Error('Erro ao incrementar o like');
+
+                res.status(201).json({
+                    ok: true,
+                    status: 201,
+                    message: 'Post curtido',
+                    curtidas: addLike.curtidas
+                })
             });
 
         } catch (error) {
@@ -223,23 +236,26 @@ const PostController = {
         }
     },
     removeLike: async (req, res) => {
-        const id = req.params.id;
+        const id_post = parseInt(req.params.id);
+        const id_usuario = req.user.id;
+        console.log(req.user)
 
         try {
-            const like = !!(await postsRepository.removeLikeByPost(id));
+            await prisma.$transaction(async (trx) => {
+                const deleteRow = await likeRepository.removeLike(id_usuario, id_post, trx);
 
-            if (like) return res.status(200).json({
-                ok: true,
-                status: 200,
-                message: 'Curtida removida',
-                id_post: id
-            });
+                if (!deleteRow) throw new Error('Erro ao remover o like');
 
-            return res.status(400).json({
-                ok: false,
-                status: 400,
-                message: 'Erro ao remover curtida',
-                id_post: id
+                const removeLike = await postsRepository.removeLikeByPost(id_post, trx);
+
+                if (!removeLike) throw new Error('Erro ao decrementar o like');
+
+                res.status(200).json({
+                    ok: true,
+                    status: 200,
+                    message: 'Curtida removida',
+                    curtidas: removeLike.curtidas
+                })
             });
 
         } catch (error) {
