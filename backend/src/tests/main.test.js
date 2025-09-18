@@ -27,8 +27,7 @@ test('Rota /usuarios retorna todos os usuários', async () => {
     const UserRepository = (await import('../repositories/userRepository.js')).default;
 
     var res = await UserRepository.getAllUsers()
-    var body = res.json();
-    log(body.message)
+    log(res.message)
     strict.strictEqual(res.status, 200);
 });
 
