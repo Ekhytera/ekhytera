@@ -211,7 +211,7 @@ export default function Post({
                             <span className="text-gray-500">{getTimeAgo(criado_em)}</span>
                         </div>
                         <div>
-                            {tb_usuarios.id_usuario === auth?.id_usuario &&
+                            {(tb_usuarios.id_usuario === auth?.id_usuario || auth?.cargo === 'admin') &&
                                 <PostMenu onDelete={handleDelete} onEdit={handleEdit} />
                             }
                         </div>

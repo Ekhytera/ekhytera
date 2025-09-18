@@ -178,7 +178,6 @@ const PostController = {
     deletePost: async (req, res) => {
         const id = +req.params.id;
 
-
         try {
             const deleted = !!(await postsRepository.deletePost(id));
 
@@ -206,7 +205,6 @@ const PostController = {
     addLike: async (req, res) => {
         const id_post = parseInt(req.params.id);
         const id_usuario = req.user.id;
-        console.log(req.user)
 
         try {
             await prisma.$transaction(async (trx) => {
@@ -240,7 +238,6 @@ const PostController = {
     removeLike: async (req, res) => {
         const id_post = parseInt(req.params.id);
         const id_usuario = req.user.id;
-        console.log(req.user)
 
         try {
             await prisma.$transaction(async (trx) => {

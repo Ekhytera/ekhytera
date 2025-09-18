@@ -93,8 +93,8 @@ const UserController = {
 
             const checarSenha = await bcrypt.compare(senha, user.senha);
 
-            if (!checarSenha) return res.status(400).json({
-                status: 400,
+            if (!checarSenha) return res.status(401).json({
+                status: 401,
                 ok: false,
                 message: 'Senha inválida'
             });
@@ -165,7 +165,7 @@ const UserController = {
                 });
             }
 
-            return res.status(440).json({
+            return res.status(404).json({
                 ok: false,
                 status: 440,
                 message: 'Erro ao encontrar com usuario',

@@ -43,7 +43,6 @@ const middlewares = {
         const email = req.body.email;
 
         const user = await usersRepository.findUserByEmail(email);
-        console.log(user);
 
         try {
             if (user) {
@@ -72,18 +71,15 @@ const middlewares = {
             const user = req.user
             const post = await postsRepository.findPostById(id);
 
-            console.log(user.cargo)
-
-            if (post[0].id_usuario !== user.id && user.cargo !== 'admin') {
-                console.log('permissão negada')
-                return res.status(403).json({
-                    ok: false,
-                    status: 403,
-                    message: "Permissão negada"
-                });
+            if (post.id_usuario == user.id || user.cargo == 'admin') {
+                return next()
             }
 
-            next()
+            return res.status(403).json({
+                ok: false,
+                status: 403,
+                message: "Permissão negada"
+            });
 
         } catch (error) {
             console.error(error);
