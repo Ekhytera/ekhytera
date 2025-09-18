@@ -27,6 +27,7 @@ export function AuthProvider({ children }: { children: React.ReactElement }) {
                     Authorization: `Bearer ${token}`
                 }
             });
+            console.log(1)
             setAuth(req.data.user);
             setAuthLoader(false);
 

@@ -7,8 +7,8 @@ import {
 } from '@heroicons/react/24/outline';
 import ContentCard from '../../components/ContentCard/ContentCard';
 import Post from '../../components/Post/Post';
+import { IoIosArrowDown } from "react-icons/io";
 import type { BackendPost } from '../../types';
-
 import { useAuth } from '../../contexts/AuthContext';
 import api from '../../services/api';
 import { toast } from 'react-toastify';
@@ -55,32 +55,45 @@ export default function Community() {
     const [newPost, setNewPost] = useState('');
     const [loading, setLoading] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [loadingMore, setLoadingMore] = useState(false);
+    const [newPostsCount, setNewPostsCount] = useState(0); // Para controlar animações
     const [pagination, setPagination] = useState({
         page: 1,
+        nextPage: 0,
+        prevPage: 0,
         hasMore: false
     });
     const { auth } = useAuth();
 
     // Fetch posts from backend
-    const fetchPosts = async () => {
+    const fetchPosts = async (page?: number) => {
         try {
-            setLoading(true);
-            const response = await api.get(`/list-posts?page=${pagination.page}`, {
+            if (page && page > 1) {
+                setLoadingMore(true);
+            } else {
+                setLoading(true);
+            }
+
+            const response = await api.get(`/list-posts?page=${page || 1}`, {
                 headers: localStorage.getItem('token') ? {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 } : {}
             });
 
             if (response.data.ok) {
-                if(pagination.page > 1){
-                    setPosts(post => [...post, ...response.data.posts]);
-                    console.log(response.data.posts)
+                if (page && page > 1) {
+                    // Adiciona os posts imediatamente
+                    setPosts(prevPosts => [...prevPosts, ...response.data.posts]);
+                    setNewPostsCount(response.data.posts.length);
                 } else {
                     setPosts(response.data.posts);
+                    setNewPostsCount(0);
                 }
 
                 setPagination({
-                    page: response.data.page + 1,
+                    page: response.data.page,
+                    nextPage: response.data.nextPage,
+                    prevPage: response.data.prevPage,
                     hasMore: response.data.hasMore
                 });
             }
@@ -92,7 +105,11 @@ export default function Community() {
                 theme: 'dark'
             });
         } finally {
-            setLoading(false);
+            // Delay mínimo apenas para o loading
+            setTimeout(() => {
+                setLoadingMore(false);
+                setLoading(false);
+            }, 100);
         }
     };
 
@@ -130,8 +147,6 @@ export default function Community() {
             if (!response.data.ok) {
                 throw new Error('Failed to update like');
             }
-
-            console.log(response.data)
 
         } catch (error) {
             console.error('Error updating like:', error);
@@ -190,7 +205,7 @@ export default function Community() {
                     theme: 'dark'
                 });
 
-                fetchPosts();
+                fetchPosts(1);
                 setNewPost('');
 
             }
@@ -217,7 +232,7 @@ export default function Community() {
 
     // Load posts on component mount
     useEffect(() => {
-        fetchPosts();
+        fetchPosts(1);
     }, []);
 
     // Handle key press in textarea
@@ -304,25 +319,70 @@ export default function Community() {
                         ) : (
                             <div className="space-y-4">
                                 {posts.length > 0 ? (
-                                    posts.map((post) => (
-                                        <Post
-                                            key={post.id_post}
-                                            {...post}
-                                            isLiked={post.isLiked}
-                                            onLike={handleLike}
-                                            fetchPosts={fetchPosts}
-                                        />
-                                    ))
+                                    <>
+                                        <div className="space-y-4">
+                                            {posts.map((post, index) => {
+                                                const isNewPost = newPostsCount > 0 && index >= (posts.length - newPostsCount);
+                                                
+                                                return (
+                                                    <div
+                                                        key={post.id_post}
+                                                        className={`transition-all duration-300 ${
+                                                            isNewPost 
+                                                                ? 'animate-slideInUp opacity-0' 
+                                                                : 'opacity-100'
+                                                        }`}
+                                                        style={isNewPost ? {
+                                                            animation: `slideInUp 0.3s ease-out ${(index - (posts.length - newPostsCount)) * 0.05}s forwards`
+                                                        } : {}}
+                                                    >
+                                                        <Post
+                                                            {...post}
+                                                            isLiked={post.isLiked}
+                                                            onLike={handleLike}
+                                                            fetchPosts={fetchPosts}
+                                                            pagination={pagination}
+                                                        />
+                                                    </div>
+                                                )
+                                            })}
+                                        </div>
+                                        
+                                        {/* Loading indicator para "Ver Mais" */}
+                                        {loadingMore && (
+                                            <div className="flex justify-center items-center py-4 animate-pulse">
+                                                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-400"></div>
+                                                <span className="ml-3 text-gray-400">Carregando mais posts...</span>
+                                            </div>
+                                        )}
+
+                                        {(posts.length > 10 || pagination.hasMore) && <div className='flex'>
+                                            <button
+                                                className='text-white mx-auto cursor-pointer hover:bg-gray-600 duration-200 flex items-center font-semibold bg-gray-600/80 py-2 px-4 rounded-md disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 transition-all'
+                                                onClick={() => {
+                                                    if (pagination.hasMore) fetchPosts(pagination.nextPage);
+                                                    else fetchPosts(1);
+                                                }}
+                                                disabled={loadingMore}
+                                            >
+                                                {loadingMore 
+                                                    ? 'Carregando...' 
+                                                    : pagination.hasMore 
+                                                        ? 'Ver Mais' 
+                                                        : 'Ver Menos'
+                                                }
+                                                <IoIosArrowDown className={`ml-2 transition-transform duration-200 ${
+                                                    pagination.hasMore ? 'rotate-0': 'rotate-180'
+                                                } ${loadingMore ? 'animate-pulse' : ''}`}/>
+                                            </button>
+                                        </div>}
+                                    </>
                                 ) : (
                                     <div className="text-center py-8">
                                         <p className="text-gray-400 text-lg">Nenhum post encontrado</p>
                                         <p className="text-gray-500 mt-2">Seja o primeiro a compartilhar algo!</p>
                                     </div>
                                 )}
-                                {pagination.hasMore && <button
-                                className='text-gray-300 mx-auto cursor-pointer hover:text-gray-400 duration-75'
-                                    onClick={() => fetchPosts()}
-                                >Carregar mais posts</button>}
                             </div>
                         )}
                     </div>
@@ -378,6 +438,31 @@ export default function Community() {
                     </div>
                 </div>
             </div>
+
+            {/* CSS personalizado para animações */}
+            <style>{`
+                @keyframes fadeIn {
+                    from {
+                        opacity: 0;
+                        transform: translateY(20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                @keyframes slideInUp {
+                    from {
+                        opacity: 0;
+                        transform: translateY(15px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+            `}</style>
         </div>
     );
 }

@@ -63,7 +63,7 @@ const PostController = {
             const pageNumber = parseInt(req.query.page);
             const userId = req.user ? req.user.id : null;
             const posts = await postsRepository.findAllPosts(pageNumber, 11, userId);
-            const hasMore = posts.length === 11;
+            const hasMore = posts.length > 10;
             
             if(hasMore) posts.pop();
 
@@ -73,6 +73,8 @@ const PostController = {
                 message: 'Posts encontrados com sucesso',
                 page: pageNumber,
                 hasMore: hasMore,
+                nextPage: pageNumber+1,
+                prevPage: pageNumber > 1 ? pageNumber -1 : 0, 
                 posts: posts
             });
 

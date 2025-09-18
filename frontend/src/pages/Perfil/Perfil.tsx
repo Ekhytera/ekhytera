@@ -384,13 +384,9 @@ function Perfil() {
         }
     }
 
-    const fetchUserPosts = () => {
-        if (visitor) {
-            getUserProfile();
-        } else {
-            getUser();
-        }
-    };
+    // const fetchUserPosts = () => {
+    //     getUserProfile();
+    // };
 
     if (authLoader || visiterLoader) {
         return (
@@ -536,7 +532,7 @@ function Perfil() {
                                             {...post}
                                             isLiked={post.isLiked}
                                             onLike={handleLike}
-                                            fetchPosts={fetchUserPosts}
+                                            fetchPosts={getUserProfile}
                                         />
                                     ))}
                                 </div>

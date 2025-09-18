@@ -37,7 +37,7 @@ const postsRepository = {
     },
 
     async findAllPosts(page, pageSize, userId) {
-        const skip = (page - 1) * pageSize;
+        const skip = (page - 1) * 10;
         const take = pageSize;
 
         try {

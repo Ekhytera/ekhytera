@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { AxiosError } from 'axios';
 
+
 interface PostProps {
     id_post: number;
     texto: string;
@@ -29,7 +30,13 @@ interface PostProps {
     };
     isLiked: boolean;
     onLike: (postId: number) => void;
-    fetchPosts: () => void;
+    fetchPosts: (page?: number) => void;
+    pagination?: {
+        page: number,
+        nextPage: number,
+        prevPage: number,
+        hasMore: boolean
+    }
 }
 
 export default function Post({
@@ -40,6 +47,7 @@ export default function Post({
     criado_em,
     tb_usuarios,
     isLiked,
+    pagination,
     onLike,
     fetchPosts
 }: PostProps) {
@@ -54,7 +62,7 @@ export default function Post({
         return `${Math.floor(diffInMinutes / 1440)}d`;
     };
 
-    const { auth } = useAuth();
+    const { auth, getUser } = useAuth();
     const [edit, setEdit] = useState('');
     const [isEdit, setIsEdit] = useState(false);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -75,7 +83,14 @@ export default function Post({
                 throw new Error("Falha ao deletar post");
             }
 
-            fetchPosts();
+            if(pagination){
+                fetchPosts(pagination.page);
+            } else {
+                fetchPosts();
+            }
+
+            getUser()
+
             toast.success("Post deletado com sucesso", {
                 position: "bottom-right",
                 autoClose: 4000,
@@ -131,7 +146,15 @@ export default function Post({
 
             setEdit('');
             setIsEdit(false)
-            fetchPosts();
+
+            if(pagination){
+                fetchPosts(pagination.page);
+            }else {
+                fetchPosts();
+            }
+
+            getUser()
+
             toast.success("Post editado com sucesso", {
                 position: "bottom-right",
                 autoClose: 4000,
