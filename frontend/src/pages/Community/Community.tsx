@@ -230,12 +230,10 @@ export default function Community() {
         }
     };
 
-    // Load posts on component mount
     useEffect(() => {
         fetchPosts(1);
     }, []);
 
-    // Handle key press in textarea
     const handleKeyPress = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
             handleSubmitPost();

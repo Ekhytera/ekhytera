@@ -16,9 +16,9 @@ const middlewares = {
         });
 
         try {
-            const dados = jwt.verify(token, SECRET);
-            req.user = dados;
-
+            const payload = jwt.verify(token, SECRET);
+            const id = payload.id ?? payload.id_usuario;
+            req.user = { ...payload, id };
             next();
         } catch (error) {
             return res.status(401).json({
@@ -34,9 +34,12 @@ const middlewares = {
 
         if (!token) return next();
 
-        const dados = jwt.verify(token, SECRET);
-        req.user = dados;
-
+        try {
+            const payload = jwt.verify(token, SECRET);
+            const id = payload.id ?? payload.id_usuario;
+            req.user = { ...payload, id };
+        } catch (_) {
+        }
         next();
     },
     verifyStatus: async (req, res, next) => {
@@ -68,11 +71,20 @@ const middlewares = {
     authorizePostOwner: async (req, res, next) => {
         try {
             const id = req.params.id;
-            const user = req.user
+            const user = req.user;
+
             const post = await postsRepository.findPostById(id);
 
-            if (post.id_usuario == user.id || user.cargo == 'admin') {
-                return next()
+            if (!post) {
+                return res.status(404).json({
+                    ok: false,
+                    status: 404,
+                    message: 'Post não encontrado'
+                });
+            }
+
+            if (post.id_usuario === user.id || user.cargo === 'admin') {
+                return next();
             }
 
             return res.status(403).json({

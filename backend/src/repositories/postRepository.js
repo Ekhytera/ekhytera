@@ -106,19 +106,18 @@ const postsRepository = {
         try {
             const post = await prisma.tb_posts.findUnique({
                 where: {
-                    id_post: parseInt(id),
-                    status: 1
+                    id_post: parseInt(id, 10)
                 },
-                include: {
-                    tb_usuarios: {
-                        select: {
-                            nome_usuario: true,
-                            endereco_imagem: true
-                        }
-                    }
+                select: {
+                    id_post: true,
+                    id_usuario: true,
+                    status: true,
+                    texto: true,
+                    imagem_post: true,
+                    criado_em: true
                 }
             });
-            return post ? [post] : [];
+            return post;
         } catch (error) {
             throw new Error(`Falha ao encontrar post: ${error.message}`);
         }
@@ -164,7 +163,7 @@ const postsRepository = {
         try {
             const result = await prisma.tb_posts.delete({
                 where: {
-                    id_post: id
+                    id_post: parseInt(id, 10)
                 },
             });
             return result;
