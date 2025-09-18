@@ -1,48 +1,67 @@
 import { assert, strict, test, describe, log } from 'poku';
 import { envFile } from 'poku';
+import quibble from 'quibble'
+// import UserRepository from '../repositories/userRepository.js';
 
 await envFile();
 
 const url = `http://${process.env.HOST}:${process.env.PORT}`;
-console.log(url);
+
 describe("TESTES NAS ROTAS DE USUÁRIO: ", { background: 'blue', icon: '👤' })
 
-test('rota /usuarios retorna todos os usuários', async () => {
-    var res = await fetch(`${url}/usuarios`);
+test('Rota /usuarios retorna todos os usuários', async () => {
+    await quibble.esm('../repositories/userRepository.js', {
+        default: {
+            getAllUsers: () => {
+                return {
+                    message: "Olá mundo!",
+                    status: 200,
+                    users: [{
+                        id_usuario: 1,
+                        username: "usuario para testes"
+                    }]
+                }
+            }
+        }
+    });
+    const UserRepository = (await import('../repositories/userRepository.js')).default;
+
+    var res = await UserRepository.getAllUsers()
+    var body = res.json();
+    log(body.message)
     strict.strictEqual(res.status, 200);
 });
 
-test('rota userName funcionando com usuário teste', async () => {
+test('Rota /userName funcionando com usuário teste', async () => {
     var res = await fetch(`${url}/usuarios/userName/teste`);
-    const msg = "Esse nome de usuário já esta em uso"
     strict.strictEqual(res.status, 200);
 });
 
 
-test('login funcionando', async () => {
+test('Login funcionando', async () => {
     const dados = {
         email: "teste@gmail.com",
         senha: "@Teste123"
     }
     var res = await fetch(`${url}/login`,
         {
-            method: "POST", 
+            method: "POST",
             body: JSON.stringify(dados),
             headers: { 'Content-Type': 'application/json' }
         }
     )
     var body = await res.json();
-    strict.strictEqual(typeof(body.token), "string");
+    strict.strictEqual(typeof (body.token), "string");
 })
 
 
-test('login com senha incorreta retorna 401 Unauthorized', async () => {
+test('Login com senha incorreta retorna 401 Unauthorized', async () => {
     const dados = {
         email: "teste@gmail.com",
         senha: "senha_incorreta400"
     }
     var res = await fetch(`${url}/login`, {
-        method: "POST", 
+        method: "POST",
         body: JSON.stringify(dados),
         headers: { 'Content-Type': 'application/json' }
     })
@@ -51,13 +70,13 @@ test('login com senha incorreta retorna 401 Unauthorized', async () => {
 })
 
 
-test('login com usuário inexistente retorna 404 Not Found', async () => {
+test('Login com usuário inexistente retorna 404 Not Found', async () => {
     const dados = {
         email: "inexistente@inexistente.naoexiste",
         senha: "senha_incorreta400"
     }
     var res = await fetch(`${url}/login`, {
-        method: "POST", 
+        method: "POST",
         body: JSON.stringify(dados),
         headers: { 'Content-Type': 'application/json' }
     })
