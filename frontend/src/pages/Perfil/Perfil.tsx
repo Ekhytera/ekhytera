@@ -151,15 +151,7 @@ function Perfil() {
             setProfile(req.data.user);
 
             if (req.data.user.tb_posts) {
-                const adaptedPosts: BackendPost[] = req.data.user.tb_posts.map((post: BackendPost) => ({
-                    ...post,
-                    tb_usuarios: {
-                        nome_usuario: req.data.user.nome_usuario || '',
-                        endereco_imagem: req.data.user.endereco_imagem || undefined,
-                        id_usuario: req.data.user.id_usuario
-                    }
-                }));
-                setUserPosts(adaptedPosts);
+                setUserPosts(req.data.user.tb_posts);
             } else {
                 setUserPosts([]);
             }
@@ -384,10 +376,6 @@ function Perfil() {
         }
     }
 
-    // const fetchUserPosts = () => {
-    //     getUserProfile();
-    // };
-
     if (authLoader || visiterLoader) {
         return (
             <div className="z-50 h-screen w-full bg-gray-950 flex justify-center items-center">
@@ -535,6 +523,7 @@ function Perfil() {
                                             fetchPosts={getUserProfile}
                                         />
                                     ))}
+                                    
                                 </div>
                             ) : (
                                 <div className="text-center py-8">

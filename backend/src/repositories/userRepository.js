@@ -21,12 +21,27 @@ const UserRepository = {
         });
         return user;
     },
-    async findUserByUserName(name, currentUserId = null) {
+    async findUserByUser(name){
+        const user = await prisma.tb_usuarios.findUnique({
+            where: {
+                nome_usuario: name
+            },
+            omit: {
+                senha: true
+            }
+        });
+        return user
+    },
+    async findUserByUserNameWithPost(name, currentUserId = null, page, pageSize) {
+        // const skip = (page - 1) * 10;
+        // const take = pageSize;
+
         const user = await prisma.tb_usuarios.findUnique({
             where: { nome_usuario: name },
             omit: { senha: true },
             include: {
                 tb_posts: {
+                    
                     include: {
                         tb_usuarios: {
                             select: {
@@ -53,10 +68,8 @@ const UserRepository = {
 
         if (!user) return null;
 
-        // Se não precisa da formatação de curtidas, retorna direto
         if (!currentUserId) return user;
 
-        // Formatar posts com isLiked quando há currentUserId
         const userWithFormattedPosts = {
             ...user,
             tb_posts: user.tb_posts.map(post => ({
@@ -68,12 +81,16 @@ const UserRepository = {
 
         return userWithFormattedPosts;
     },
-    async findUserById(id, currentUserId = null) {
+    async findUserByIdWithPost(id, currentUserId = null, page, pageSize) {
+        // const skip = (page - 1) * 10;
+        // const take = pageSize;
+
         const user = await prisma.tb_usuarios.findUnique({
             where: { id_usuario: id },
             omit: { senha: true },
             include: {
                 tb_posts: {
+                    
                     include: {
                         tb_usuarios: {
                             select: {
@@ -100,7 +117,6 @@ const UserRepository = {
 
         if (!user) return null;
 
-        // Formatar posts com isLiked
         const userWithFormattedPosts = {
             ...user,
             tb_posts: user.tb_posts.map(post => ({
@@ -112,6 +128,19 @@ const UserRepository = {
 
         return userWithFormattedPosts;
     },
+
+    async findUserById(id){
+        const user = await prisma.tb_usuarios.findUnique({
+            where: {
+                id_usuario: id
+            },
+            omit: {
+                senha: true
+            }
+        });
+        return user
+    },
+    
     async updateInfo(id, data) {
         const update = await prisma.tb_usuarios.update({
             where: { id_usuario: id },

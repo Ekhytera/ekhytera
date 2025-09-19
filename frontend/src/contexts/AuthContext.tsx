@@ -15,19 +15,18 @@ const AuthContext = createContext({} as AuthProps);
 export function AuthProvider({ children }: { children: React.ReactElement }) {
 
     const [auth, setAuth] = useState<UserWithPosts | null>(null);
-    const [authLoader, setAuthLoader] = useState(true);
+    const [authLoader, setAuthLoader] = useState(true)
 
     async function getUser() {
         try {
             const token = localStorage.getItem('token') ?
                 localStorage.getItem('token') : null;
 
-            const req = await api.get('/usuarios/id', {
+            const req = await api.get(`/usuarios/id`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
-            console.log(1)
             setAuth(req.data.user);
             setAuthLoader(false);
 

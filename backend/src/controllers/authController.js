@@ -1,4 +1,5 @@
 import UserRepository from "../repositories/userRepository.js";
+import postsRepository from "../repositories/postRepository.js";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { uploadToSupabase, deleteFromSupabase } from "../middlewares/uplaodImage.js";
@@ -152,9 +153,10 @@ const UserController = {
     },
     getUserById: async (req, res) => {
         try {
+            const pageNumber = parseInt(req.query.page);
             const id = req.user.id;
 
-            const user = await UserRepository.findUserById(id, id);
+            const user = await UserRepository.findUserByIdWithPost(id, id);
 
             if (user) {
                 return res.status(200).json({
@@ -188,7 +190,7 @@ const UserController = {
             });
         }
 
-        const nomeUser = await UserRepository.findUserByUserName(userName);
+        const nomeUser = await UserRepository.findUserByUser(userName);
 
         try {
             if (nomeUser) return res.status(200).json({
@@ -219,7 +221,7 @@ const UserController = {
         }
 
         const currentUserId = req.user?.id || null;
-        const user = await UserRepository.findUserByUserName(userName, currentUserId);
+        const user = await UserRepository.findUserByUserNameWithPost(userName, currentUserId);
 
         try {
             if (user) {

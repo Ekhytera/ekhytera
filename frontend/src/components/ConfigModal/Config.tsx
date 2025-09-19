@@ -7,10 +7,11 @@ import api from "../../services/api";
 import { IoSettingsOutline } from "react-icons/io5";
 import { CiLock } from "react-icons/ci";
 import { useAuth } from "../../contexts/AuthContext";
-import { FaCheck } from "react-icons/fa";
+import { GoCheck } from "react-icons/go";
 import { CiLogout } from "react-icons/ci";
 import { ChevronRightIcon } from '@heroicons/react/24/outline';
 import { IoIosArrowRoundBack } from "react-icons/io";
+import { VscChromeClose } from "react-icons/vsc";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
@@ -35,7 +36,7 @@ type FormData = z.infer<typeof schema>
 
 function Config({ setConfigIsOpen }: ConfigProps) {
 
-    const { auth, setAuth, getUser } = useAuth();
+    const { auth, setAuth } = useAuth();
     const navigate = useNavigate();
 
     const { register, handleSubmit, formState: { errors }, watch, reset } = useForm<FormData>({
@@ -92,10 +93,14 @@ function Config({ setConfigIsOpen }: ConfigProps) {
                 throw new Error("falha ao atualizar o nome")
             }
 
-            getUser();
-            toast.success("Nome alterado com sucesso", {
+            if (data.nome_usuario !== auth?.nome_usuario) {
+                navigate(`/`, { replace: true });
+            }
+
+            handleLogout();
+            toast.success("Faça login novamente para salvar as alterações", {
                 position: "bottom-right",
-                autoClose: 4000,
+                autoClose: 5000,
                 pauseOnHover: false,
                 theme: 'dark'
             });
@@ -214,7 +219,9 @@ function Config({ setConfigIsOpen }: ConfigProps) {
                 >
                     <button className="text-xl px-2 cursor-pointer rounded-sm hover:scale-110 hover:bg-zinc-700 duration-200 text-white w-fit absolute right-5 top-3 z-20"
                         onClick={() => setConfigIsOpen(false)}
-                    >X</button>
+                    >
+                        <VscChromeClose />
+                    </button>
                     <div className="text-white flex items-center text-xl font-semibold mb-5 border-b-1">
                         <IoSettingsOutline className="mr-2" />Configurações
                     </div>
@@ -232,7 +239,6 @@ function Config({ setConfigIsOpen }: ConfigProps) {
                             />
 
                             <CiLock size={20} className="text-gray-400 absolute right-2" />
-
                         </div>
                         <div className="items-center">
                             <Input
@@ -243,18 +249,21 @@ function Config({ setConfigIsOpen }: ConfigProps) {
                                 register={register}
                             />
                             {auth?.nome_usuario !== watchedUsername &&
-                                <div className="flex justify-start text-white font-bold m-1 gap-2 duration-200 transition-all flex-row-reverse">
-                                    <button className="text-xl bg-blue-700 px-1 cursor-pointer rounded-sm hover:scale-105 hover:bg-blue-600 duration-200">
-                                        < FaCheck />
+                                <div className="flex justify-start text-white m-1 gap-2 duration-200 transition-all flex-row-reverse">
+                                    <button className="text-xl bg-blue-700 px-2 cursor-pointer rounded-sm hover:scale-105 hover:bg-blue-600 duration-200"
+                                        disabled={!!errorInputName}
+                                    >
+                                        <GoCheck />
                                     </button>
-                                    <button className="text-xl bg-zinc-700 px-2 cursor-pointer rounded-sm hover:scale-110 hover:bg-zinc-600 duration-200"
+                                    <button className="text-xl bg-zinc-700 px-2 py-2 cursor-pointer rounded-sm hover:scale-110 hover:bg-zinc-600 duration-200 font-bold"
                                         onClick={() => {
                                             reset({ nome_usuario: auth?.nome_usuario || "" });
                                             setErrorInputName('');
                                         }}
                                     >
-                                        X
+                                        <VscChromeClose />
                                     </button>
+                                    <p className="text-sm">Ao mudar o nome, sera necessario efetuar login novamente</p>
                                 </div>}
                         </div>
                     </form>
@@ -300,7 +309,7 @@ function Config({ setConfigIsOpen }: ConfigProps) {
                                     <button
                                         type="submit"
                                         className="flex items-center rounded-md text-white mx-1 mt-2 px-2 bg-red-600 h-10 cursor-pointer hover:scale-105 hover:bg-red-700">
-                                        < FaCheck />
+                                        <GoCheck />
                                     </button>
 
                                 </div>

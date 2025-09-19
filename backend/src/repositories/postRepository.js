@@ -36,6 +36,15 @@ const postsRepository = {
         }
     },
 
+    async findAmountPostByUser(id_usuario) {
+        const postCount = await prisma.tb_posts.count({
+            where: {
+                id_usuario: id_usuario
+            }
+        });
+        return postCount
+    },
+
     async findAllPosts(page, pageSize, userId) {
         const skip = (page - 1) * 10;
         const take = pageSize;

@@ -19,7 +19,6 @@ const PostController = {
         try {
             const userLogged = await usersRepository.findUserById(user.id);
 
-
             const postData = {
                 texto: texto,
                 id_usuario: user.id

@@ -56,14 +56,15 @@ export default function Community() {
     const [loading, setLoading] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [loadingMore, setLoadingMore] = useState(false);
-    const [newPostsCount, setNewPostsCount] = useState(0); // Para controlar animações
+    const [newPostsCount, setNewPostsCount] = useState(0); 
     const [pagination, setPagination] = useState({
         page: 1,
         nextPage: 0,
         prevPage: 0,
         hasMore: false
     });
-    const { auth } = useAuth();
+    // const [sharedIsOpen, setSharedIsOpen] = useState(false);
+    const { auth, getUser } = useAuth();
 
     // Fetch posts from backend
     const fetchPosts = async (page?: number) => {
@@ -82,7 +83,6 @@ export default function Community() {
 
             if (response.data.ok) {
                 if (page && page > 1) {
-                    // Adiciona os posts imediatamente
                     setPosts(prevPosts => [...prevPosts, ...response.data.posts]);
                     setNewPostsCount(response.data.posts.length);
                 } else {
@@ -96,6 +96,8 @@ export default function Community() {
                     prevPage: response.data.prevPage,
                     hasMore: response.data.hasMore
                 });
+
+                getUser();
             }
         } catch (error) {
             console.error('Error fetching posts:', error);
@@ -105,7 +107,6 @@ export default function Community() {
                 theme: 'dark'
             });
         } finally {
-            // Delay mínimo apenas para o loading
             setTimeout(() => {
                 setLoadingMore(false);
                 setLoading(false);
