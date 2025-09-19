@@ -66,7 +66,6 @@ export default function Community() {
     // const [sharedIsOpen, setSharedIsOpen] = useState(false);
     const { auth, getUser } = useAuth();
 
-    // Fetch posts from backend
     const fetchPosts = async (page?: number) => {
         try {
             if (page && page > 1) {
@@ -114,7 +113,6 @@ export default function Community() {
         }
     };
 
-    // Handle like/unlike
     const handleLike = async (id_post: number) => {
         if (!auth) {
             toast.warning('Faça login para curtir posts', {
@@ -168,7 +166,6 @@ export default function Community() {
         }
     };
 
-    // Handle post submission
     const handleSubmitPost = async () => {
         if (!auth) {
             toast.warning('Faça login para fazer posts', {
@@ -244,7 +241,7 @@ export default function Community() {
     return (
         <div className="min-h-screen bg-gray-950 pt-24 pb-12">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex flex-col lg:flex-row gap-8">
+                <div className="flex justify-between flex-col lg:flex-row">
                     <div className="flex-1 max-w-2xl mx-auto lg:mx-0">
                         <div className="py-6 border-b border-white/10 mb-6">
                             <h1 className="text-2xl font-bold text-white">Comunidade</h1>
