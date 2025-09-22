@@ -10,24 +10,7 @@ const url = `http://${process.env.HOST}:${process.env.PORT}`;
 describe("TESTES NAS ROTAS DE USUÁRIO: ", { background: 'blue', icon: '👤' })
 
 test('Rota /usuarios retorna todos os usuários', async () => {
-    await quibble.esm('../repositories/userRepository.js', {
-        default: {
-            getAllUsers: () => {
-                return {
-                    message: "Olá mundo!",
-                    status: 200,
-                    users: [{
-                        id_usuario: 1,
-                        username: "usuario para testes"
-                    }]
-                }
-            }
-        }
-    });
-    const UserRepository = (await import('../repositories/userRepository.js')).default;
-
-    var res = await UserRepository.getAllUsers()
-    log(res.message)
+    var res = await fetch(`${url}/usuarios`);
     strict.strictEqual(res.status, 200);
 });
 
@@ -90,15 +73,16 @@ test('rota /usuarios/:id funciona', async () => {
 });
 
 
-// test('rota /usuarios/:id retorna 404 para usuário inexistente', async () => {
-//     var res = await fetch(`${url}/usuarios/0`);
-//     strict.strictEqual(res.status, 404, "Status deve ser 404 Not Found");
-// });
+test('rota /usuarios/:id retorna 404 para usuário inexistente', async () => {
+    var res = await fetch(`${url}/usuarios/0`);
+    strict.strictEqual(res.status, 404, "Status deve ser 404 Not Found");
+});
 
 
-// test('rota /usuarios/info/:userName retorna informações do usuário', async () => {
-//     var res = await fetch(`${url}/usuarios/info/teste`);
-//     assert(res.status, 200);
-//     var body = await res.json();
-//     strict.strictEqual(body.userName, "teste", "Nome de usuário deve ser \"teste\"");
-// });
+test('rota /usuarios/info/:userName retorna informações do usuário', async () => {
+    var res = await fetch(`${url}/usuarios/info/teste`);
+    assert(res.status, 200);
+    var body = await res.json();
+    log(body)
+    strict.strictEqual(body.user.nome_usuario, "teste", "Nome de usuário deve ser \"teste\"");
+});
