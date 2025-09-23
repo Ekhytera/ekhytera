@@ -1,6 +1,7 @@
 import { router } from "./routes";
 import { RouterProvider } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext.tsx';
+import { PostsProvider } from "./contexts/PostsContext.tsx";
 import { ToastContainer } from 'react-toastify';
 
 
@@ -11,11 +12,12 @@ function App() {
   return (
     <>
       <AuthProvider>
-        <>
-          <RouterProvider router={router} />
-
-          <ToastContainer />
-        </>
+        <PostsProvider>
+          <>
+            <RouterProvider router={router} />
+            <ToastContainer />
+          </>
+        </PostsProvider>
       </AuthProvider>
     </>
   )

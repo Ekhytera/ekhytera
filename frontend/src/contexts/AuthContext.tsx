@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import api from "../services/api";
 import type { UserWithPosts } from "../types";
 
@@ -17,7 +17,7 @@ export function AuthProvider({ children }: { children: React.ReactElement }) {
     const [auth, setAuth] = useState<UserWithPosts | null>(null);
     const [authLoader, setAuthLoader] = useState(true)
 
-    async function getUser() {
+    const getUser = useCallback(async() => {
         try {
             const token = localStorage.getItem('token') ?
                 localStorage.getItem('token') : null;
@@ -36,7 +36,7 @@ export function AuthProvider({ children }: { children: React.ReactElement }) {
             setAuth(null);
             setAuthLoader(false);
         }
-    }
+    }, []);
 
     useEffect(() => {
         getUser();
