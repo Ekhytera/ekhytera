@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
+import React, { createContext, useContext, useState, useCallback } from "react";
 import api from "../services/api";
 import { toast } from 'react-toastify';
 import type { BackendPost } from "../types";
@@ -145,14 +145,12 @@ export function PostsProvider({ children }: { children: React.ReactElement }) {
         }
     }, []);
 
-    // ✅ Função para carregar mais posts
     const handleLoadMore = useCallback(() => {
         if (pagination.hasMore && !loadingMore) {
             fetchPosts(pagination.nextPage);
         }
     }, [pagination.hasMore, pagination.nextPage, loadingMore, fetchPosts]);
 
-    // ✅ Função para resetar para primeira página
     const handleReset = useCallback(() => {
         if (!loading && !loadingMore) {
             setPagination(prev => ({ ...prev, page: 1, hasMore: false }));
@@ -160,7 +158,6 @@ export function PostsProvider({ children }: { children: React.ReactElement }) {
         }
     }, [loading, loadingMore, fetchPosts]);
 
-    // ✅ Função para limpar posts (útil para logout/navegação)
     const resetPosts = useCallback(() => {
         setPosts([]);
         setLoading(true);
@@ -172,10 +169,6 @@ export function PostsProvider({ children }: { children: React.ReactElement }) {
             prevPage: 0,
             hasMore: false
         });
-    }, []);
-
-    useEffect(() => {
-        fetchPosts();
     }, []);
 
     return (

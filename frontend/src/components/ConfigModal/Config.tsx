@@ -7,6 +7,7 @@ import api from "../../services/api";
 import { IoSettingsOutline } from "react-icons/io5";
 import { CiLock } from "react-icons/ci";
 import { useAuth } from "../../contexts/AuthContext";
+import { usePosts } from "../../contexts/PostsContext";
 import { GoCheck } from "react-icons/go";
 import { CiLogout } from "react-icons/ci";
 import { ChevronRightIcon } from '@heroicons/react/24/outline';
@@ -34,6 +35,7 @@ type FormData = z.infer<typeof schema>
 function Config() {
 
     const { auth, setAuth } = useAuth();
+    const { resetPosts } = usePosts();
     const navigate = useNavigate();
     const [configIsOpen, setConfigIsOpen] = useState(false);
 
@@ -129,6 +131,7 @@ function Config() {
 
     function handleLogout() {
         setAuth(null);
+        resetPosts();
         localStorage.removeItem('token');
         navigate('/');
     }

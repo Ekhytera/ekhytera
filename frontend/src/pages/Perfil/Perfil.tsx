@@ -68,6 +68,12 @@ function Perfil() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userName, authLoader, auth?.nome_usuario, auth?.tb_posts]);
 
+    useEffect(() => {
+        if(auth?.nome_usuario == userName){
+            getUser()
+        }
+    }, []);
+
     const getUserProfile = useCallback(async () => {
         try {
             setPostsLoading(true);

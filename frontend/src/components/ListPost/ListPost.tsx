@@ -1,17 +1,14 @@
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import { IoIosArrowDown } from 'react-icons/io';
 import Post from '../../components/Post/Post';
 import { usePosts } from '../../contexts/PostsContext';
 import type { BackendPost } from "../../types";
 
 interface ListPostProps {
-    // ✅ Props para modo Perfil
     isPerfil?: boolean;
     userPosts?: BackendPost[];
     postsLoading?: boolean;
     onUserPostLike?: (id_post: number) => Promise<void>;
-    
-    // ✅ Props opcionais para modo Community
     showPagination?: boolean;
 }
 
@@ -38,7 +35,10 @@ function ListPost({
     const loading = isPerfil ? postsLoading : communityLoading;
     const handleLike = isPerfil ? (onUserPostLike || (() => Promise.resolve())) : communityHandleLike;
 
-    // ✅ Loading state
+    useEffect(() => {
+        fetchPosts()
+    }, [])
+
     if (loading) {
         return (
             <div className="flex justify-center items-center py-8">
