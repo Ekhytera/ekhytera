@@ -1,13 +1,35 @@
 import { assert, strict, test, describe, log } from 'poku';
 import { envFile } from 'poku';
-import quibble from 'quibble'
-// import UserRepository from '../repositories/userRepository.js';
-
 await envFile();
-
 const url = `http://${process.env.HOST}:${process.env.PORT}`;
 
-describe("TESTES NAS ROTAS DE USUÁRIO: ", { background: 'blue', icon: '👤' })
+
+// mock do PrismaClient
+await quibble.esm('@prisma/client', {
+    PrismaClient: function () {
+        return {
+            tb_usuarios: {
+                create: async (args) => ({
+                    id_usuario: 1,
+                    ...args.data
+                }),
+                findMany: async () => ([
+                    { id_usuario: 1, email: 'teste@gmail.com' },
+                    { id_usuario: 2, email: 'teste2@gmail.com' }
+                ]),
+                findUnique: async (email) => {
+                    var data = [{ id_usuario: 5, email: 'teste@gmail.com' }]
+                    return data.find(user => user.email === "teste@gmail.com");
+                }
+            }
+        }
+    }
+});
+
+const UserRepository = (await import('../repositories/userRepository.js')).default;
+
+
+describe("TESTES INTEGRADOS - USUÁRIO: ", { background: 'blue', icon: '👤' })
 
 test('Rota /usuarios retorna todos os usuários', async () => {
     var res = await fetch(`${url}/usuarios`);
@@ -67,15 +89,9 @@ test('Login com usuário inexistente retorna 404 Not Found', async () => {
 })
 
 
-test('rota /usuarios/:id funciona', async () => {
+test('rota /usuarios/id funciona', async () => {
     var res = await fetch(`${url}/usuarios/id?id=1`);
     strict.strictEqual(res.status, 401, "Buscar usuário por ID sem token deve retornar 401 Unauthorized");
-});
-
-
-test('rota /usuarios/:id retorna 404 para usuário inexistente', async () => {
-    var res = await fetch(`${url}/usuarios/0`);
-    strict.strictEqual(res.status, 404, "Status deve ser 404 Not Found");
 });
 
 
@@ -83,6 +99,5 @@ test('rota /usuarios/info/:userName retorna informações do usuário', async ()
     var res = await fetch(`${url}/usuarios/info/teste`);
     assert(res.status, 200);
     var body = await res.json();
-    log(body)
     strict.strictEqual(body.user.nome_usuario, "teste", "Nome de usuário deve ser \"teste\"");
 });

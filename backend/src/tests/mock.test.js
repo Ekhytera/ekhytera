@@ -26,7 +26,7 @@ await quibble.esm('@prisma/client', {
 const UserRepository = (await import('../repositories/userRepository.js')).default;
 
 
-describe("TESTES NO USERREPOSITORY ", { background: 'blue', icon: '👤' })
+describe("TESTES UNITÁRIOS - USUÁRIO: ", { background: 'blue', icon: '👤' })
 test('UserRepository.create cria um usuário', async () => {
   const newUser = await UserRepository.create({ email: 'teste@gmail.com' });
   strict.equal(newUser.id_usuario, 1);
