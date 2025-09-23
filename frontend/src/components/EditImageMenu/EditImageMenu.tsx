@@ -1,7 +1,8 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { GoPencil } from 'react-icons/go';
 import { IoImageOutline, IoTrashOutline } from 'react-icons/io5';
 import { MdOutlineAccountBox } from 'react-icons/md';
+import React from 'react';
 
 interface EditImageMenuProps {
     onEditBanner: (file: File) => void;
@@ -15,7 +16,8 @@ function EditImageMenu({ onEditBanner, onEditProfile, onRemoveBanner, onRemovePr
     const bannerInputRef = useRef<HTMLInputElement>(null);
     const profileInputRef = useRef<HTMLInputElement>(null);
 
-    const handleFileChange = (
+    // ✅ Memoizar função para evitar re-criação
+    const handleFileChange = useCallback((
         event: React.ChangeEvent<HTMLInputElement>, 
         callback: (file: File) => void
     ) => {
@@ -24,45 +26,65 @@ function EditImageMenu({ onEditBanner, onEditProfile, onRemoveBanner, onRemovePr
             callback(file);
             setIsOpen(false);
         }
-    };
+    }, []);
 
-    const menuOptions = [
+    // ✅ Memoizar handlers
+    const handleBannerClick = useCallback(() => bannerInputRef.current?.click(), []);
+    const handleProfileClick = useCallback(() => profileInputRef.current?.click(), []);
+    
+    const handleRemoveBanner = useCallback(() => {
+        onRemoveBanner();
+        setIsOpen(false);
+    }, [onRemoveBanner]);
+    
+    const handleRemoveProfile = useCallback(() => {
+        onRemoveProfile();
+        setIsOpen(false);
+    }, [onRemoveProfile]);
+
+    const handleToggleMenu = useCallback(() => setIsOpen(!isOpen), [isOpen]);
+    const handleCloseMenu = useCallback(() => setIsOpen(false), []);
+
+    const handleBannerChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => 
+        handleFileChange(e, onEditBanner), [handleFileChange, onEditBanner]
+    );
+    
+    const handleProfileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => 
+        handleFileChange(e, onEditProfile), [handleFileChange, onEditProfile]
+    );
+
+    // ✅ Memoizar array de opções
+    const menuOptions = React.useMemo(() => [
         {
             icon: <IoImageOutline size={18} />,
             label: "Editar banner",
-            onClick: () => bannerInputRef.current?.click(),
+            onClick: handleBannerClick,
             type: "edit" as const
         },
         {
             icon: <MdOutlineAccountBox size={18} />,
             label: "Editar foto de perfil",
-            onClick: () => profileInputRef.current?.click(),
+            onClick: handleProfileClick,
             type: "edit" as const
         },
         {
             icon: <IoTrashOutline size={18} />,
             label: "Remover banner",
-            onClick: () => {
-                onRemoveBanner();
-                setIsOpen(false);
-            },
+            onClick: handleRemoveBanner,
             type: "remove" as const
         },
         {
             icon: <IoTrashOutline size={18} />,
             label: "Remover foto de perfil",
-            onClick: () => {
-                onRemoveProfile();
-                setIsOpen(false);
-            },
+            onClick: handleRemoveProfile,
             type: "remove" as const
         }
-    ];
+    ], [handleBannerClick, handleProfileClick, handleRemoveBanner, handleRemoveProfile]);
 
     return (
         <div className="relative">
             <button
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={handleToggleMenu}
                 className="bg-gray-900 rounded-md px-2 py-1 hover:text-[#79A7DD] text-[#E0E1DD] transition-colors duration-200 flex items-center"
             >
                 <GoPencil size={20} className="mr-2" />
@@ -73,7 +95,7 @@ function EditImageMenu({ onEditBanner, onEditProfile, onRemoveBanner, onRemovePr
                 <>
                     <div 
                         className="fixed inset-0 z-10" 
-                        onClick={() => setIsOpen(false)}
+                        onClick={handleCloseMenu}
                     />
                     
                     <div className="absolute top-full left-0 mt-2 w-56 bg-gray-800 rounded-lg shadow-lg border border-gray-700 z-20 overflow-hidden">
@@ -102,18 +124,19 @@ function EditImageMenu({ onEditBanner, onEditProfile, onRemoveBanner, onRemovePr
                 ref={bannerInputRef}
                 type="file"
                 accept=".jpg,.jpeg,.png"
-                onChange={(e) => handleFileChange(e, onEditBanner)}
+                onChange={handleBannerChange}
                 className="hidden"
             />
             <input
                 ref={profileInputRef}
                 type="file"
                 accept=".jpg,.jpeg,.png"
-                onChange={(e) => handleFileChange(e, onEditProfile)}
+                onChange={handleProfileChange}
                 className="hidden"
             />
         </div>
     );
 }
 
-export default EditImageMenu;
+// ✅ Memoizar o componente
+export default React.memo(EditImageMenu);
