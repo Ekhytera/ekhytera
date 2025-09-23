@@ -1,8 +1,8 @@
 import { assert, strict, test, describe, log } from 'poku';
 import { envFile } from 'poku';
 await envFile();
+import quibble from 'quibble';
 const url = `http://${process.env.HOST}:${process.env.PORT}`;
-
 
 // mock do PrismaClient
 await quibble.esm('@prisma/client', {
@@ -85,7 +85,7 @@ test('Login com usuário inexistente retorna 404 Not Found', async () => {
         headers: { 'Content-Type': 'application/json' }
     })
 
-    strict.strictEqual(res.status, 401, "Login com usuário inexistente deve retornar 401 Unauthorized");
+    strict.strictEqual(res.status, 404, "Login com usuário inexistente deve retornar 404 Not Found");
 })
 
 
