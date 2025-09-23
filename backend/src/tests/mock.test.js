@@ -39,6 +39,5 @@ test('UserRepository.getAllUsers retorna lista mockada', async () => {
 
 test('UserRepository.findUserByEmail retorna usuário', async () => {
   const user = await UserRepository.findUserByEmail();
-  log(user)
   strict.equal(user.email, "teste@gmail.com");
 });
