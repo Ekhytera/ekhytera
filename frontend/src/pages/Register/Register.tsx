@@ -14,14 +14,15 @@ import { AxiosError } from "axios";
 
 const schema = z.object({
     email: z.string()
-    .email('Insira um email valido')
-    .nonempty('O campo email é obrigatório'),
+        .email('Insira um email valido')
+        .nonempty('O campo email é obrigatório'),
     nome_usuario: z.string()
         .trim()
-        .nonempty('O campo nome é obrigatótio')
+        .nonempty('O campo nome é obrigatório')
         .regex(/^\S+$/, "Não pode conter espaços")
+        .regex(/^[a-zA-Z0-9_-]+$/, "Não pode conter acentos ou caracteres especiais (apenas letras, números, _ e -)")
         .min(3, 'O nome deve conter no mínimo 3 caracteres')
-        .max(25, 'O nome deve conter no maximo 25 caracteres'),
+        .max(25, 'O nome deve conter no máximo 25 caracteres'),
     senha: z.string()
         .nonempty('O campo senha é obrigatótio')
         .min(6, "A senha deve conter no mínimo 6 caracteres")
@@ -75,14 +76,14 @@ function Register() {
             } else {
                 setErrorInputName('');
             }
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
             setErrorInputName('');
         }
     }
 
     useEffect(() => {
-        if(localStorage.getItem('token')){
+        if (localStorage.getItem('token')) {
             localStorage.removeItem('token')
         }
     }, []);

@@ -24,10 +24,11 @@ const schema = z.object({
         .nonempty('O campo email é obrigatório'),
     nome_usuario: z.string()
         .trim()
-        .nonempty('O campo nome é obrigatótio')
+        .nonempty('O campo nome é obrigatório')
         .regex(/^\S+$/, "Não pode conter espaços")
+        .regex(/^[a-zA-Z0-9_-]+$/, "Não pode conter acentos ou caracteres especiais (apenas letras, números, _ e -)")
         .min(3, 'O nome deve conter no mínimo 3 caracteres')
-        .max(20, 'O nome deve conter no maximo 20 caracteres')
+        .max(25, 'O nome deve conter no máximo 25 caracteres'),
 });
 
 type FormData = z.infer<typeof schema>
