@@ -47,8 +47,8 @@ function Community() {
     return (
         <div className="min-h-screen bg-gray-950 pt-24 pb-12">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between flex-col lg:flex-row">
-                    <div className="flex-1 max-w-2xl mx-auto lg:mx-0">
+                <div className="flex gap-4 justify-between flex-col lg:flex-row">
+                    <div className="w-full flex-1 max-w-2xl mx-auto lg:mx-0">
                         <div className="py-6 border-b border-white/10 mb-6">
                             <h1 className="text-2xl font-bold text-white">Comunidade</h1>
                             <p className="text-gray-400 mt-1">Conecte-se com outros entusiastas de tecnologia</p>

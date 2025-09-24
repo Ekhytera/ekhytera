@@ -100,7 +100,7 @@ function ListPost({
             )}
 
             {!isPerfil && showPagination && (posts.length > 10 || pagination.hasMore) && (
-                <div className='flex'>
+                <div className='flex my-10 lg:my-0'>
                     <button
                         className='text-white mx-auto cursor-pointer hover:bg-gray-600 duration-200 flex items-center font-semibold bg-gray-600/80 py-2 px-4 rounded-md disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 transition-all'
                         onClick={pagination.hasMore ? handleLoadMore : handleReset}

@@ -58,13 +58,6 @@ function PostMenu({ onEdit, onDelete, userId }: PostMenuProps) {
             {isOpen && (
                 <>
                     <div
-                        className="fixed inset-0 z-10"
-                        onClick={() => {
-                            setIsOpen(false);
-                            setConfirmDelete(false);
-                        }}
-                    />
-                    <div
                         ref={menuRef}
                         className="absolute right-0 mt-2 w-40 bg-gray-800 rounded-lg shadow-lg border border-gray-700 z-20 overflow-hidden"
                     >

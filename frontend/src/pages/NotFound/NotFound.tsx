@@ -57,7 +57,7 @@ export default function NotFound() {
                             to="/community"
                             className="text-[#79A7DD] hover:text-[#E0E1DD] transition-colors duration-200 underline underline-offset-4"
                         >
-                            Fórum
+                            Comunidade
                         </Link>
                         <Link
                             to="/catalogo"
