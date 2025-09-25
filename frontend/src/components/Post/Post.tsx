@@ -10,7 +10,7 @@ import api from '../../services/api';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../contexts/AuthContext';
 import { Link } from 'react-router-dom';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, memo } from 'react';
 import { AxiosError } from 'axios';
 
 
@@ -39,7 +39,7 @@ interface PostProps {
     }
 }
 
-export default function Post({
+function Post({
     id_post,
     texto,
     imagem_post,
@@ -51,6 +51,7 @@ export default function Post({
     onLike,
     fetchPosts
 }: PostProps) {
+
     const getTimeAgo = (dateString: string): string => {
         const now = new Date();
         const postDate = new Date(dateString);
@@ -71,7 +72,7 @@ export default function Post({
     ? tb_usuarios.endereco_imagem
     : 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png';
     
-    async function handleDelete() {
+    const handleDelete = useCallback(async () => {
         try {
             const req = await api.delete(`delete-post/${id_post}`, {
                 headers: {
@@ -106,14 +107,14 @@ export default function Post({
                 theme: 'dark'
             });
         }
-    }
+    }, [id_post, pagination, fetchPosts, getUser]);
 
     async function handleEdit() {
         setEdit(texto);
         setIsEdit(true)
     }
 
-    async function handleSaveEdit() {
+    const handleSaveEdit = useCallback(async () => {
         if (!edit.trim()) {
             toast.error("O post não pode estar vazio", {
                 position: "bottom-right",
@@ -181,7 +182,7 @@ export default function Post({
 
             setIsEdit(false);
         }
-    }
+    }, [edit, texto, id_post, pagination, fetchPosts, getUser]);
 
     useEffect(() => {
         if (isEdit && textareaRef.current) {
@@ -212,7 +213,7 @@ export default function Post({
                         </div>
                         <div>
                             {(tb_usuarios.id_usuario === auth?.id_usuario || auth?.cargo === 'admin') &&
-                                <PostMenu onDelete={handleDelete} onEdit={handleEdit} />
+                                <PostMenu onDelete={handleDelete} onEdit={handleEdit} userId={tb_usuarios.id_usuario} />
                             }
                         </div>
                     </div>
@@ -291,3 +292,5 @@ export default function Post({
         </div>
     );
 }
+
+export default memo(Post);

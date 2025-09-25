@@ -1,4 +1,5 @@
 import { ChevronRightIcon, AcademicCapIcon } from '@heroicons/react/24/outline';
+import React from 'react';
 
 type contentList = {
     title: string;
@@ -49,4 +50,5 @@ function ContentCard({title, nameButton, contentList}: ContentCardProps) {
     )
 }
 
-export default ContentCard
+// ✅ Memoizar o componente
+export default React.memo(ContentCard)

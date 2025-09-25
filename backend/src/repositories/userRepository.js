@@ -21,7 +21,7 @@ const UserRepository = {
         });
         return user;
     },
-    async findUserByUser(name){
+    async findUserByUser(name) {
         const user = await prisma.tb_usuarios.findUnique({
             where: {
                 nome_usuario: name
@@ -33,23 +33,13 @@ const UserRepository = {
         return user
     },
     async findUserByUserNameWithPost(name, currentUserId = null, page, pageSize) {
-        // const skip = (page - 1) * 10;
-        // const take = pageSize;
 
         const user = await prisma.tb_usuarios.findUnique({
             where: { nome_usuario: name },
             omit: { senha: true },
             include: {
                 tb_posts: {
-                    
                     include: {
-                        tb_usuarios: {
-                            select: {
-                                nome_usuario: true,
-                                endereco_imagem: true,
-                                id_usuario: true
-                            }
-                        },
                         tb_curtidas: currentUserId ? {
                             where: {
                                 id_usuario: currentUserId
@@ -74,6 +64,11 @@ const UserRepository = {
             ...user,
             tb_posts: user.tb_posts.map(post => ({
                 ...post,
+                tb_usuarios: {
+                    nome_usuario: user.nome_usuario,
+                    endereco_imagem: user.endereco_imagem,
+                    id_usuario: user.id_usuario
+                },
                 isLiked: post.tb_curtidas.length > 0,
                 tb_curtidas: undefined
             }))
@@ -82,23 +77,13 @@ const UserRepository = {
         return userWithFormattedPosts;
     },
     async findUserByIdWithPost(id, currentUserId = null, page, pageSize) {
-        // const skip = (page - 1) * 10;
-        // const take = pageSize;
 
         const user = await prisma.tb_usuarios.findUnique({
             where: { id_usuario: id },
             omit: { senha: true },
             include: {
                 tb_posts: {
-                    
                     include: {
-                        tb_usuarios: {
-                            select: {
-                                nome_usuario: true,
-                                endereco_imagem: true,
-                                id_usuario: true
-                            }
-                        },
                         tb_curtidas: currentUserId ? {
                             where: {
                                 id_usuario: currentUserId
@@ -121,15 +106,20 @@ const UserRepository = {
             ...user,
             tb_posts: user.tb_posts.map(post => ({
                 ...post,
+                tb_usuarios: {
+                    nome_usuario: user.nome_usuario,
+                    endereco_imagem: user.endereco_imagem,
+                    id_usuario: user.id_usuario
+                },
                 isLiked: currentUserId ? post.tb_curtidas.length > 0 : false,
-                tb_curtidas: undefined // Remove dados brutos de curtidas
+                tb_curtidas: undefined
             }))
         };
 
         return userWithFormattedPosts;
     },
 
-    async findUserById(id){
+    async findUserById(id) {
         const user = await prisma.tb_usuarios.findUnique({
             where: {
                 id_usuario: id
@@ -140,7 +130,7 @@ const UserRepository = {
         });
         return user
     },
-    
+
     async updateInfo(id, data) {
         const update = await prisma.tb_usuarios.update({
             where: { id_usuario: id },

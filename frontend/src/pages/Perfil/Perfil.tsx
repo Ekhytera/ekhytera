@@ -1,37 +1,51 @@
-import { Link } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
+import { Link, useParams, useNavigate } from "react-router-dom";
+
 import { useAuth } from "../../contexts/AuthContext";
+
 import { ChevronRightIcon } from '@heroicons/react/24/outline';
-import { IoSettingsOutline } from "react-icons/io5";
 import ContentCard from "../../components/ContentCard/ContentCard";
 import Config from "../../components/ConfigModal/Config";
-import { useEffect, useState } from "react";
-import api from "../../services/api";
 import { toast } from "react-toastify";
 import EditImageMenu from "../../components/EditImageMenu/EditImageMenu";
-import { useParams, useNavigate } from "react-router-dom";
+import Description from "../../components/Description/Description";
+import ListPost from "../../components/ListPost/ListPost";
+
+import api from "../../services/api";
 import { type User, type BackendPost } from "../../types";
-import Post from "../../components/Post/Post";
-import { AxiosError } from "axios";
+
+const banner = 'https://www.womantowomanmentoring.org/wp-content/uploads/placeholder.jpg';
+const foto = 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png';
+
+const educationalContent = [
+    {
+        title: "Como escolher fonte de alimentação",
+        type: "Guia",
+        difficulty: "Iniciante"
+    },
+    {
+        title: "Overclock seguro para iniciantes",
+        type: "Tutorial",
+        difficulty: "Intermediário"
+    },
+    {
+        title: "Refrigeração líquida vs ar",
+        type: "Comparativo",
+        difficulty: "Avançado"
+    }
+];
 
 function Perfil() {
 
     const { auth, getUser, authLoader, setAuth } = useAuth();
     const { userName } = useParams();
     const navigate = useNavigate();
-    const banner = 'https://www.womantowomanmentoring.org/wp-content/uploads/placeholder.jpg';
-    const foto = 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png';
-    const [configIsOpen, setConfigIsOpen] = useState(false);
-    const [descricao, setDescricao] = useState('');
     const [profile, setProfile] = useState<User>();
     const [visitor, setvisitor] = useState(false);
     const [visiterLoader, setVisitorLoader] = useState(false);
     const [activeTab, setActiveTab] = useState<'builds' | 'posts'>('builds');
     const [userPosts, setUserPosts] = useState<BackendPost[]>([]);
     const [postsLoading, setPostsLoading] = useState(false);
-
-    useEffect(() => {
-        setDescricao(auth?.descricao || "");
-    }, [auth?.descricao]);
 
     useEffect(() => {
         if (authLoader) return;
@@ -42,15 +56,7 @@ function Perfil() {
             setProfile(undefined);
 
             if (auth.tb_posts) {
-                const adaptedPosts: BackendPost[] = auth.tb_posts.map(post => ({
-                    ...post,
-                    tb_usuarios: {
-                        nome_usuario: auth.nome_usuario || '',
-                        endereco_imagem: auth.endereco_imagem || undefined,
-                        id_usuario: auth.id_usuario
-                    }
-                }));
-                setUserPosts(adaptedPosts);
+                setUserPosts(auth.tb_posts);
             } else {
                 setUserPosts([]);
             }
@@ -59,82 +65,16 @@ function Perfil() {
             setVisitorLoader(true);
             getUserProfile();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userName, authLoader, auth?.nome_usuario, auth?.tb_posts]);
 
-    const educationalContent = [
-        {
-            title: "Como escolher fonte de alimentação",
-            type: "Guia",
-            difficulty: "Iniciante"
-        },
-        {
-            title: "Overclock seguro para iniciantes",
-            type: "Tutorial",
-            difficulty: "Intermediário"
-        },
-        {
-            title: "Refrigeração líquida vs ar",
-            type: "Comparativo",
-            difficulty: "Avançado"
+    useEffect(() => {
+        if(auth?.nome_usuario == userName){
+            getUser()
         }
-    ];
+    }, []);
 
-    const handleLike = async (id_post: number) => {
-        if (!auth) {
-            toast.warning('Faça login para curtir posts', {
-                position: "bottom-right",
-                autoClose: 3000,
-                theme: 'dark'
-            });
-            return;
-        }
-
-        try {
-            const currentPost = userPosts.find(item => item.id_post === id_post);
-            const endpoint = !currentPost?.isLiked ? `/add-like/${id_post}` : `/remove-like/${id_post}`
-
-            setUserPosts(userPosts.map(post =>
-                post.id_post === id_post
-                    ? {
-                        ...post,
-                        curtidas: post.isLiked ? post.curtidas - 1 : post.curtidas + 1,
-                        isLiked: post.isLiked ? false : true
-                    }
-                    : post
-            ));
-
-            const response = await api.patch(endpoint, {}, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`
-                }
-            });
-
-            if (!response.data.ok) {
-                throw new Error('Failed to update like');
-            }
-
-            console.log(response.data)
-
-        } catch (error) {
-            console.error('Error updating like:', error);
-            setUserPosts(userPosts.map(post =>
-                post.id_post === id_post
-                    ? {
-                        ...post,
-                        curtidas: post.isLiked ? post.curtidas + 1 : post.curtidas - 1
-                    }
-                    : post
-            ));
-
-            toast.error('Erro ao curtir post', {
-                position: "bottom-right",
-                autoClose: 3000,
-                theme: 'dark'
-            });
-        }
-    };
-
-    async function getUserProfile() {
+    const getUserProfile = useCallback(async () => {
         try {
             setPostsLoading(true);
             const req = await api.get(`/usuarios/info/${userName}`, {
@@ -163,59 +103,13 @@ function Perfil() {
             navigate('/404', { replace: true });
             setVisitorLoader(false);
         }
-    }
+    }, [userName, navigate]);
 
     const formatarData = (dataString?: string | Date) => {
         if (!dataString) return "";
         const date = typeof dataString === "string" ? new Date(dataString) : dataString;
         return date.toLocaleDateString('pt-BR');
     };
-
-    async function handleUpdateDescription(descricao: string) {
-        if (descricao === auth?.descricao) return;
-
-        descricao = descricao.trim().replace(/(\r?\n){3,}/g, '\n\n\n');
-
-        try {
-            const req = await api.patch('/update-user', { descricao }, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`
-                }
-            });
-
-            if (!req.data.ok) {
-                throw new Error("Falha ao atualizar descrição")
-            }
-
-            setDescricao(descricao);
-
-            toast.success("Sua descrição foi salva", {
-                position: "bottom-right",
-                autoClose: 4000,
-                pauseOnHover: false,
-                theme: 'dark'
-            })
-
-        } catch (error) {
-            setDescricao(auth?.descricao || '');
-
-            if (error instanceof AxiosError && error.response) {
-                toast.error(error.response.data.message, {
-                    position: "bottom-right",
-                    autoClose: 4000,
-                    pauseOnHover: false,
-                    theme: 'dark'
-                });
-            } else {
-                toast.error("Erro ao salvar! Tente novamente", {
-                    position: "bottom-right",
-                    autoClose: 4000,
-                    pauseOnHover: false,
-                    theme: 'dark'
-                });
-            }
-        }
-    }
 
     function formatedImage(file: File) {
         if (!file) return;
@@ -231,7 +125,7 @@ function Perfil() {
         return formData;
     }
 
-    async function handleEditBanner(file: File) {
+    const handleEditBanner = useCallback(async (file: File) => {
         const data = formatedImage(file);
 
         if (auth) {
@@ -255,7 +149,7 @@ function Perfil() {
             }
 
             getUser();
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            // eslint-disable-next-line
         } catch (error) {
             toast.error(`Falha ao adicionar imagem`, {
                 position: "bottom-right",
@@ -264,9 +158,9 @@ function Perfil() {
                 theme: 'dark'
             });
         }
-    };
+    }, [auth, setAuth, getUser]);
 
-    async function handleEditProfile(file: File) {
+    const handleEditProfile = useCallback(async (file: File) => {
         const data = formatedImage(file);
 
         if (auth) {
@@ -290,8 +184,7 @@ function Perfil() {
             }
 
             getUser();
-
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            // eslint-disable-next-line
         } catch (error) {
             toast.error(`Falha ao adicionar imagem`, {
                 position: "bottom-right",
@@ -300,10 +193,9 @@ function Perfil() {
                 theme: 'dark'
             });
         }
-    };
+    }, [auth, setAuth, getUser]);
 
-    async function handleRemoveBanner() {
-
+    const handleRemoveBanner = useCallback(async () => {
         if (!auth?.endereco_banner) return;
 
         setAuth({
@@ -327,8 +219,7 @@ function Perfil() {
             }
 
             getUser();
-
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            // eslint-disable-next-line
         } catch (error) {
             toast.error(`Falha ao remover imagem`, {
                 position: "bottom-right",
@@ -337,9 +228,9 @@ function Perfil() {
                 theme: 'dark'
             });
         }
-    };
+    }, [auth, setAuth, getUser]);
 
-    async function handleRemoveProfile() {
+    const handleRemoveProfile = useCallback(async () => {
         if (!auth?.endereco_imagem) return;
 
         setAuth({
@@ -365,7 +256,7 @@ function Perfil() {
 
             getUser();
 
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            // eslint-disable-next-line
         } catch (error) {
             toast.error(`Falha ao remover imagem`, {
                 position: "bottom-right",
@@ -374,7 +265,62 @@ function Perfil() {
                 theme: 'dark'
             });
         }
-    }
+    }, [auth, setAuth, getUser]);
+
+    const handleUserPostLike = useCallback(async (id_post: number) => {
+        if (!localStorage.getItem('token')) {
+            toast.warning('Faça login para curtir posts', {
+                position: "bottom-right",
+                autoClose: 3000,
+                theme: 'dark'
+            });
+            return;
+        }
+
+        try {
+            setUserPosts(prevPosts => {
+                const currentPost = prevPosts.find(item => item.id_post === id_post);
+                const endpoint = !currentPost?.isLiked ? `/add-like/${id_post}` : `/remove-like/${id_post}`;
+
+                api.patch(endpoint, {}, {
+                    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+                }).catch(error => {
+                    console.error('Error updating like:', error);
+
+                    setUserPosts(revertPosts =>
+                        revertPosts.map(post =>
+                            post.id_post === id_post
+                                ? {
+                                    ...post,
+                                    curtidas: post.isLiked ? post.curtidas + 1 : post.curtidas - 1,
+                                    isLiked: !post.isLiked
+                                }
+                                : post
+                        )
+                    );
+
+                    toast.error('Erro ao curtir post', {
+                        position: "bottom-right",
+                        autoClose: 3000,
+                        theme: 'dark'
+                    });
+                });
+
+                return prevPosts.map(post =>
+                    post.id_post === id_post
+                        ? {
+                            ...post,
+                            curtidas: post.isLiked ? post.curtidas - 1 : post.curtidas + 1,
+                            isLiked: !post.isLiked
+                        }
+                        : post
+                );
+            });
+
+        } catch (error) {
+            console.error('Error updating like:', error);
+        }
+    }, []);
 
     if (authLoader || visiterLoader) {
         return (
@@ -386,7 +332,7 @@ function Perfil() {
 
     return (
         <div className="min-h-screen bg-gray-950 pt-25 pb-12">
-            {configIsOpen && <Config setConfigIsOpen={setConfigIsOpen} />}
+
 
             <main className="w-full max-w-6xl mx-auto mb-5 bg-gray-900/50 border-2 border-gray-900 rounded-md backdrop-blur-2xl">
                 <section className="flex items-center relative">
@@ -425,32 +371,12 @@ function Perfil() {
                             {!visitor && <p className="text-gray-300">{auth?.email}</p>}
                         </div>
 
-                        <div className="mt-5 flex flex-col gap-2">
-                            <div className="flex items-center justify-between">
-                                <label className="text-white">Descrição </label>
-                                {!visitor && <span className="text-gray-300">{descricao.length}/300</span>}
-                            </div>
-                            {!visitor ?
-                                <textarea
-                                    placeholder="Adicione uma descrição para o seu perfil..."
-                                    className="block w-full h-30 rounded-md bg-white/5 px-3 py-2 text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 resize-none scroll-profile"
-                                    value={descricao}
-                                    onChange={(e) => setDescricao(e.target.value)}
-                                    onBlur={(e) => handleUpdateDescription(e.target.value)}
-                                    maxLength={300}
-                                ></textarea>
-                                :
-                                <p className="break-words whitespace-pre-line w-full text-gray-300 border-l-2 pl-2 py-2 scroll-profile text-justify">{profile?.descricao || "Sem descrição"}</p>
-                            }
-                        </div>
+                        <Description visitor={visitor} desc={profile?.descricao} />
+
+
                         {!visitor && <div className="mt-5 md:mt-auto flex justify-between">
-                            <button
-                                onClick={() => setConfigIsOpen(true)}
-                                className="text-gray-300 flex items-center cursor-pointer hover:text-gray-400 hover:underline underline-offset-4 duration-200"
-                            >
-                                <IoSettingsOutline className="mr-2" />
-                                Configurações
-                            </button>
+                            <Config />
+
                         </div>}
                     </section>
 
@@ -513,18 +439,13 @@ function Perfil() {
                                     <span className="ml-3 text-gray-400">Carregando posts...</span>
                                 </div>
                             ) : userPosts.length > 0 ? (
-                                <div className="space-y-6">
-                                    {userPosts.map((post) => (
-                                        <Post
-                                            key={post.id_post}
-                                            {...post}
-                                            isLiked={post.isLiked}
-                                            onLike={handleLike}
-                                            fetchPosts={getUserProfile}
-                                        />
-                                    ))}
-                                    
-                                </div>
+                                <ListPost 
+                                    isPerfil={true} 
+                                    userPosts={userPosts} 
+                                    postsLoading={postsLoading} 
+                                    onUserPostLike={handleUserPostLike} 
+                                    showPagination={false} 
+                                />
                             ) : (
                                 <div className="text-center py-8">
                                     <p className="text-gray-400 text-lg">

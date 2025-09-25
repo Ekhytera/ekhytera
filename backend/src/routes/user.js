@@ -19,7 +19,7 @@ routes.post('/login', UserController.login);
 // ROTAS PRIVADAS --------------------------------------------
 
 routes.get('/usuarios/id', auth.verifyToken, UserController.getUserById);
-routes.patch('/update-user', auth.verifyToken, upload.single('imagem'), validateText, UserController.updateUser);
+routes.patch('/update-user', auth.verifyToken, upload.single('imagem'), UserController.updateUser);
 routes.delete('/delete-user', auth.verifyToken, UserController.deleteUser);
 
 
