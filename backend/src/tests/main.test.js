@@ -62,7 +62,7 @@ test('Login funcionando', async () => {
 test('Login com senha incorreta retorna 401 Unauthorized', async () => {
     const dados = {
         email: "teste@gmail.com",
-        senha: "senha_incorreta400"
+        senha: "senha_incorreta401"
     }
     var res = await fetch(`${url}/login`, {
         method: "POST",
@@ -85,7 +85,7 @@ test('Login com usuário inexistente retorna 404 Not Found', async () => {
         headers: { 'Content-Type': 'application/json' }
     })
 
-    strict.strictEqual(res.status, 401, "Login com usuário inexistente deve retornar 401 Unauthorized");
+    strict.strictEqual(res.status, 404, "Login com usuário inexistente deve retornar 404 Not Found");
 })
 
 
