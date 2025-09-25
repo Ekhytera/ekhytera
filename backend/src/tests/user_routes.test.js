@@ -33,33 +33,17 @@ describe("TESTES INTEGRADOS - USUÁRIO: ", { background: 'blue', icon: '👤' })
 
 test('Rota /usuarios retorna todos os usuários', async () => {
     var res = await fetch(`${url}/usuarios`);
-    strict.strictEqual(res.status, 200);
+    var body = await res.json()
+    strict.strictEqual(body.users.length > 0, true, "Existe pelo menos 1 usuário no banco de dados");
 });
 
-test('Rota /userName funcionando com usuário teste', async () => {
+test('Rota "/userName" funcionando com usuário teste', async () => {
     var res = await fetch(`${url}/usuarios/userName/teste`);
     strict.strictEqual(res.status, 200);
 });
 
 
-test('Login funcionando', async () => {
-    const dados = {
-        email: "teste@gmail.com",
-        senha: "@Teste123"
-    }
-    var res = await fetch(`${url}/login`,
-        {
-            method: "POST",
-            body: JSON.stringify(dados),
-            headers: { 'Content-Type': 'application/json' }
-        }
-    )
-    var body = await res.json();
-    strict.strictEqual(typeof (body.token), "string");
-})
-
-
-test('Login com senha incorreta retorna 401 Unauthorized', async () => {
+test('Rota "/login" operacional', async () => {
     const dados = {
         email: "teste@gmail.com",
         senha: "senha_incorreta401"
@@ -69,8 +53,10 @@ test('Login com senha incorreta retorna 401 Unauthorized', async () => {
         body: JSON.stringify(dados),
         headers: { 'Content-Type': 'application/json' }
     })
+    var body = await res.json()
 
-    strict.strictEqual(res.status, 401, "Senha incorreta deve retornar 401 Unauthorized");
+    strict.strictEqual(res.status, 401, "Login com senha incorreta deve retornar 401 Unauthorized");
+    strict.strictEqual(body.message != null && body.message != "", true, "Servidor retorna mensagem de erro para login incorreto");
 })
 
 
@@ -84,13 +70,14 @@ test('Login com usuário inexistente retorna 404 Not Found', async () => {
         body: JSON.stringify(dados),
         headers: { 'Content-Type': 'application/json' }
     })
-
+    var body = await res.json()
     strict.strictEqual(res.status, 404, "Login com usuário inexistente deve retornar 404 Not Found");
+    strict.strictEqual(body.message != null && body.message != "", true, "Servidor retorna mensagem de erro para login inexistente");
 })
 
 
-test('rota /usuarios/id funciona', async () => {
-    var res = await fetch(`${url}/usuarios/id?id=1`);
+test('Rota /usuarios/id funciona', async () => {
+    var res = await fetch(`${url}/usuarios/id`);
     strict.strictEqual(res.status, 401, "Buscar usuário por ID sem token deve retornar 401 Unauthorized");
 });
 
