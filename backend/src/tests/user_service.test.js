@@ -2,6 +2,8 @@ import { strict, test, log, describe, envFile } from 'poku';
 import quibble from 'quibble';
 import httpMocks from 'node-mocks-http'
 await envFile();
+
+
 // mock do PrismaClient
 await quibble.esm('@prisma/client', {
   PrismaClient: function () {
@@ -29,6 +31,8 @@ await quibble.esm('@prisma/client', {
     }
   }
 });
+
+
 await quibble.esm('bcrypt', {
   default: {
     compare: async (s1, s2) => s1 === s2 ? true : false,

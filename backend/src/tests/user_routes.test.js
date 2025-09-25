@@ -9,27 +9,31 @@ await quibble.esm('@prisma/client', {
     PrismaClient: function () {
         return {
             tb_usuarios: {
+
                 create: async (args) => ({
                     id_usuario: 1,
                     ...args.data
                 }),
+
                 findMany: async () => ([
                     { id_usuario: 1, email: 'teste@gmail.com' },
                     { id_usuario: 2, email: 'teste2@gmail.com' }
                 ]),
-                findUnique: async (email) => {
-                    var data = [{ id_usuario: 5, email: 'teste@gmail.com' }]
-                    return data.find(user => user.email === "teste@gmail.com");
+
+                findUnique: async (args) => {
+                    var data = [{ id_usuario: 1, email: 'teste@gmail.com', senha: 'teste' },
+                    { id_usuario: 2, email: 'teste2@gmail.com', senha: 'teste2' },
+                    ]
+                    return data.find(user => user.email === args.where.email);
                 }
+
             }
         }
     }
 });
 
-const UserRepository = (await import('../repositories/userRepository.js')).default;
-
-
 describe("TESTES INTEGRADOS - USUÁRIO: ", { background: 'blue', icon: '👤' })
+
 
 test('Rota /usuarios retorna todos os usuários', async () => {
     var res = await fetch(`${url}/usuarios`);
@@ -37,11 +41,25 @@ test('Rota /usuarios retorna todos os usuários', async () => {
     strict.strictEqual(body.users.length > 0, true, "Existe pelo menos 1 usuário no banco de dados");
 });
 
+
 test('Rota "/userName" funcionando com usuário teste', async () => {
     var res = await fetch(`${url}/usuarios/userName/teste`);
     strict.strictEqual(res.status, 200);
 });
 
+
+test('Rota /usuarios/id funciona', async () => {
+    var res = await fetch(`${url}/usuarios/id`);
+    strict.strictEqual(res.status, 401, "Buscar usuário por ID sem token deve retornar 401 Unauthorized");
+});
+
+
+test('rota /usuarios/info/:userName retorna informações do usuário', async () => {
+    var res = await fetch(`${url}/usuarios/info/teste`);
+    assert(res.status, 200);
+    var body = await res.json();
+    strict.strictEqual(body.user.nome_usuario, "teste", "Nome de usuário deve ser \"teste\"");
+});
 
 test('Rota "/login" operacional', async () => {
     const dados = {
@@ -74,17 +92,3 @@ test('Login com usuário inexistente retorna 404 Not Found', async () => {
     strict.strictEqual(res.status, 404, "Login com usuário inexistente deve retornar 404 Not Found");
     strict.strictEqual(body.message != null && body.message != "", true, "Servidor retorna mensagem de erro para login inexistente");
 })
-
-
-test('Rota /usuarios/id funciona', async () => {
-    var res = await fetch(`${url}/usuarios/id`);
-    strict.strictEqual(res.status, 401, "Buscar usuário por ID sem token deve retornar 401 Unauthorized");
-});
-
-
-test('rota /usuarios/info/:userName retorna informações do usuário', async () => {
-    var res = await fetch(`${url}/usuarios/info/teste`);
-    assert(res.status, 200);
-    var body = await res.json();
-    strict.strictEqual(body.user.nome_usuario, "teste", "Nome de usuário deve ser \"teste\"");
-});
