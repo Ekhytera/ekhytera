@@ -9,7 +9,7 @@ const forbiddenWords = [
     'sexo', 'porn', 'porno', 'pornografia', 'masturbacao', 'masturbação',
     'punheta', 'siririca', 'orgasmo', 'tesao', 'tesão', 'gozar', 'gozo',
     'penis', 'pênis', 'piroca', 'pirocao', 'pirocão','vagina', 'clitoris', 'clitóris', 'bct',
-    'cu', 'cuzinho', 'cuzão', 'bucetão', 'bucetinha' ,
+    'cu', 'cuzinho', 'cuzão', 'bucetão', 'bucetinha',
 
     // Termos racistas e discriminatórios
     'negro', 'macaco', 'primata', 'escravo', 'senzala',
