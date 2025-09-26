@@ -126,31 +126,31 @@ export default function PCBuild() {
   const [showGameDropdown, setShowGameDropdown] = useState(false)
   const [showSoftwareDropdown, setShowSoftwareDropdown] = useState(false)
   const [softwareCurrentPage, setSoftwareCurrentPage] = useState(1)
-  const [softwareItemsPerPage] = useState(4) // 4 itens por página (2x2 grid)
+  const [softwareItemsPerPage] = useState(4) 
   const [gameCurrentPage, setGameCurrentPage] = useState(1)
-  const [gameItemsPerPage] = useState(4) // 4 itens por página (2x2 grid)
+  const [gameItemsPerPage] = useState(4) 
   const [showPartsDetail, setShowPartsDetail] = useState(false)
   const [savedConfigurations, setSavedConfigurations] = useState<SavedConfiguration[]>([])
   const [showSavedList, setShowSavedList] = useState(false)
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false) // Simula estado de login
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false) 
   const [showLoginPrompt, setShowLoginPrompt] = useState(false)
   
-  // Component search states
+
   const [componentSearchQueries, setComponentSearchQueries] = useState<{[key: string]: string}>({})
   const [showComponentDropdowns, setShowComponentDropdowns] = useState<{[key: string]: boolean}>({})
 
-  // Recommendations system states
+
   const [showRecommendations, setShowRecommendations] = useState(false)
   const [recommendationTab, setRecommendationTab] = useState<'algorithm' | 'community' | 'notebooks'>('algorithm')
 
-  // Price catalog filter states
+
   const [showFilters, setShowFilters] = useState(false)
   const [priceFilterType, setPriceFilterType] = useState<string>('all')
   const [priceFilterBrand, setPriceFilterBrand] = useState<string>('all')
   const [priceRangeMin, setPriceRangeMin] = useState<number>(0)
   const [priceRangeMax, setPriceRangeMax] = useState<number>(10000)
 
-  // Load saved configurations when user logs in
+
   useEffect(() => {
     if (isUserLoggedIn) {
       try {
@@ -166,12 +166,12 @@ export default function PCBuild() {
         console.warn('Erro ao carregar configurações salvas:', error)
       }
     } else {
-      // Clear configurations when user logs out
+      
       setSavedConfigurations([])
     }
   }, [isUserLoggedIn])
 
-  // Close dropdowns when clicking outside
+  
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Element
@@ -186,7 +186,7 @@ export default function PCBuild() {
     }
   }, [])
 
-  // Mock data for prices - Replace with actual API data
+
   const [partPrices] = useState<PartPrice[]>([
     {
       name: 'Intel Core i7-13700K',
@@ -300,39 +300,39 @@ export default function PCBuild() {
     },
   ])
 
-  // Mock data - Replace with actual data from your backend
+
   const availableParts: ComputerPart[] = [
-    // CPUs
+
     { id: '1', name: 'Intel Core i7-13700K', type: 'cpu', price: 2800, performance: 90 },
     { id: '2', name: 'AMD Ryzen 7 7800X', type: 'cpu', price: 2600, performance: 88 },
     { id: '3', name: 'Intel Core i5-13600K', type: 'cpu', price: 1800, performance: 82 },
     { id: '4', name: 'AMD Ryzen 5 7600X', type: 'cpu', price: 1600, performance: 80 },
-    // GPUs
+
     { id: '5', name: 'NVIDIA RTX 4070', type: 'gpu', price: 3500, performance: 85 },
     { id: '6', name: 'AMD RX 6800 XT', type: 'gpu', price: 3200, performance: 83 },
     { id: '7', name: 'NVIDIA RTX 4060 Ti', type: 'gpu', price: 2500, performance: 78 },
     { id: '8', name: 'AMD RX 6700 XT', type: 'gpu', price: 2300, performance: 75 },
-    // RAM
+
     { id: '9', name: '32GB DDR5 6000MHz', type: 'ram', price: 1200, performance: 90 },
     { id: '10', name: '16GB DDR5 5600MHz', type: 'ram', price: 600, performance: 85 },
     { id: '11', name: '32GB DDR4 3600MHz', type: 'ram', price: 800, performance: 75 },
     { id: '12', name: '16GB DDR4 3200MHz', type: 'ram', price: 400, performance: 70 },
-    // Storage
+
     { id: '13', name: 'Samsung 2TB NVMe Gen4', type: 'storage', price: 1000, performance: 90 },
     { id: '14', name: 'WD Black 1TB NVMe Gen4', type: 'storage', price: 600, performance: 85 },
     { id: '15', name: 'Crucial 2TB SATA SSD', type: 'storage', price: 700, performance: 70 },
     { id: '16', name: 'Seagate 2TB HDD', type: 'storage', price: 300, performance: 50 },
-    // Motherboards
+ 
     { id: '17', name: 'ASUS ROG Z790', type: 'motherboard', price: 2500, performance: 90 },
     { id: '18', name: 'MSI MPG B650', type: 'motherboard', price: 1500, performance: 85 },
     { id: '19', name: 'Gigabyte B760', type: 'motherboard', price: 1000, performance: 80 },
     { id: '20', name: 'ASRock B650', type: 'motherboard', price: 800, performance: 75 },
-    // PSUs
+ 
     { id: '21', name: 'Corsair RM850x', type: 'psu', price: 800, performance: 90 },
     { id: '22', name: 'EVGA 750W G5', type: 'psu', price: 600, performance: 85 },
     { id: '23', name: 'Be Quiet! 650W', type: 'psu', price: 500, performance: 80 },
     { id: '24', name: 'Thermaltake 600W', type: 'psu', price: 400, performance: 75 },
-    // Cases
+
     { id: '25', name: 'Lian Li O11 Dynamic', type: 'case', price: 800, performance: 90 },
     { id: '26', name: 'NZXT H510', type: 'case', price: 500, performance: 85 },
     { id: '27', name: 'Corsair 4000D', type: 'case', price: 400, performance: 80 },
@@ -530,7 +530,7 @@ export default function PCBuild() {
     }
   ]
 
-  // Mock data for recommendations
+
   const recommendedBuilds: RecommendedBuild[] = [
     {
       id: '1',
@@ -638,7 +638,6 @@ export default function PCBuild() {
     const updatedConfigs = [...savedConfigurations, newConfig]
     setSavedConfigurations(updatedConfigs)
     
-    // Simular salvamento no backend - em produção, seria uma chamada API
     try {
       localStorage.setItem('ekhytera-saved-configs', JSON.stringify(updatedConfigs))
     } catch (error) {
@@ -667,7 +666,7 @@ export default function PCBuild() {
       const updatedConfigs = savedConfigurations.filter(config => config.id !== configId)
       setSavedConfigurations(updatedConfigs)
       
-      // Update localStorage
+
       try {
         localStorage.setItem('ekhytera-saved-configs', JSON.stringify(updatedConfigs))
       } catch (error) {
@@ -676,7 +675,7 @@ export default function PCBuild() {
     }
   }
 
-  // Function to get part icon SVG
+
   const getPartIcon = (type: string) => {
     const iconProps = "w-5 h-5"
     
@@ -828,7 +827,7 @@ export default function PCBuild() {
     }
   }
 
-  // Function to get part name in Portuguese
+
   const getPartNameInPortuguese = (type: string) => {
     switch (type) {
       case 'cpu': return 'Processador'
@@ -842,7 +841,7 @@ export default function PCBuild() {
     }
   }
 
-  // Function to filter components by search query
+
   const getFilteredComponents = (type: string) => {
     const query = componentSearchQueries[type] || ''
     const components = availableParts.filter(part => part.type === type)
@@ -854,25 +853,25 @@ export default function PCBuild() {
     )
   }
 
-  // Function to handle component search input
+  
   const handleComponentSearch = (type: string, query: string) => {
     setComponentSearchQueries(prev => ({ ...prev, [type]: query }))
     setShowComponentDropdowns(prev => ({ ...prev, [type]: true }))
   }
 
-  // Function to handle focus on search input
+
   const handleComponentFocus = (type: string) => {
     setShowComponentDropdowns(prev => ({ ...prev, [type]: true }))
   }
 
-  // Function to handle component selection from dropdown
+
   const handleComponentSelection = (part: ComputerPart, type: string) => {
     handlePartSelection(part)
     setComponentSearchQueries(prev => ({ ...prev, [type]: part.name }))
     setShowComponentDropdowns(prev => ({ ...prev, [type]: false }))
   }
 
-  // Function to clear component search
+
   const clearComponentSearch = (type: string) => {
     setComponentSearchQueries(prev => ({ ...prev, [type]: '' }))
     setShowComponentDropdowns(prev => ({ ...prev, [type]: false }))
@@ -892,8 +891,8 @@ export default function PCBuild() {
 
   const handleGameSelection = (game: Game) => {
     setSelectedGame(game)
-    setSelectedSoftware(game) // Update unified software state
-    // Auto-select parts based on game requirements
+    setSelectedSoftware(game) 
+    
     const recommendedParts = availableParts.reduce((acc, part) => {
       if (part.performance >= game.requirements[part.type as keyof typeof game.requirements]) {
         if (!acc[part.type] || acc[part.type].price > part.price) {
@@ -910,7 +909,7 @@ export default function PCBuild() {
     const software = softwareList.find(s => s.id === softwareId)
     if (software) {
       setSelectedSoftware(software)
-      // Auto-select parts based on software requirements
+      
       const recommendedParts = availableParts.reduce((acc, part) => {
         if (part.performance >= software.requirements[part.type as keyof typeof software.requirements]) {
           if (!acc[part.type] || acc[part.type].price > part.price) {
@@ -924,7 +923,7 @@ export default function PCBuild() {
     }
   }
 
-  // Filter functions
+  
   const filteredGames = games.filter(game =>
     game.name.toLowerCase().includes(gameSearchQuery.toLowerCase())
   )
@@ -934,7 +933,7 @@ export default function PCBuild() {
     software.category.toLowerCase().includes(softwareSearchQuery.toLowerCase())
   )
 
-  // Price catalog filter functions
+  
   const filteredPrices = partPrices.filter(part => {
     const matchesType = priceFilterType === 'all' || part.type === priceFilterType
     const matchesBrand = priceFilterBrand === 'all' || part.brand === priceFilterBrand
@@ -942,36 +941,36 @@ export default function PCBuild() {
                          part.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          part.brand.toLowerCase().includes(searchQuery.toLowerCase())
     
-    // Get lowest price for range filtering
+   
     const lowestPrice = Math.min(...part.prices.map(p => p.price))
     const matchesPriceRange = lowestPrice >= priceRangeMin && lowestPrice <= priceRangeMax
     
     return matchesType && matchesBrand && matchesSearch && matchesPriceRange
   })
 
-  // Get unique types and brands for filter options
+  
   const availableTypes = [...new Set(partPrices.map(part => part.type))]
   const availableBrands = [...new Set(partPrices.map(part => part.brand))]
 
-  // Pagination logic for games
+  
   const totalGamePages = Math.ceil(filteredGames.length / gameItemsPerPage)
   const gameStartIndex = (gameCurrentPage - 1) * gameItemsPerPage
   const gameEndIndex = gameStartIndex + gameItemsPerPage
   const currentGameItems = filteredGames.slice(gameStartIndex, gameEndIndex)
 
-  // Pagination logic for software
+  
   const totalSoftwarePages = Math.ceil(filteredSoftware.length / softwareItemsPerPage)
   const startIndex = (softwareCurrentPage - 1) * softwareItemsPerPage
   const endIndex = startIndex + softwareItemsPerPage
   const currentSoftwareItems = filteredSoftware.slice(startIndex, endIndex)
 
-  // Reset to first page when search changes
+  
   useEffect(() => {
     setGameCurrentPage(1)
     setSoftwareCurrentPage(1)
   }, [gameSearchQuery, softwareSearchQuery])
 
-  // Close dropdowns when clicking outside
+  
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement
@@ -987,7 +986,7 @@ export default function PCBuild() {
 
   return (
     <div className="flex h-screen bg-zinc-950 relative">
-      {/* Background blur effect */}
+
       <div
         aria-hidden="true"
         className="absolute inset-x-0 -top-80 pl-350 z-0 transform-gpu overflow-hidden blur-3xl"
@@ -1001,7 +1000,7 @@ export default function PCBuild() {
         />
       </div>
 
-      {/* Background Computer Image */}
+
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
         <img
           src="/src/assets/image.png"
@@ -1017,7 +1016,7 @@ export default function PCBuild() {
         />
       </div>
 
-      {/* Sidebar */}
+
       <div className="relative z-10 w-[420px] bg-zinc-950/90 shadow-lg h-full flex flex-col border-r border-zinc-800">
         <div className="p-6 border-b border-zinc-800 mt-20">
           <div className="flex items-center justify-between mb-2">
@@ -1031,7 +1030,7 @@ export default function PCBuild() {
         </div>
 
         <div className="p-6 space-y-6 flex-1 overflow-y-auto scroll-profile">
-          {/* Build Mode Options */}
+  
           <div className="space-y-2">
             <button
               className={`w-full px-4 py-3 rounded-lg text-left ${!showNotebooks && buildMode === 'manual'
@@ -1127,10 +1126,10 @@ export default function PCBuild() {
               </span>
             </button>
             
-            {/* Separator */}
+
             <div className="border-t border-zinc-700 my-4"></div>
             
-            {/* Lista de Configurações */}
+ 
             <button
               className={`w-full px-4 py-3 rounded-lg text-left transition-colors ${
                 !isUserLoggedIn
@@ -1185,10 +1184,10 @@ export default function PCBuild() {
             </button>
           </div>
 
-          {/* Game/Software Selection for Automatic Mode */}
+
           {!showNotebooks && buildMode === 'automatic' && (
             <div className="space-y-4">
-              {/* Recommendation Type Toggle */}
+ 
               <div>
                 <h3 className="text-lg font-semibold text-gray-700 mb-3">Tipo de Configuração</h3>
                 <div className="flex space-x-3">
@@ -1260,12 +1259,12 @@ export default function PCBuild() {
                 </div>
               </div>
 
-              {/* Game Selection */}
+
               {recommendationType === 'games' && (
                 <div className="space-y-3">
                   <h3 className="text-lg font-semibold text-gray-700">Selecione um Jogo</h3>
 
-                  {/* Search Bar for Games */}
+
                   <div className="relative search-dropdown-container">
                     <div className="relative">
                       <input
@@ -1289,7 +1288,7 @@ export default function PCBuild() {
                       </svg>
                     </div>
 
-                    {/* Dropdown Results */}
+
                     {showGameDropdown && filteredGames.length > 0 && (
                       <div className="absolute z-50 w-full mt-1 bg-zinc-900 border border-zinc-800 rounded-lg shadow-lg max-h-60 overflow-y-auto scroll-profile">
                         {filteredGames.slice(0, 5).map(game => (
@@ -1366,7 +1365,7 @@ export default function PCBuild() {
                     ))}
                   </div>
 
-                  {/* Pagination Controls for Games */}
+
                   {totalGamePages > 1 && (
                     <div className="flex justify-center items-center space-x-2 mt-4">
                       <button
@@ -1417,7 +1416,7 @@ export default function PCBuild() {
                     </div>
                   )}
 
-                  {/* Games Info */}
+
                   <div className="text-center text-sm text-zinc-400 mt-2">
                     Mostrando {currentGameItems.length} de {filteredGames.length} jogos
                     {gameSearchQuery && ` (filtrado por "${gameSearchQuery}")`}
@@ -1434,12 +1433,12 @@ export default function PCBuild() {
                 </div>
               )}
 
-              {/* Software Selection */}
+
               {recommendationType === 'software' && (
                 <div className="space-y-3">
                   <h3 className="text-lg font-semibold text-gray-700">Selecione um Software</h3>
 
-                  {/* Search Bar for Software */}
+
                   <div className="relative search-dropdown-container">
                     <div className="relative">
                       <input
@@ -1463,7 +1462,6 @@ export default function PCBuild() {
                       </svg>
                     </div>
 
-                    {/* Dropdown Results */}
                     {showSoftwareDropdown && filteredSoftware.length > 0 && (
                       <div className="absolute z-50 w-full mt-1 bg-zinc-900 border border-zinc-800 rounded-lg shadow-lg max-h-60 overflow-y-auto scroll-profile">
                         {filteredSoftware.slice(0, 5).map(software => (
@@ -1540,7 +1538,6 @@ export default function PCBuild() {
                     ))}
                   </div>
 
-                  {/* Pagination Controls */}
                   {totalSoftwarePages > 1 && (
                     <div className="flex justify-center items-center space-x-2 mt-4">
                       <button
@@ -1591,7 +1588,6 @@ export default function PCBuild() {
                     </div>
                   )}
 
-                  {/* Software Info */}
                   <div className="text-center text-sm text-zinc-400 mt-2">
                     Mostrando {currentSoftwareItems.length} de {filteredSoftware.length} softwares
                     {softwareSearchQuery && ` (filtrado por "${softwareSearchQuery}")`}
@@ -1610,7 +1606,6 @@ export default function PCBuild() {
             </div>
           )}
 
-          {/* Recommendations Button */}
           {!showNotebooks && (selectedGame || selectedSoftware) && (
             <div className="mb-4">
               <button
@@ -1632,7 +1627,6 @@ export default function PCBuild() {
             </div>
           )}
 
-          {/* Price Summary */}
           {!showNotebooks && Object.keys(selectedParts).length > 0 && (
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-zinc-100">Resumo do Orçamento</h3>
@@ -1653,7 +1647,6 @@ export default function PCBuild() {
             </div>
           )}
 
-          {/* Main Content */}
           <div className="space-y-6">
             {showNotebooks ? (
               <div className="space-y-4">
@@ -1693,7 +1686,6 @@ export default function PCBuild() {
                       <h3 className="text-base font-bold text-zinc-100">{getPartNameInPortuguese(type)}</h3>
                     </div>
                     
-                    {/* Search Bar with Dropdown */}
                     <div className="relative component-search-container">
                       <div className="relative">
                         <input
@@ -1729,7 +1721,7 @@ export default function PCBuild() {
                         )}
                       </div>
 
-                      {/* Dropdown Results */}
+  
                       {showComponentDropdowns[type] && (
                         <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-zinc-950 border border-zinc-800 rounded-lg shadow-xl max-h-64 overflow-y-auto scroll-profile">
                           {getFilteredComponents(type).length > 0 ? (
@@ -1847,7 +1839,6 @@ export default function PCBuild() {
         </div>
       </div>
 
-      {/* Price Catalog */}
       {showPrices && (
         <div
           className="absolute right-8 top-40 w-[420px] bg-zinc-950/75 shadow-2xl h-[calc(100vh-12rem)] rounded-xl border border-zinc-800 backdrop-blur-xl transition-all duration-300 ease-out transform translate-x-0 opacity-100 z-30 flex flex-col"
@@ -1869,9 +1860,7 @@ export default function PCBuild() {
               </button>
             </div>
             
-            {/* Search and Filter Bar */}
             <div className="flex items-center gap-2">
-              {/* Search Bar */}
               <div className="flex-1 relative">
                 <input
                   type="text"
@@ -1895,7 +1884,6 @@ export default function PCBuild() {
                 </svg>
               </div>
 
-              {/* Filter Toggle Button */}
               <button
                 onClick={() => setShowFilters(!showFilters)}
                 className={`p-2 rounded-lg transition-colors ${
@@ -1910,10 +1898,8 @@ export default function PCBuild() {
               </button>
             </div>
 
-            {/* Filters Panel */}
             {showFilters && (
               <div className="space-y-3 p-4 bg-zinc-900/50 rounded-lg border border-zinc-800">
-                {/* Type Filter */}
                 <div>
                   <label className="block text-sm font-medium text-zinc-300 mb-1">Tipo de Componente</label>
                   <select
@@ -1928,7 +1914,6 @@ export default function PCBuild() {
                   </select>
                 </div>
 
-                {/* Brand Filter */}
                 <div>
                   <label className="block text-sm font-medium text-zinc-300 mb-1">Marca</label>
                   <select
@@ -1943,7 +1928,6 @@ export default function PCBuild() {
                   </select>
                 </div>
 
-                {/* Price Range Filter */}
                 <div>
                   <label className="block text-sm font-medium text-zinc-300 mb-1">
                     Faixa de Preço: R$ {priceRangeMin} - R$ {priceRangeMax}
@@ -1972,7 +1956,6 @@ export default function PCBuild() {
                   </div>
                 </div>
 
-                {/* Clear Filters Button */}
                 <button
                   onClick={() => {
                     setPriceFilterType('all')
@@ -1989,7 +1972,6 @@ export default function PCBuild() {
             )}
           </div>
 
-          {/* Conteúdo scrollable */}
           <div className="flex-1 p-4 lg:p-6 space-y-4 lg:space-y-6 overflow-y-auto min-h-0 scroll-profile">
             {filteredPrices.length === 0 ? (
               <div className="text-center py-8">
@@ -2048,10 +2030,8 @@ export default function PCBuild() {
         </div>
       )}
 
-      {/* Empty main content area for background */}
       <div className="flex-1 bg-zinc-950"></div>
 
-      {/* Saved Configurations Panel */}
       {showSavedList && isUserLoggedIn && (
         <div
           className="absolute right-8 top-40 w-[420px] bg-zinc-950/75 shadow-2xl h-[calc(100vh-12rem)] rounded-xl overflow-hidden border border-zinc-800 backdrop-blur-xl transition-all duration-300 ease-out transform translate-x-0 opacity-100 z-30"
@@ -2145,11 +2125,9 @@ export default function PCBuild() {
         </div>
       )}
 
-      {/* Login Prompt Modal */}
       {showLoginPrompt && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-zinc-900/95 backdrop-blur-xl rounded-xl border border-zinc-800/50 shadow-2xl max-w-md w-full p-6">
-            {/* Header */}
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-xl font-bold text-zinc-100">
                 Login Necessário
@@ -2164,7 +2142,6 @@ export default function PCBuild() {
               </button>
             </div>
 
-            {/* Content */}
             <div className="text-center mb-6">
               <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#79A7DD]/20 flex items-center justify-center">
                 <svg className="w-8 h-8 text-[#79A7DD]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2188,7 +2165,6 @@ export default function PCBuild() {
               </div>
             </div>
 
-            {/* Actions */}
             <div className="space-y-3">
               <Link
                 to="/login"
@@ -2213,7 +2189,6 @@ export default function PCBuild() {
         </div>
       )}
 
-      {/* Parts Detail Panel */}
       {showPartsDetail && (
         <div
           className="absolute right-8 top-40 w-[420px] bg-zinc-950/75 shadow-2xl h-[calc(100vh-12rem)] rounded-xl overflow-hidden border border-zinc-800 backdrop-blur-xl transition-all duration-300 ease-out transform translate-x-0 opacity-100 z-30"
@@ -2275,7 +2250,6 @@ export default function PCBuild() {
                   </div>
                 ))}
 
-                {/* Total Section */}
                 <div className="sticky bottom-0 bg-zinc-950/75 backdrop-blur-xl border-t border-zinc-800/50 p-4 rounded-xl">
                   <div className="bg-gradient-to-r from-[#79A7DD]/20 to-[#a3c5ee]/20 rounded-lg p-4 border border-[#79A7DD]/30">
                     <div className="flex justify-between items-center mb-2">
@@ -2322,7 +2296,6 @@ export default function PCBuild() {
         </div>
       )}
 
-      {/* Recommendations Panel */}
       {showRecommendations && (selectedGame || selectedSoftware) && (
         <div
           className="absolute right-8 top-40 w-[500px] bg-zinc-950/75 shadow-2xl h-[calc(100vh-12rem)] rounded-xl overflow-hidden border border-zinc-800 backdrop-blur-xl transition-all duration-300 ease-out transform translate-x-0 opacity-100 z-30 flex flex-col"
@@ -2346,7 +2319,6 @@ export default function PCBuild() {
               </button>
             </div>
             
-            {/* Tabs */}
             <div className="flex space-x-2">
               <button
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
@@ -2382,7 +2354,6 @@ export default function PCBuild() {
           </div>
           
           <div className="flex-1 overflow-y-auto scroll-profile p-6">
-            {/* Algorithm Recommendations */}
             {recommendationTab === 'algorithm' && (
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-zinc-100 mb-4">Builds Recomendadas</h3>
@@ -2409,7 +2380,6 @@ export default function PCBuild() {
               </div>
             )}
 
-            {/* Community Recommendations */}
             {recommendationTab === 'community' && (
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-zinc-100 mb-4">Builds da Comunidade</h3>
@@ -2454,7 +2424,6 @@ export default function PCBuild() {
               </div>
             )}
 
-            {/* Notebook Recommendations */}
             {recommendationTab === 'notebooks' && (
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-zinc-100 mb-4">Notebooks Recomendados</h3>

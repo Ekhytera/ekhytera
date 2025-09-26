@@ -28,7 +28,7 @@ export async function uploadToSupabase(file, folder = 'uploads') {
         const filePath = `${folder}/${fileName}`;
 
         const { data, error } = await supabase.storage
-            .from('pictures') // Your bucket name
+            .from('pictures') 
             .upload(filePath, file.buffer, {
                 contentType: file.mimetype,
                 upsert: false

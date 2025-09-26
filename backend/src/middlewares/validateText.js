@@ -8,12 +8,13 @@ const forbiddenWords = [
     // Termos sexuais explícitos
     'sexo', 'porn', 'porno', 'pornografia', 'masturbacao', 'masturbação',
     'punheta', 'siririca', 'orgasmo', 'tesao', 'tesão', 'gozar', 'gozo',
-    'penis', 'pênis', 'vagina', 'clitoris', 'clitóris', 'bct',
+    'penis', 'pênis', 'piroca', 'pirocao', 'pirocão','vagina', 'clitoris', 'clitóris', 'bct',
+    'cu', 'cuzinho', 'cuzão', 'bucetão', 'bucetinha' ,
 
     // Termos racistas e discriminatórios
     'negro', 'macaco', 'primata', 'escravo', 'senzala',
-    'nazista', 'hitler', 'holocausto', 'supremacia',
-    'gay', 'viado', 'bicha', 'sapatao', 'sapatão', 'traveco',
+    'nazista', 'hitler', 'holocausto', 'supremacia', 'mono', 'heil',
+    'gay', 'viado', 'viadinho', 'bicha', 'sapatao', 'sapatão', 'traveco',
 
     // Incitação à violência
     'matar', 'morrer', 'morte', 'suicidio', 'suicídio', 'enforcar',
@@ -42,12 +43,13 @@ const forbiddenWords = [
     // Termos em inglês comuns
     'fuck', 'shit', 'bitch', 'damn', 'hell', 'ass', 'bastard',
     'whore', 'slut', 'cunt', 'dick', 'cock', 'pussy', 'tits',
-    'boobs', 'nude', 'naked', 'sex', 'porn', 'xxx',
+    'boobs', 'nude', 'naked', 'sex', 'porn', 'xxx', 'nigger', 'nigga',
 
     // Ameaças
     'vou te matar', 'vou te quebrar', 'vou te bater', 'tome cuidado',
     'você vai se arrepender', 'vou te pegar', 'te espero la fora',
-    'te espero lá fora', 'acerto de contas',
+    'te espero lá fora', 'acerto de contas', 'vai acordar com a boca cheia de formiga',
+    'tribunal do crime', 'X9',
 
     // Informações pessoais (padrões)
     'telefone:', 'celular:', 'whatsapp:', 'email:', 'endereço:',

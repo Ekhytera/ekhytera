@@ -5,15 +5,17 @@ import { Materiais } from "../../components/Materials";
 import { lazy, Suspense, useState, useRef, useEffect } from 'react';
 import { Noticias } from "../../components/News";
 
-const Testimonials = lazy(() => {
+const Testimonials = lazy<React.ComponentType>(() => {
     return new Promise(resolve => {
         setTimeout(() => {
-            resolve(import('../../components/Testimonial/Testimonial'));
+            import('../../components/Testimonial/Testimonial').then(module => {
+                resolve({ default: module.default });
+            });
         }, 2000);
     });
 });
 
-// Hook para animação de lazy loading
+
 const useIntersectionObserver = (options = {}) => {
   const [isIntersecting, setIsIntersecting] = useState(false);
   const [hasAnimated, setHasAnimated] = useState(false);
@@ -48,7 +50,7 @@ const useIntersectionObserver = (options = {}) => {
 
 
 export default function Home() {
-    // Refs para animações de cada seção
+
     const [heroRef, heroVisible] = useIntersectionObserver();
     const [cardRef, cardVisible] = useIntersectionObserver();
     const [bentoRef, bentoVisible] = useIntersectionObserver();
@@ -58,7 +60,7 @@ export default function Home() {
 
     return (
         <>
-            {/* Hero Section */}
+
             <div 
                 ref={heroRef}
                 className={`transition-all duration-1000 ease-out ${
@@ -70,7 +72,7 @@ export default function Home() {
                 <Hero />
             </div>
 
-            {/* Card Section */}
+
             <div 
                 ref={cardRef}
                 className={`transition-all duration-1000 ease-out delay-200 ${
@@ -82,7 +84,7 @@ export default function Home() {
                 <Card />
             </div>
 
-            {/* Bento Grid Section */}
+
             <div 
                 ref={bentoRef}
                 className={`transition-all duration-1000 ease-out delay-300 ${
@@ -94,7 +96,7 @@ export default function Home() {
                 <Bento />
             </div>
 
-            {/* Testimonials Section */}
+  
             <div 
                 ref={testimonialsRef}
                 className={`transition-all duration-1000 ease-out delay-400 ${
@@ -112,7 +114,7 @@ export default function Home() {
                 </Suspense>
             </div>
 
-            {/* Notícias Section */}
+
             <div 
                 ref={noticiasRef}
                 className={`transition-all duration-1000 ease-out delay-500 ${
@@ -124,7 +126,7 @@ export default function Home() {
                 <Noticias />
             </div>
 
-            {/* Materiais Section */}
+
             <div 
                 ref={materiaisRef}
                 className={`transition-all duration-1000 ease-out delay-600 ${

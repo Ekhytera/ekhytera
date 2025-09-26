@@ -10,13 +10,12 @@
     "dev": "nodemon ./src/server.js",
     "test:server": "start-server-and-test start http://127.0.0.1:3000 test",
     "test:stress": "autocannon -c 1000 -d 10 http://127.0.0.1:3000/"
-
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^6.16.1",
+    "@prisma/client": "^6.16.2",
     "@supabase/supabase-js": "^2.57.4",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",

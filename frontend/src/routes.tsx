@@ -9,8 +9,8 @@ import NotFound from './pages/NotFound/NotFound';
 import Perfil from './pages/Perfil/Perfil';
 import Catalog from './pages/Catalog/Catalog';
 import Promotions from './pages/Promotions/Promotions';
-import PrivacyPolicy from './pages/PrivacyPolicy';
-import TermsConditions from './pages/TermsConditions';
+import PrivacyPolicy from './pages/PrivacyPolicy/PrivacyPolicy';
+import TermsConditions from './pages/TermsConditions/TermsConditions';
 
 export const router = createBrowserRouter([
     {
