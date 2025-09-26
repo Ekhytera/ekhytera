@@ -15,20 +15,16 @@ function Description({ visitor, desc }: DescriptionProps) {
     const [descricao, setDescricao] = useState('');
     const [charCount, setCharCount] = useState(0);
 
-    // ✅ Memoizar função para evitar re-criação
     const handleUpdateDescription = useCallback(async (descricao: string) => {
-        if (descricao === auth?.descricao) return;
+        console.log(descricao == auth?.descricao)
+        if (descricao == auth?.descricao) return;
 
-        // ✅ Permitir valores vazios/nulos
-        let processedDescription = descricao;
-        if (descricao.trim()) {
-            processedDescription = descricao.trim().replace(/(\r?\n){3,}/g, '\n\n\n');
-        } else {
-            processedDescription = "";
-        }
+
+        descricao = descricao.trim().replace(/(\r?\n){3,}/g, '\n\n\n');
+
 
         try {
-            const req = await api.patch('/update-user', { descricao: processedDescription }, {
+            const req = await api.patch('/update-user', { descricao }, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
@@ -38,10 +34,10 @@ function Description({ visitor, desc }: DescriptionProps) {
                 throw new Error("Falha ao atualizar descrição")
             }
 
-            setDescricao(processedDescription);
+            setDescricao(descricao);
 
-            const message = processedDescription 
-                ? "Sua descrição foi salva" 
+            const message = descricao
+                ? "Sua descrição foi salva"
                 : "Descrição removida com sucesso";
 
             toast.success(message, {

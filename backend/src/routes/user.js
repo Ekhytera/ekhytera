@@ -21,7 +21,5 @@ routes.post('/login', UserController.login);
 routes.get('/usuarios/id', auth.verifyToken, UserController.getUserById);
 routes.patch('/update-user', auth.verifyToken, upload.single('imagem'), UserController.updateUser);
 routes.delete('/delete-user', auth.verifyToken, UserController.deleteUser);
-routes.patch('/uptdate-user', auth.verifyToken, validateText, UserController.updateUser);
-
 
 export default routes

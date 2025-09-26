@@ -33,8 +33,8 @@ const forbiddenWords = [
 
     // Termos relacionados a hack/fraude
     'hack', 'hacker', 'crackeado', 'pirata', 'senha', 'password',
-    'cartao de credito', 'cartão de crédito', 'cpf', 'rg', 'conta bancaria',
-    'conta bancária', 'golpe', 'fraude', 'phishing',
+    'cartao de credito', 'cartão de crédito', 'cpf', 'rg', 'bancaria',
+    'bancária', 'golpe', 'fraude', 'phishing',
 
     // Variações com números e símbolos
     'p0rn0', 'p@rn', 's3x0', 'f@ck', 'sh1t', 'b1tch', 'd@mn',
@@ -72,14 +72,6 @@ export function validateText(req, res, next) {
 
     if ('nome_usuario' in data) {
         text = data.nome_usuario
-    }
-
-    if (!text || typeof text !== 'string') {
-        return res.status(400).json({
-            ok: false,
-            status: 400,
-            message: 'texto inválido'
-        })
     }
 
     const textLower = text.toLowerCase();
