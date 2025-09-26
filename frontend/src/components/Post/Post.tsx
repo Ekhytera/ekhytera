@@ -213,7 +213,7 @@ function Post({
                         </div>
                         <div>
                             {(tb_usuarios.id_usuario === auth?.id_usuario || auth?.cargo === 'admin') &&
-                                <PostMenu onDelete={handleDelete} onEdit={handleEdit} />
+                                <PostMenu onDelete={handleDelete} onEdit={handleEdit} userId={tb_usuarios.id_usuario} />
                             }
                         </div>
                     </div>

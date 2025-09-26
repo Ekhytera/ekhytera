@@ -24,10 +24,11 @@ const schema = z.object({
         .nonempty('O campo email é obrigatório'),
     nome_usuario: z.string()
         .trim()
-        .nonempty('O campo nome é obrigatótio')
+        .nonempty('O campo nome é obrigatório')
         .regex(/^\S+$/, "Não pode conter espaços")
+        .regex(/^[a-zA-Z0-9_-]+$/, "Não pode conter acentos ou caracteres especiais (apenas letras, números, _ e -)")
         .min(3, 'O nome deve conter no mínimo 3 caracteres')
-        .max(20, 'O nome deve conter no maximo 20 caracteres')
+        .max(25, 'O nome deve conter no máximo 25 caracteres'),
 });
 
 type FormData = z.infer<typeof schema>
@@ -38,7 +39,6 @@ function Config() {
     const { resetPosts } = usePosts();
     const navigate = useNavigate();
     const [configIsOpen, setConfigIsOpen] = useState(false);
-
 
     const { register, handleSubmit, formState: { errors }, watch, reset } = useForm<FormData>({
         resolver: zodResolver(schema),
@@ -222,10 +222,10 @@ function Config() {
             </button>
 
             {configIsOpen && (
-                <div className="w-full h-screen flex items-center justify-center z-50 fixed inset-0 bg-black/50" onClick={() => {
+                <div className="min-w-full min-h-screen flex items-center justify-center z-50 fixed inset-0 bg-black/50" onClick={() => {
                     setConfigIsOpen(false)
                 }}>
-                    <div className="bg-zinc-900 w-full max-w-md p-5 mx-auto rounded-xl flex flex-col relative"
+                    <div className="bg-zinc-900 w-full max-w-md p-5 mx-auto rounded-xl flex flex-col relative -top-1/4 md:-top-1/6"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <button className="text-xl p-2 cursor-pointer rounded-sm hover:scale-110 hover:bg-zinc-700 duration-200 text-white w-fit absolute right-5 top-1 z-20"
