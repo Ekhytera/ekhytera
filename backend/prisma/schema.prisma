@@ -27,6 +27,11 @@ model tb_usuarios {
   @@map("tb_usuarios")
 }
 
+enum Cargo {
+  user
+  admin
+}
+
 model tb_posts {
   id_post       Int           @id @default(autoincrement())
   texto         String
@@ -54,7 +59,96 @@ model tb_curtidas {
   @@map("tb_curtidas")
 }
 
-enum Cargo {
-  user
-  admin
+model tb_componentes {
+  id_componente      Int         @id @default(autoincrement())
+  tipo               Componente
+  modelo             String      @db.VarChar(100)
+  endereco_imagem    String?     @db.VarChar(255)
+  plataforma         Plataforma?
+  marca              Marca
+  fabricante         String      @db.VarChar(45)
+  rating             Int?        @db.SmallInt
+  quantidade_memoria Int?
+  cores              Int?
+  threads            Int?
+  clock_base         Int? // MHz
+  clock_boost        Int? // MHz
+  tdp                Int? // Watts
+  lancamento         DateTime?   @db.Date
+  status             Int         @default(1) @db.SmallInt
+  criado_em          DateTime    @default(now()) @db.Timestamp(0)
+  atualizado_em      DateTime    @updatedAt
+
+  softwares_gpu_min tb_softwares[] @relation("GpuMinima")
+  softwares_gpu_rec tb_softwares[] @relation("GpuRecomendada")
+  softwares_cpu_min tb_softwares[] @relation("CpuMinima")
+  softwares_cpu_rec tb_softwares[] @relation("CpuRecomendada")
+  softwares_ram_min tb_softwares[] @relation("RamMinima")
+  softwares_ram_rec tb_softwares[] @relation("RamRecomendada")
+
+  @@index([tipo])
+  @@index([marca])
+  @@map("tb_componentes")
+}
+
+enum Componente {
+  gpu
+  cpu
+  ram
+}
+
+enum Plataforma {
+  am4
+  am5
+  ddr3
+  ddr4
+  ddr5
+}
+
+enum Marca {
+  amd
+  intel
+  nvidia
+}
+
+model tb_softwares {
+  id_software     Int       @id @default(autoincrement())
+  categoria       Categoria
+  nome            String    @unique @db.VarChar(100)
+  endereco_imagem String?   @db.VarChar(255)
+  descricao       String?   @db.VarChar(500)
+  desenvolvedora  String?   @db.VarChar(100)
+  lancamento      DateTime? @db.Date
+
+  // Requisitos mínimos
+  id_gpu_minima        Int?
+  id_cpu_minima        Int?
+  id_ram_minima        Int?
+  armazenamento_minimo Int? // GB
+
+  // Requisitos recomendados
+  id_gpu_recomendada        Int?
+  id_cpu_recomendada        Int?
+  id_ram_recomendada        Int?
+  armazenamento_recomendado Int? // GB
+
+  status        Int      @default(1) @db.SmallInt
+  criado_em     DateTime @default(now()) @db.Timestamp(0)
+  atualizado_em DateTime @updatedAt
+
+  gpu_minima      tb_componentes? @relation("GpuMinima", fields: [id_gpu_minima], references: [id_componente])
+  gpu_recomendada tb_componentes? @relation("GpuRecomendada", fields: [id_gpu_recomendada], references: [id_componente])
+  cpu_minima      tb_componentes? @relation("CpuMinima", fields: [id_cpu_minima], references: [id_componente])
+  cpu_recomendada tb_componentes? @relation("CpuRecomendada", fields: [id_cpu_recomendada], references: [id_componente])
+  ram_minima      tb_componentes? @relation("RamMinima", fields: [id_ram_minima], references: [id_componente])
+  ram_recomendada tb_componentes? @relation("RamRecomendada", fields: [id_ram_recomendada], references: [id_componente])
+
+  @@index([categoria])
+  @@index([nome])
+  @@map("tb_softwares")
+}
+
+enum Categoria {
+  jogo
+  aplicativo
 }
