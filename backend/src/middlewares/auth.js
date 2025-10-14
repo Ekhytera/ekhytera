@@ -24,7 +24,7 @@ const middlewares = {
             return res.status(401).json({
                 ok: false,
                 status: 401,
-                message: 'Token invalido'
+                message: `Token inválido: ${error}`
             });
         }
     },
@@ -38,7 +38,8 @@ const middlewares = {
             const payload = jwt.verify(token, SECRET);
             const id = payload.id ?? payload.id_usuario;
             req.user = { ...payload, id };
-        } catch (_) {
+        } catch (error) {
+            console.log(error)
         }
         next();
     },

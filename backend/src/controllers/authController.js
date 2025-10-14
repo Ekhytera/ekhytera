@@ -1,5 +1,4 @@
 import UserRepository from "../repositories/userRepository.js";
-import postsRepository from "../repositories/postRepository.js";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { uploadToSupabase, deleteFromSupabase } from "../middlewares/uplaodImage.js";
@@ -65,7 +64,7 @@ const UserController = {
             return res.status(500).json({
                 ok: false,
                 status: 500,
-                message: 'Erro no servidor'
+                message: `Erro no servidor: ${error}`
             });
         }
     },
@@ -153,7 +152,6 @@ const UserController = {
     },
     getUserById: async (req, res) => {
         try {
-            const pageNumber = parseInt(req.query.page);
             const id = req.user.id;
 
             const user = await UserRepository.findUserByIdWithPost(id, id);

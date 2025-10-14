@@ -1,4 +1,4 @@
-import { strict, test, log, describe, envFile } from 'poku';
+import { strict, test, describe, envFile } from 'poku';
 import quibble from 'quibble';
 import httpMocks from 'node-mocks-http'
 await envFile();
@@ -21,7 +21,7 @@ await quibble.esm('@prisma/client', {
         ]),
 
         findUnique: async (args) => {
-          var data = [{ id_usuario: 1, email: 'teste@gmail.com', senha: 'teste' },
+          const data = [{ id_usuario: 1, email: 'teste@gmail.com', senha: 'teste' },
           { id_usuario: 2, email: 'teste2@gmail.com', senha: 'teste2' },
           ]
           return data.find(user => user.email === args.where.email);
@@ -35,7 +35,7 @@ await quibble.esm('@prisma/client', {
 
 await quibble.esm('bcrypt', {
   default: {
-    compare: async (s1, s2) => s1 === s2 ? true : false,
+    compare: async (s1, s2) => s1 === s2,
   }
 });
 
@@ -63,7 +63,7 @@ test('UserRepository.getAllUsers retorna lista mockada', async () => {
 
 test('UserRepository.findUserByEmail retorna usuário', async () => {
   const email = "teste@gmail.com"
-  var user = await UserRepository.findUserByEmail(email);
+  const user = await UserRepository.findUserByEmail(email);
   strict.strictEqual(user.email, email);
 });
 
@@ -74,30 +74,30 @@ test('Login via authController funcional', async () => {
   /* função que faz as requisições com os parametros email e senha,
   depois retorna o status, mensagem e token para verificação
   */
-  var testar = async (email, senha) => {
-    var req = httpMocks.createRequest({
+  const testar = async (email, senha) => {
+    const req = httpMocks.createRequest({
       method: 'POST',
       body: { email: email, senha: senha }
     })
-    var res = httpMocks.createResponse()
+    const res = httpMocks.createResponse()
 
     await UserController.login(req, res)
 
-    var body = await res._getJSONData();
+    const body = await res._getJSONData();
 
     return { status: res.statusCode, message: res.statusMessage, token: body.token }
   }
 
   // uma requisição com senha correta, outra com incorreta
-  var senha_correta = await testar("teste@gmail.com", "teste");
-  var senha_incorreta = await testar("teste@gmail.com", "INCORRETO");
-  var usuario_nexiste = await testar("teste_naoexisto@gmail.com", "nada");
+  const senha_correta = await testar("teste@gmail.com", "teste");
+  const senha_incorreta = await testar("teste@gmail.com", "INCORRETO");
+  const usuario_nexiste = await testar("teste_naoexisto@gmail.com", "nada");
 
   // com senha correta
   strict.strictEqual(senha_correta.status, 200, 'Status deve ser 200');
   strict.strictEqual(senha_correta.message, "OK", "Servidor deve retornar \"OK\"")
   strict.strictEqual(typeof (senha_correta.token), "string", "Token deve ser do tipo string")
-  
+
   // com senha incorreta
   strict.strictEqual(senha_incorreta.status, 401, "Login com senha incorreta deve retornar 401 Unauthorized")
 
