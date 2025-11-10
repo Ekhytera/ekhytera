@@ -90,7 +90,7 @@ const postsRepository = {
         try {
             const posts = await prisma.tb_posts.findMany({
                 where: {
-                    id_usuario: parseInt(id_usuario)
+                    id_usuario: Number.parseInt(id_usuario)
                 },
                 include: {
                     tb_usuarios: {
@@ -115,7 +115,7 @@ const postsRepository = {
         try {
             const post = await prisma.tb_posts.findUnique({
                 where: {
-                    id_post: parseInt(id, 10)
+                    id_post: Number.parseInt(id, 10)
                 },
                 select: {
                     id_post: true,
@@ -136,7 +136,7 @@ const postsRepository = {
         try {
             const result = await client.tb_posts.update({
                 where: {
-                    id_post: parseInt(id)
+                    id_post: Number.parseInt(id)
                 },
                 data: {
                     curtidas: {
@@ -154,7 +154,7 @@ const postsRepository = {
         try {
             const result = await client.tb_posts.update({
                 where: {
-                    id_post: parseInt(id)
+                    id_post: Number.parseInt(id)
                 },
                 data: {
                     curtidas: {
@@ -172,7 +172,7 @@ const postsRepository = {
         try {
             const result = await prisma.tb_posts.delete({
                 where: {
-                    id_post: parseInt(id, 10)
+                    id_post: Number.parseInt(id, 10)
                 },
             });
             return result;
@@ -185,7 +185,7 @@ const postsRepository = {
         try {
             const result = await prisma.tb_posts.update({
                 where: {
-                    id_post: parseInt(id)
+                    id_post: Number.parseInt(id)
                 },
                 data: {
                     texto: text

@@ -59,7 +59,7 @@ const PostController = {
     },
     getAllPosts: async (req, res) => {
         try {
-            const pageNumber = parseInt(req.query.page);
+            const pageNumber = Number.parseInt(req.query.page);
             const userId = req.user ? req.user.id : null;
             const posts = await postsRepository.findAllPosts(pageNumber, 11, userId);
             const hasMore = posts.length > 10;
@@ -202,7 +202,7 @@ const PostController = {
         }
     },
     addLike: async (req, res) => {
-        const id_post = parseInt(req.params.id);
+        const id_post = Number.parseInt(req.params.id);
         const id_usuario = req.user.id;
 
         try {
@@ -235,7 +235,7 @@ const PostController = {
         }
     },
     removeLike: async (req, res) => {
-        const id_post = parseInt(req.params.id);
+        const id_post = Number.parseInt(req.params.id);
         const id_usuario = req.user.id;
 
         try {
