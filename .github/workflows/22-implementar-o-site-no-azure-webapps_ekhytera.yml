@@ -54,7 +54,7 @@ jobs:
           name: node-app
           path: |
             backend/**
-            backend/node_modules/.prisma/**
+            backend/node_modules/**/*
 
   deploy:
     runs-on: ubuntu-latest
