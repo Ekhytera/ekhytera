@@ -30,6 +30,11 @@ jobs:
           cd backend
           npx prisma generate
 
+      - name: Verify if Prisma client was generated
+        run: |
+          ls -la backend/node_modules/@prisma/client/
+          ls -la backend/node_modules/.prisma/client/
+
       - name: Build frontend
         working-directory: frontend
         run: |
