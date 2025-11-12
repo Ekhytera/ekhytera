@@ -32,11 +32,11 @@ jobs:
           path: .
 
       - name: Build frontend
+        working-directory: frontend
         run: |
           cd frontend
           npm install
           npm run build
-          working-directory: frontend
 
       - name: Move frontend build into backend
         run: |
