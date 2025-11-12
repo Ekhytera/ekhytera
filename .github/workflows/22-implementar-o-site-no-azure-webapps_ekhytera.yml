@@ -24,7 +24,9 @@ jobs:
         run: |
           cd backend
           npm install
-          npx prisma generate
+
+      - name: Generate Prisma client
+        run: npx prisma generate
 
       - name: Build frontend
         working-directory: frontend
