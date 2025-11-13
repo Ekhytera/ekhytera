@@ -2,7 +2,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 const api = axios.create({
-    baseURL: 'http://127.0.0.1:3000'
+    baseURL: `http://${import.meta.env.VITE_HOST}:${import.meta.env.VITE_PORT}`
 });
 
 api.interceptors.response.use(
@@ -10,7 +10,7 @@ api.interceptors.response.use(
     error => {
         if (error.response?.data.status === 401) {
             if(localStorage.getItem('token')){
-                toast.error('Sua seção expirou. Faça login novamente', {
+                toast.error('Sua sessão expirou. Faça login novamente', {
                     autoClose: 1500,
                     position: "top-center",
                     hideProgressBar: true,
