@@ -3,10 +3,18 @@ import cors from 'cors';
 import userRoutes from './routes/user.js';
 import postRoutes from './routes/post.js';
 import dotenv from 'dotenv';
+import path from "path";
+import { fileURLToPath } from "url";
 
 dotenv.config();
-
 const app = express();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// serve a build do react
+// o express ignora essa linha se não encontrar a pasta public (que só existe na build)
+app.use(express.static(path.join(__dirname, "../public")));
 
 app.use(express.json());
 app.use(cors({
