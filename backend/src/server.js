@@ -12,21 +12,25 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// serve a build do react
-// o express ignora essa linha se não encontrar a pasta public (que só existe na build)
-app.use(express.static(path.join(__dirname, "../public")));
-// rota para servir os arquivos estáticos do frontend
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public', 'index.html'));
-});
 
 app.use(express.json());
 app.use(cors({
     origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
 }));
+
 app.use(userRoutes);
 app.use(postRoutes);
+
+// serve a build do react
+// o express ignora essa linha se não encontrar a pasta public (que só existe na build)
+app.use(express.static(path.join(__dirname, "../public")));
+// rota para servir os arquivos estáticos do frontend
+// deve ser definida após as rotas principais!
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public', 'index.html'));
+});
+
 
 // determina o host e a porta do servidor baseado no ambiente (produção ou desenvolvimento)
 const isProduction = process.env.NODE_ENV === 'production';
