@@ -15,6 +15,10 @@ const __dirname = path.dirname(__filename);
 // serve a build do react
 // o express ignora essa linha se não encontrar a pasta public (que só existe na build)
 app.use(express.static(path.join(__dirname, "../public")));
+// rota para servir os arquivos estáticos do frontend
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public', 'index.html'));
+});
 
 app.use(express.json());
 app.use(cors({
