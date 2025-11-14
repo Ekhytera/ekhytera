@@ -6,7 +6,7 @@ const isProduction = import.meta.env.MODE === 'production'; // vite configura es
 const protocol = isProduction ? 'https' : 'http';
 
 const api = axios.create({
-    baseURL: `${protocol}://${import.meta.env.HOST}${import.meta.env.PORT ? `:${import.meta.env.PORT}` : ''}`
+    baseURL: `${protocol}://${import.meta.env.VITE_HOST}${import.meta.env.VITE_PORT ? `:${import.meta.env.VITE_PORT}` : ''}`
 });
 
 api.interceptors.response.use(
