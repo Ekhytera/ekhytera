@@ -24,6 +24,10 @@ app.use(cors({
 app.use(userRoutes);
 app.use(postRoutes);
 
+// determina o host e a porta do servidor baseado no ambiente (produção ou desenvolvimento)
+const isProduction = process.env.NODE_ENV === 'production';
+const protocol = isProduction ? 'https' : 'http';
+
 app.listen(process.env.PORT, process.env.HOST, () => {
-    console.log(`Servidor rodando em http://${process.env.HOST}:${process.env.PORT}`)
+    console.log(`Modo: ${process.env.NODE_ENV}\nServidor rodando em ${protocol}://${process.env.HOST}${process.env.PORT ? `:${process.env.PORT}` : ''}`);
 })

@@ -1,8 +1,12 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
+// determina o host e a porta do servidor baseado no ambiente (produção ou desenvolvimento)
+const isProduction = import.meta.env.MODE === 'production'; // vite configura essa variável automaticamente
+const protocol = isProduction ? 'https' : 'http';
+
 const api = axios.create({
-    baseURL: `http://${import.meta.env.VITE_HOST}:${import.meta.env.VITE_PORT}`
+    baseURL: `${protocol}://${import.meta.env.VITE_HOST}:${import.meta.env.VITE_PORT}`
 });
 
 api.interceptors.response.use(
