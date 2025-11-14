@@ -19,8 +19,8 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
 }));
 
-app.use(userRoutes);
-app.use(postRoutes);
+app.use("/api",userRoutes);
+app.use("/api",postRoutes);
 
 // serve a build do react
 // o express ignora essa linha se não encontrar a pasta public (que só existe na build)
