@@ -3,7 +3,7 @@ name: Build and deploy Node.js app to Azure Web App - ekhytera
 on:
   push:
     branches:
-      - 22-implementar-o-site-no-azure-webapps
+      - main
   workflow_dispatch:
 
 jobs:
