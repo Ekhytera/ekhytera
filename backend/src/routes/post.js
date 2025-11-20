@@ -5,7 +5,7 @@ import { validateText } from "../middlewares/validateText.js";
 
 const routes = Router();
 
-routes.post('/create-post', auth.verifyToken, validateText, PostController.createPost);
+routes.post('/create-post', auth.verifyToken, PostController.createPost);
 routes.get('/list-posts', auth.optionalAuth, PostController.getAllPosts);
 routes.get('/list-posts/userId/:userId', PostController.getAllPostsByUserId);
 routes.get('/list-posts/id/:id', PostController.getPostById);

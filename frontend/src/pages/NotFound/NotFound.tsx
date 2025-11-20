@@ -42,7 +42,7 @@ export default function NotFound() {
 
                     <Link
                         to="/montagem"
-                        className="border-2 border-[#79A7DD] text-[#79A7DD] font-semibold px-8 py-3 rounded-lg hover:bg-[#79A7DD] hover:text-white transition-all duration-300"
+                        className="ring-2 ring-[#79A7DD] ring-inset text-[#79A7DD] font-semibold px-8 py-3 rounded-lg hover:bg-[#79A7DD] hover:text-white transition-all duration-300"
                     >
                         Monte seu PC
                     </Link>

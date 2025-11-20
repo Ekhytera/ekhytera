@@ -42,7 +42,7 @@ function Perfil() {
     const navigate = useNavigate();
     const [profile, setProfile] = useState<User>();
     const [visitor, setvisitor] = useState(false);
-    const [visiterLoader, setVisitorLoader] = useState(false);
+    const [visitorLoader, setVisitorLoader] = useState(false);
     const [activeTab, setActiveTab] = useState<'builds' | 'posts'>('builds');
     const [userPosts, setUserPosts] = useState<BackendPost[]>([]);
     const [postsLoading, setPostsLoading] = useState(false);
@@ -322,7 +322,7 @@ function Perfil() {
         }
     }, []);
 
-    if (authLoader || visiterLoader) {
+    if (authLoader || visitorLoader) {
         return (
             <div className="z-50 h-screen w-full bg-gray-950 flex justify-center items-center">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400"></div>
@@ -433,39 +433,49 @@ function Perfil() {
                                 Posts de {visitor ? profile?.nome_usuario : auth?.nome_usuario}
                             </h1>
 
-                            {postsLoading ? (
-                                <div className="flex justify-center items-center py-8">
-                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400"></div>
-                                    <span className="ml-3 text-gray-400">Carregando posts...</span>
-                                </div>
-                            ) : userPosts.length > 0 ? (
-                                <ListPost 
-                                    isPerfil={true} 
-                                    userPosts={userPosts} 
-                                    postsLoading={postsLoading} 
-                                    onUserPostLike={handleUserPostLike} 
-                                    showPagination={false} 
-                                />
-                            ) : (
-                                <div className="text-center py-8">
-                                    <p className="text-gray-400 text-lg">
-                                        {visitor
-                                            ? `${profile?.nome_usuario} ainda não fez nenhum post`
-                                            : 'Você ainda não fez nenhum post'
-                                        }
-                                    </p>
-                                    <p className="text-gray-500 mt-2">
-                                        {!visitor && (
-                                            <Link
-                                                to="/community"
-                                                className="text-[#79A7DD] hover:text-[#E0E1DD] transition-colors duration-200 underline underline-offset-4"
-                                            >
-                                                Comece a compartilhar na comunidade!
-                                            </Link>
-                                        )}
-                                    </p>
-                                </div>
-                            )}
+                            {(() => {
+                                if (postsLoading) {
+                                    return (
+                                        <div className="flex justify-center items-center py-8">
+                                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400"></div>
+                                            <span className="ml-3 text-gray-400">Carregando posts...</span>
+                                        </div>
+                                    );
+                                }
+                                
+                                if (userPosts.length > 0) {
+                                    return (
+                                        <ListPost 
+                                            isPerfil={true} 
+                                            userPosts={userPosts} 
+                                            postsLoading={postsLoading} 
+                                            onUserPostLike={handleUserPostLike} 
+                                            showPagination={false} 
+                                        />
+                                    );
+                                }
+                                
+                                return (
+                                    <div className="text-center py-8">
+                                        <p className="text-gray-400 text-lg">
+                                            {visitor
+                                                ? `${profile?.nome_usuario} ainda não fez nenhum post`
+                                                : 'Você ainda não fez nenhum post'
+                                            }
+                                        </p>
+                                        <p className="text-gray-500 mt-2">
+                                            {!visitor && (
+                                                <Link
+                                                    to="/community"
+                                                    className="text-[#79A7DD] hover:text-[#E0E1DD] transition-colors duration-200 underline underline-offset-4"
+                                                >
+                                                    Comece a compartilhar na comunidade!
+                                                </Link>
+                                            )}
+                                        </p>
+                                    </div>
+                                );
+                            })()}
                         </>
                     )}
                 </section>
