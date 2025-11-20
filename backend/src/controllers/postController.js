@@ -1,7 +1,8 @@
 import postsRepository from "../repositories/postRepository.js";
 import usersRepository from "../repositories/userRepository.js";
 import likeRepository from "../repositories/likeRepository.js";
-import { PrismaClient } from '@prisma/client';
+import pkg from "@prisma/client";
+const { PrismaClient } = pkg;
 
 const prisma = new PrismaClient();
 

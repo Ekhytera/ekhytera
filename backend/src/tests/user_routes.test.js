@@ -1,7 +1,11 @@
 import { assert, strict, test, describe, envFile } from 'poku';
 await envFile();
 import quibble from 'quibble';
-const url = `http://${process.env.HOST}:${process.env.PORT}`;
+
+// determina o host e a porta do servidor baseado no ambiente (produção ou desenvolvimento)
+const isProduction = process.env.NODE_ENV === 'production';
+const protocol = isProduction ? 'https' : 'http';
+const url = `${protocol}://${process.env.HOST}${process.env.PORT ? `:${process.env.PORT}` : ''}`;
 
 // mock do PrismaClient
 await quibble.esm('@prisma/client', {
