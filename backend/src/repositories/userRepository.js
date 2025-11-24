@@ -75,7 +75,6 @@ const UserRepository = {
         }
     },
     async findUserByUserNameWithPost(name, currentUserId = null, page, pageSize) {
-
         try {
             const user = await prisma.tb_usuarios.findUnique({
                 where: { nome_usuario: name },
@@ -90,7 +89,12 @@ const UserRepository = {
                                 select: {
                                     id_curtida: true
                                 }
-                            } : false
+                            } : true,
+                            _count: {
+                                select: {
+                                    tb_curtidas: true
+                                }
+                            }
                         },
                         orderBy: {
                             criado_em: 'desc'
@@ -98,10 +102,6 @@ const UserRepository = {
                     }
                 }
             });
-
-            if (!user) return null;
-
-            if (!currentUserId) return user;
 
             const userWithFormattedPosts = {
                 ...user,
@@ -112,8 +112,10 @@ const UserRepository = {
                         endereco_imagem: user.endereco_imagem,
                         id_usuario: user.id_usuario
                     },
-                    isLiked: post.tb_curtidas.length > 0,
-                    tb_curtidas: undefined
+                    isLiked: currentUserId ? (Array.isArray(post.tb_curtidas) ? post.tb_curtidas.length > 0 : false) : false,
+                    likesCount: post._count.tb_curtidas,
+                    tb_curtidas: undefined,
+                    _count: undefined
                 }))
             };
 
@@ -129,7 +131,6 @@ const UserRepository = {
         }
     },
     async findUserByIdWithPost(id, currentUserId = null, page, pageSize) {
-
         try {
             const user = await prisma.tb_usuarios.findUnique({
                 where: { id_usuario: id },
