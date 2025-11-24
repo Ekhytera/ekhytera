@@ -61,10 +61,16 @@ const UserController = {
             });
 
         } catch (error) {
+            console.error("Erro no servidor", {
+                message: error.message,
+                code: error.code,
+                meta: error.meta,
+                timestamp: new Date().toISOString()
+            });
             return res.status(500).json({
                 ok: false,
                 status: 500,
-                message: `Erro no servidor: ${error}`
+                message: `Erro desconhecido, tente novamente!`
             });
         }
     },
@@ -118,11 +124,16 @@ const UserController = {
             });
 
         } catch (error) {
-            console.log(error)
+            console.error("Erro no servidor", {
+                message: error.message,
+                code: error.code,
+                meta: error.meta,
+                timestamp: new Date().toISOString()
+            });
             return res.status(500).json({
                 ok: false,
                 status: 500,
-                message: 'Erro no servidor'
+                message: 'Erro desconhecido, tente novamente!'
             });
         }
     },
@@ -142,11 +153,16 @@ const UserController = {
             }
 
         } catch (error) {
-            console.log(error);
+            console.error("Erro no servidor", {
+                message: error.message,
+                code: error.code,
+                meta: error.meta,
+                timestamp: new Date().toISOString()
+            });
             return res.status(500).json({
                 ok: false,
                 status: 500,
-                message: 'Erro no servidor'
+                message: 'Erro desconhecido, tente novamente!'
             });
         }
     },
@@ -171,11 +187,16 @@ const UserController = {
                 message: 'Erro ao encontrar com usuario',
             });
         } catch (error) {
-            console.log(error);
+            console.error("Erro no servidor", {
+                message: error.message,
+                code: error.code,
+                meta: error.meta,
+                timestamp: new Date().toISOString()
+            });
             return res.status(500).json({
                 ok: false,
                 status: 500,
-                message: 'Erro no servidor'
+                message: 'Erro desconhecido, tente novamente!'
             });
         }
     },
@@ -201,11 +222,16 @@ const UserController = {
             });
 
         } catch (error) {
-            console.log(error);
+            console.error("Erro no servidor", {
+                message: error.message,
+                code: error.code,
+                meta: error.meta,
+                timestamp: new Date().toISOString()
+            });
             return res.status(500).json({
                 ok: false,
                 status: 500,
-                message: 'Erro no servidor'
+                message: 'Erro desconhecido, tente novamente!'
             });
         }
     },
@@ -238,11 +264,16 @@ const UserController = {
             });
 
         } catch (error) {
-            console.log(error);
+            console.error("Erro no servidor", {
+                message: error.message,
+                code: error.code,
+                meta: error.meta,
+                timestamp: new Date().toISOString()
+            });
             return res.status(500).json({
                 ok: false,
                 status: 500,
-                message: 'Erro no servidor'
+                message: 'Erro desconhecido, tente novamente!'
             });
         }
     },
@@ -326,11 +357,16 @@ const UserController = {
             });
 
         } catch (error) {
-            console.error(error);
+            console.error("Erro no servidor", {
+                message: error.message,
+                code: error.code,
+                meta: error.meta,
+                timestamp: new Date().toISOString()
+            });
             return res.status(500).json({
                 ok: false,
                 status: 500,
-                message: error.message
+                message: 'Erro desconhecido, tente novamente!'
             });
         }
     },
@@ -376,8 +412,17 @@ const UserController = {
             });
 
         } catch (error) {
-            console.log(error);
-
+            console.error("Erro no servidor", {
+                message: error.message,
+                code: error.code,
+                meta: error.meta,
+                timestamp: new Date().toISOString()
+            });
+            return res.status(500).json({
+                ok: false,
+                status: 500,
+                message: 'Erro desconhecido, tente novamente!'
+            });
         }
     }
 }
