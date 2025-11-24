@@ -18,7 +18,13 @@ const postsRepository = {
             });
             return posts;
         } catch (error) {
-            throw new Error(`Database query failed: ${error.message}`);
+            console.error("Erro no banco de dados", {
+                message: error.message,
+                code: error.code,
+                meta: error.meta,
+                timestamp: new Date().toISOString()
+            });
+            throw new Error("Erro desconhecido, tente novamente!");
         }
     },
 
@@ -33,7 +39,13 @@ const postsRepository = {
             });
             return { insertId: result.id_post };
         } catch (error) {
-            throw new Error(`Falha ao criar post: ${error.message}`);
+            console.error("Erro no banco de dados", {
+                message: error.message,
+                code: error.code,
+                meta: error.meta,
+                timestamp: new Date().toISOString()
+            });
+            throw new Error("Erro desconhecido, tente novamente!");
         }
     },
 
@@ -83,7 +95,13 @@ const postsRepository = {
 
             return postsWithLikeStatus;
         } catch (error) {
-            throw new Error(`Falha ao listar post: ${error.message}`);
+            console.error("Erro no banco de dados", {
+                message: error.message,
+                code: error.code,
+                meta: error.meta,
+                timestamp: new Date().toISOString()
+            });
+            throw new Error("Erro desconhecido, tente novamente!");
         }
     },
 
@@ -108,7 +126,13 @@ const postsRepository = {
             });
             return posts;
         } catch (error) {
-            throw new Error(`Falha ao listar post: ${error.message}`);
+            console.error("Erro no banco de dados", {
+                message: error.message,
+                code: error.code,
+                meta: error.meta,
+                timestamp: new Date().toISOString()
+            });
+            throw new Error("Erro desconhecido, tente novamente!");
         }
     },
 
@@ -129,7 +153,13 @@ const postsRepository = {
             });
             return post;
         } catch (error) {
-            throw new Error(`Falha ao encontrar post: ${error.message}`);
+            console.error("Erro no banco de dados", {
+                message: error.message,
+                code: error.code,
+                meta: error.meta,
+                timestamp: new Date().toISOString()
+            });
+            throw new Error("Erro desconhecido, tente novamente!");
         }
     },
 
@@ -147,7 +177,13 @@ const postsRepository = {
             });
             return result;
         } catch (error) {
-            throw new Error(`Falha ao curtir post: ${error.message}`);
+            console.error("Erro no banco de dados", {
+                message: error.message,
+                code: error.code,
+                meta: error.meta,
+                timestamp: new Date().toISOString()
+            });
+            throw new Error("Erro desconhecido, tente novamente!");
         }
     },
 
@@ -165,7 +201,13 @@ const postsRepository = {
             });
             return result
         } catch (error) {
-            throw new Error(`Falha ao remover a curtida: ${error.message}`);
+            console.error("Erro no banco de dados", {
+                message: error.message,
+                code: error.code,
+                meta: error.meta,
+                timestamp: new Date().toISOString()
+            });
+            throw new Error("Erro desconhecido, tente novamente!");
         }
     },
 
@@ -178,7 +220,13 @@ const postsRepository = {
             });
             return result;
         } catch (error) {
-            throw new Error(`Falha ao apagar post: ${error.message}`);
+            console.error("Erro no banco de dados", {
+                message: error.message,
+                code: error.code,
+                meta: error.meta,
+                timestamp: new Date().toISOString()
+            });
+            throw new Error("Erro desconhecido, tente novamente!");
         }
     },
 
@@ -194,7 +242,13 @@ const postsRepository = {
             });
             return result;
         } catch (error) {
-            throw new Error(`Falha ao editar post: ${error.message}`);
+            console.error("Erro no banco de dados", {
+                message: error.message,
+                code: error.code,
+                meta: error.meta,
+                timestamp: new Date().toISOString()
+            });
+            throw new Error("Erro desconhecido, tente novamente!");
         }
     }
 }
