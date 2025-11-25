@@ -44,8 +44,8 @@ function Config() {
         resolver: zodResolver(schema),
         mode: "onChange",
         defaultValues: {
-            email: auth!.email || "",
-            nome_usuario: auth!.nome_usuario || ""
+            email: auth?.email || "",
+            nome_usuario: auth?.nome_usuario || ""
         }
     });
 
