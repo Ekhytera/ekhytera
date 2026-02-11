@@ -1003,14 +1003,14 @@ export default function PCBuild() {
 
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
         <img
-          src="../../../public/images/image.png"
+          src="/images/image.png"
           alt="Computer Background"
           className="w-[400px] h-auto object-contain opacity-100"
           onError={(e) => {
             const img = e.target as HTMLImageElement;
             if (!img.dataset.tried) {
               img.dataset.tried = 'true';
-              img.src = '../../../imgs/pcgamermaior.png';
+              img.src = 'images/image.png';
             }
           }}
         />
